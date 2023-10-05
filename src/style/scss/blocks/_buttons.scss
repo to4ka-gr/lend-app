@@ -1,0 +1,39 @@
+.button {
+    position: relative;
+    width: 130px;
+    height: 50px;
+    margin-top: 20px;
+    color: $third-color;
+    background-color: $main-color;
+    border: none;
+    border-radius: 5px;
+    text-transform: uppercase;
+}
+
+.myUsersBtn {
+    margin-top: 22px;
+    margin-left: 2px;
+}
+
+.myUsersBtn.hidden, .addUsersBtn.hidden {
+    display: none;
+}
+
+.submit {
+    width: auto;
+    margin-top: 0px;
+    height: 15%;
+}
+
+.editSubmit {
+    margin-top: 0;
+    height: 30px;
+    padding: 5px;
+}
+
+.addUsersBtn{
+    position: absolute;
+    max-height: 50%;
+    bottom: 20px;
+
+}

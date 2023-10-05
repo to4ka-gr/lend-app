@@ -1,0 +1,28 @@
+.closeModalAdminPanel, .closeModalAddUsers, .closeModalEditUser {
+    display: inline-block;
+    position: absolute;
+    top: 0;
+    right: -30px;
+    width: 20px;
+    height: 20px;
+    background: url('../../icons/Close.svg') center center/cover no-repeat;
+}
+
+// .closeModalAddUsers {
+//     top: 0;
+//     right: -30px;
+// }
+
+.closeModalEditUser {
+    z-index: 10;
+    width: 20px;
+    height: 20px;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    
+}
+
+.closeModalAdminPanel.hidden{
+    display: none;
+}

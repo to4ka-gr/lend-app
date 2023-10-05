@@ -1,0 +1,53 @@
+.modalAdminPanel, .modalAddUsers {
+    display: flex;
+    position: fixed;
+    padding: 20px;
+    padding-bottom: 90px;
+    top: -200%;
+    left: 50%;
+    transform: translateX(-50%);
+    margin-top: 75px;
+    justify-content: space-around;
+    align-items: space-around;
+    height: 500px;
+    width: 1140px;
+    background-color: #fffdfd;
+    border-radius: 10px;
+    transition: all 0.5s;
+}
+
+.modalAddUsers {
+    padding: 20px;
+    justify-content: center;
+    align-items: center;
+    height: 400px;
+    width: 400px;
+    background-color: $third-color;
+    border-radius: 5%;
+}
+
+.modalAdminPanel.active, .modalAddUsers.active {
+    top: 0;
+}
+
+.modalEditUser {
+    // display: block;
+    display: grid;
+    position: absolute;
+    width: 100%;
+    grid-template-columns: 96% 4%;
+    top: 30px;
+    right: 0;
+    height: auto;
+    z-index: 10;
+    background-color: gray;
+    // border: 1px solid;
+    border-radius: 5px;
+    // :hover {
+    //     display: none;
+    // }
+}
+
+.modalEditUser.hidden {
+    display: none;
+}
