@@ -27,6 +27,7 @@ function createMainHTML() {
                             </div>
                             <div class='user_name'>
                                 ФИО
+                                <div class='sort_icon'></div>
                             </div>
                             <div class='loan_date'>
                                 Дата займа
@@ -36,9 +37,11 @@ function createMainHTML() {
                             </div>
                             <div class='date_added'>
                                 Дата добавления
+                                <div class='sort_icon'></div>
                             </div>
                             <div class='loan_amount'>
                                 Сумма
+                                <div class='sort_icon'></div>
                             </div>
                             <div class='id'>
                                 ID
@@ -52,6 +55,9 @@ function createMainHTML() {
     
                         <ul class='users_list'></ul>
                     </div>
+
+                    <div class='icon_modal_notification'></div>
+                    <div class='new_notification'></div>
     
                     <button class='button addUsersBtn'>
                         Добавить
@@ -122,7 +128,7 @@ class User {
     }
 };
 
-class APIService { // TODO: нужно все строяные елементы заменить на константы как сделано с формой
+class APIService { // TODO: нужно все строяные элементы заменить на константы как сделано с формой
     addNewUser(user) {
 
         arrMyUsers.push(user);
@@ -226,6 +232,44 @@ function createFormMini(arr, i) {
     `);
 }
 
+function createUserString(users, parent) {
+    users.forEach((myUser, i) => {
+        parent.innerHTML += `
+            <li class="each_user"> 
+                <span class='each_user-number'>
+                    ${i + 1}.
+                </span>
+                <span class='each_user-userName' data-tooltip="
+                    ${myUser.userName} 
+                    ${myUser.userPatronymic} 
+                    ${myUser.userSurname}
+                ">
+                    ${myUser.userName.substring(0, 1)}. 
+                    ${myUser.userPatronymic.substring(0, 1)}. 
+                    ${myUser.userSurname}
+                </span>
+                <span class='each_user-loanDate'>
+                    ${myUser.loanDate}
+                </span>
+                <span class='each_user-expirationDate'>
+                    ${myUser.expirationDate}
+                </span>
+                <span class='each_user-dateAdded'>
+                    ${myUser.dateAdded}
+                </span>
+                <span class='each_user-loanAmount'>
+                    ${myUser.loanAmount}
+                </span>
+                <span class='each_user-userId'>
+                    #${myUser.userId}
+                </span>
+                <div class='edit'></div> 
+                <div class='remove'></div> 
+            </li>
+        `;
+    });
+}
+
 function createUsersList(users, parent) {
 
     let warningUser = [];
@@ -233,43 +277,43 @@ function createUsersList(users, parent) {
 
     parent.innerHTML = '';
 
-    function createUserString(users, parent) {
-        users.forEach((myUser, i) => {
-            parent.innerHTML += `
-                <li class="each_user"> 
-                    <span class='each_user-number'>
-                        ${i + 1}.
-                    </span>
-                    <span class='each_user-userName' data-tooltip="
-                        ${myUser.userName} 
-                        ${myUser.userPatronymic} 
-                        ${myUser.userSurname}
-                    ">
-                        ${myUser.userName.substring(0, 1)}. 
-                        ${myUser.userPatronymic.substring(0, 1)}. 
-                        ${myUser.userSurname}
-                    </span>
-                    <span class='each_user-loanDate'>
-                        ${myUser.loanDate}
-                    </span>
-                    <span class='each_user-expirationDate'>
-                        ${myUser.expirationDate}
-                    </span>
-                    <span class='each_user-dateAdded'>
-                        ${myUser.dateAdded}
-                    </span>
-                    <span class='each_user-loanAmount'>
-                        ${myUser.loanAmount}
-                    </span>
-                    <span class='each_user-userId'>
-                        #${myUser.userId}
-                    </span>
-                    <div class='edit'></div> 
-                    <div class='remove'></div> 
-                </li>
-            `;
-        });
-    }
+    // function createUserString(users, parent) {
+    //     users.forEach((myUser, i) => {
+    //         parent.innerHTML += `
+    //             <li class="each_user"> 
+    //                 <span class='each_user-number'>
+    //                     ${i + 1}.
+    //                 </span>
+    //                 <span class='each_user-userName' data-tooltip="
+    //                     ${myUser.userName} 
+    //                     ${myUser.userPatronymic} 
+    //                     ${myUser.userSurname}
+    //                 ">
+    //                     ${myUser.userName.substring(0, 1)}. 
+    //                     ${myUser.userPatronymic.substring(0, 1)}. 
+    //                     ${myUser.userSurname}
+    //                 </span>
+    //                 <span class='each_user-loanDate'>
+    //                     ${myUser.loanDate}
+    //                 </span>
+    //                 <span class='each_user-expirationDate'>
+    //                     ${myUser.expirationDate}
+    //                 </span>
+    //                 <span class='each_user-dateAdded'>
+    //                     ${myUser.dateAdded}
+    //                 </span>
+    //                 <span class='each_user-loanAmount'>
+    //                     ${myUser.loanAmount}
+    //                 </span>
+    //                 <span class='each_user-userId'>
+    //                     #${myUser.userId}
+    //                 </span>
+    //                 <div class='edit'></div> 
+    //                 <div class='remove'></div> 
+    //             </li>
+    //         `;
+    //     });
+    // }
 
     createUserString(users, parent);
 
@@ -408,6 +452,7 @@ function createUsersList(users, parent) {
                 formElementMini.reset();
                 myUsersBtn.insertAdjacentHTML('beforebegin', ``);
             });
+            formElementMini.reset();
         });
     });
 

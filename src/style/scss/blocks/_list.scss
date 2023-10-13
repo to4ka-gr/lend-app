@@ -2,22 +2,40 @@
     position: absolute;
     top: 20px;
     width: 1090px;
-    height: 390px;
-    margin-bottom: 90px;
+    height: 404px;
     left: 50%;
     transform: translateX(-50%);
     background: $second-color;
+    .wrapper_for_list {
+        display: grid;
+        grid-template-columns: 5% 20% 15% 15% 15% 10% 10% 10%;
+        grid-template-rows: 25px;
+        justify-items: center;
+        padding-top: 8px;
+        height: 25px;
+        .sort_icon {
+            position: relative;
+            top: -17px;
+            left: -20px;
+            width: 15px;
+            height: 15px;
+            background: url('../icons/sort.png') center center/cover no-repeat;
+            &:hover {
+                cursor: pointer;
+            }
+        }
+    }
     .users_list {
         display: block;
         position: relative;
         width: 100%;
         height: 370px;
         padding: 10px 0 0 0;
-        margin-bottom: 10px;
+        top: 10px;
         left: 50%;
         transform: translateX(-50%);
-        background: rgb(199, 197, 197);
-        color: black;
+        background: $list-color;
+        color: $base-color;
         overflow: auto;
         .each_user {
             display: grid;
@@ -29,30 +47,23 @@
             list-style-type: none;
             position: relative;
             line-height: 25px;
-            color: #000000;
+            color: $base-color;
             margin-bottom: 15px;
         }
         .each_warning {
-            background-color: rgb(215, 200, 101);
+            background-color: $warning-color;
         }
         .each_expired {
-            background-color: rgb(210, 97, 97);
+            background-color: $main-color;
         }
         .each_edit {
-            background-color: rgb(59, 59, 62);
+            background-color: $second-color;
         }
-    }
-    .wrapper_for_list {
-        display: grid;
-        grid-template-columns: 5% 20% 15% 15% 15% 10% 10% 10%;
-        justify-items: center;
-        height: 25px;
     }
     .filter {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
         justify-items: center;
-        align-items: center;
         width: 100%;
         &_round {
             display: inline-block;
@@ -60,20 +71,16 @@
             width: 18px;
             border: 1px solid;
             border-radius: 100%;
-            color: #000000;
-            &:hover {
-                cursor: pointer;
-                border: 3px solid;
-            }
+            color: $base-color;
         }
         &_all {
-            background-color: darkgray;
+            background-color: $list-color;
         }
         &_warning {
-            background-color: yellow;
+            background-color: $warning-color;
         }
         &_expired {
-            background-color: red;
+            background-color: $main-color;
         }
     }
 }
@@ -87,12 +94,12 @@
     width: 200px;
     left: -25px; 
     top: 0;
-    background: #000000;
-    color: #fff;
+    background: $base-color;
+    color: $third-color;
     font-size: 10px;
     font-weight: 400;
     padding:  1% 4%;
-    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+    box-shadow: 2px 2px 5px $base-color;
     pointer-events: none;
     opacity: 0;
     transition: 0.5s;

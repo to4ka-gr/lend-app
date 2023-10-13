@@ -11,7 +11,7 @@
 
 .input:hover, .button:hover {
     cursor: pointer;
-    box-shadow: 0 0 0 3px #808080;;
+    box-shadow: 0 0 0 3px $second-color;
 }
 
 .each_user:hover {
@@ -26,11 +26,11 @@
         transform: translateY(-50%);
         width: 20px;
         height: 20px;
-        background: url('../../icons/trash.png') center (center / cover) no-repeat;
+        background: url('../icons/trash.png') center (center / cover) no-repeat;
         cursor: pointer;
     }
     .edit {
-        background: url('../../icons/pencil.png') center (center / cover) no-repeat;
+        background: url('../icons/pencil.png') center (center / cover) no-repeat;
         right: 45px;
         width: 22px;
         height: 22px;
@@ -40,6 +40,10 @@
 .filter_round:hover {
     cursor: pointer;
     border: 3px solid;
+}
+
+.icon_modal_notification:hover {
+    cursor: pointer;
 }
 
 [data-tooltip]:hover:after {

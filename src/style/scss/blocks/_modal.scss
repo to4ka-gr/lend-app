@@ -1,8 +1,8 @@
 .modalAdminPanel, .modalAddUsers {
     display: flex;
     position: fixed;
-    padding: 20px;
-    padding-bottom: 90px;
+    padding: 25px;
+    padding-bottom: 76px;
     top: -200%;
     left: 50%;
     transform: translateX(-50%);
@@ -11,7 +11,7 @@
     align-items: space-around;
     height: 500px;
     width: 1140px;
-    background-color: #fffdfd;
+    background-color: $third-color;
     border-radius: 10px;
     transition: all 0.5s;
 }
@@ -38,11 +38,29 @@
     top: 30px;
     right: 0;
     height: auto;
-    z-index: 10;
-    background-color: gray;
+    background-color: $second-color;
     border-radius: 5px;
 }
 
 .modalEditUser.hidden {
     display: none;
+}
+
+.icon_modal_notification {
+    position: absolute;
+    background: url('../icons/notification.png') center center/cover no-repeat;
+    width: 40px;
+    height: 40px;
+    top: 440px;
+    left: 1075px;
+}
+
+.new_notification {
+    position: absolute;
+    width: 18px;
+    height: 18px;
+    background-color: $main-color;
+    border-radius: 100%;
+    top: 439px;
+    left: 1096px;
 }
