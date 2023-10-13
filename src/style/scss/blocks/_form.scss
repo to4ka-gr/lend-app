@@ -8,8 +8,7 @@
 }
 
 .input {
-    height: 14%;
-    // margin: 10px;
+    height: 10%;
     padding: 10px;
     font-size: 15px;
     border: 1px solid $second-color;
@@ -19,12 +18,9 @@
 .formMini {
     display: grid;
     top: 15px;
-    width: 96%;
+    width: 98%;
     grid-template-columns: 15% 15% 15% 14% 14% 15% 8%;
     column-gap: 0.5%;
-    // height: 100%;
-    // flex-direction: row;
-    // justify-content: space-between;
 }
 
 .editInput {

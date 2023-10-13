@@ -17,13 +17,13 @@
 }
 
 .modalAddUsers {
-    padding: 20px;
+    padding: 20px 25px;
     justify-content: center;
     align-items: center;
-    height: 400px;
+    height: 500px;
     width: 400px;
     background-color: $third-color;
-    border-radius: 5%;
+    border-radius: 10px;
 }
 
 .modalAdminPanel.active, .modalAddUsers.active {
@@ -31,7 +31,6 @@
 }
 
 .modalEditUser {
-    // display: block;
     display: grid;
     position: absolute;
     width: 100%;
@@ -41,11 +40,7 @@
     height: auto;
     z-index: 10;
     background-color: gray;
-    // border: 1px solid;
     border-radius: 5px;
-    // :hover {
-    //     display: none;
-    // }
 }
 
 .modalEditUser.hidden {

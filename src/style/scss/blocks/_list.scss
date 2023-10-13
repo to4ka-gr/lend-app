@@ -1,9 +1,8 @@
 .myUseresList {
     position: absolute;
     top: 20px;
-    width: 1100px;
+    width: 1090px;
     height: 390px;
-    // padding: 0 5px 15px 5px;
     margin-bottom: 90px;
     left: 50%;
     transform: translateX(-50%);
@@ -12,9 +11,9 @@
         display: block;
         position: relative;
         width: 100%;
-        height: 96%;
-        top: 5px;
-        padding: 10px 0;
+        height: 370px;
+        padding: 10px 0 0 0;
+        margin-bottom: 10px;
         left: 50%;
         transform: translateX(-50%);
         background: rgb(199, 197, 197);
@@ -22,40 +21,17 @@
         overflow: auto;
         .each_user {
             display: grid;
-            grid-template-columns: 5% 15% 15% 15% 15% 15% 15% 5%;
+            grid-template-columns: 5% 20% 15% 15% 15% 10% 10% 10%;
             justify-items: center;
             text-transform: uppercase;
-            font-size: 18px;
+            font-size: 15px;
             font-weight: bold;
             list-style-type: none;
             position: relative;
             line-height: 25px;
             color: #000000;
             margin-bottom: 15px;
-            // &:hover {
-            //     border: 0.1px solid;
-            //     // transition: all 0.5;
-            //     .remove, .edit {
-            //         content: '';
-            //         display: block;
-            //         position: absolute;
-            //         right: 5px;
-            //         top: 50%;
-            //         transform: translateY(-50%);
-            //         width: 20px;
-            //         height: 20px;
-            //         background: url('../../icons/trash.png') center (center / cover) no-repeat;
-            //         cursor: pointer;
-            //     }
-            //     .edit {
-            //         background: url('../../icons/pencil.png') center (center / cover) no-repeat;
-            //         right: 30px;
-            //         width: 22px;
-            //         height: 22px;
-            //     }
-            // }
         }
-
         .each_warning {
             background-color: rgb(215, 200, 101);
         }
@@ -68,7 +44,56 @@
     }
     .wrapper_for_list {
         display: grid;
-        grid-template-columns: 5% 15% 15% 15% 15% 15% 15% 5%;
+        grid-template-columns: 5% 20% 15% 15% 15% 10% 10% 10%;
         justify-items: center;
+        height: 25px;
+    }
+    .filter {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        justify-items: center;
+        align-items: center;
+        width: 100%;
+        &_round {
+            display: inline-block;
+            height: 18px;
+            width: 18px;
+            border: 1px solid;
+            border-radius: 100%;
+            color: #000000;
+            &:hover {
+                cursor: pointer;
+                border: 3px solid;
+            }
+        }
+        &_all {
+            background-color: darkgray;
+        }
+        &_warning {
+            background-color: yellow;
+        }
+        &_expired {
+            background-color: red;
+        }
     }
 }
+
+[data-tooltip] {
+    position: relative;
+   }
+   [data-tooltip]:after {
+    content: attr(data-tooltip);
+    position: absolute;
+    width: 200px;
+    left: -25px; 
+    top: 0;
+    background: #000000;
+    color: #fff;
+    font-size: 10px;
+    font-weight: 400;
+    padding:  1% 4%;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+    pointer-events: none;
+    opacity: 0;
+    transition: 0.5s;
+   } 

@@ -1,13 +1,12 @@
 .closeModalAdminPanel:hover, .closeModalAddUsers:hover {
     cursor: pointer;
-    transform: scale(1.5);
+    transform: scale(1.2);
 }
 
 .closeModalEditUser:hover {
     cursor: pointer;
     top: 6px;
-    // transform: translateY(-50%);
-    transform: scale(1.5);
+    transform: scale(1.2);
 }
 
 .input:hover, .button:hover {
@@ -17,12 +16,12 @@
 
 .each_user:hover {
     border: 0.1px solid;
-    // transition: all 0.5;
+    height: 25px;
     .remove, .edit {
         content: '';
         display: block;
         position: absolute;
-        right: 5px;
+        right: 20px;
         top: 50%;
         transform: translateY(-50%);
         width: 20px;
@@ -32,8 +31,19 @@
     }
     .edit {
         background: url('../../icons/pencil.png') center (center / cover) no-repeat;
-        right: 30px;
+        right: 45px;
         width: 22px;
         height: 22px;
     }
 }
+
+.filter_round:hover {
+    cursor: pointer;
+    border: 3px solid;
+}
+
+[data-tooltip]:hover:after {
+    opacity: 1;
+    top: 25px;
+    z-index: 10;
+   }
