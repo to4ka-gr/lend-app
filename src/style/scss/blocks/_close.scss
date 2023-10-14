@@ -1,22 +1,20 @@
-.closeModalAdminPanel, .closeModalAddUsers, .closeModalEditUser {
+.close_modal_main, .close_modal_form_add_users, .close_modal_edit_user {
     display: inline-block;
     position: absolute;
-    top: 6px;
+    top: 4px;
     right: 5px;
-    width: 15px;
-    height: 15px;
+    width: 18px;
+    height: 18px;
     background: url('../icons/Close.svg') center center/cover no-repeat;
 }
 
-.closeModalEditUser {
-    width: 20px;
-    height: 20px;
-    right: 4px;
-    top: 50%;
-    transform: translateY(-50%);
-    
+.close_modal_edit_user {
+    width: 30px;
+    height: 30px;
+    right: 0;
+    top: 0;
 }
 
-.closeModalAdminPanel.hidden{
+.close_modal_main.hidden{
     display: none;
 }

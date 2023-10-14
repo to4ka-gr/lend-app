@@ -6,26 +6,26 @@
 
 function createMainHTML() {
     
-    root.insertAdjacentHTML(
+    root.insertAdjacentHTML( // closeModalAddUsers
         'afterbegin',
     
         `<div class='container'>
             <div class='wrapper'>
     
-                <button class='button myUsersBtn' id='myUsersBtn'>
+                <button class='button btn_show_my_users' id='btn_show_my_users'>
                     Мои заемщики
                 </button>
     
-                <div class='modalAdminPanel'>
+                <div class='modal_main'>
     
-                    <div class='closeModalAdminPanel'></div>
+                    <div class='close_modal_main'></div>
     
-                    <div class='myUseresList' id='usersUi'>
-                        <div class='wrapper_for_list'>
-                            <div class='number'>
+                    <div class='users_list-head'>
+                        <div class='users_list-wrapper'>
+                            <div class='index'>
                                 №
                             </div>
-                            <div class='user_name'>
+                            <div class='full_name'>
                                 ФИО
                                 <div class='sort_icon'></div>
                             </div>
@@ -46,10 +46,10 @@ function createMainHTML() {
                             <div class='id'>
                                 ID
                             </div>
-                            <div class='filter'>
-                                <div class='filter_round filter_all'></div>
-                                <div class='filter_round filter_warning'></div>
-                                <div class='filter_round filter_expired'></div>
+                            <div class='filter_rounds'>
+                                <div class='filter_rounds-item filter_rounds-all'></div>
+                                <div class='filter_rounds-item filter_rounds-warning'></div>
+                                <div class='filter_rounds-item filter_rounds-expired'></div>
                             </div>
                         </div>
     
@@ -59,26 +59,26 @@ function createMainHTML() {
                     <div class='icon_modal_notification'></div>
                     <div class='new_notification'></div>
     
-                    <button class='button addUsersBtn'>
+                    <button class='button btn_add_new_user'>
                         Добавить
                     </button>
     
                 </div>
             
-                <div class='modalAddUsers'>
+                <div class='modal_form_add_user'>
     
-                    <div class='closeModalAddUsers'></div>
+                    <div class='close_modal_form_add_users'></div>
     
                     <form class='form' id='form'>
     
-                        <input required type='text' placeholder='Ваше имя' class='input userName' name='userName' autocomplete='on'/>
-                        <input required type='text' placeholder='Ваше отчество' class='input userPatronymic' name='userPatronymic' autocomplete='on'/>
-                        <input required type='text' placeholder='Ваша фамилия' class='input userSurname' name='userSurname' autocomplete='on'/>
-                        <input required type='date' class='input loanDate' name='loanDate' autocomplete='on'/>
-                        <input required type='date' class='input expirationDate' name='expirationDate' autocomplete='on'/>
-                        <input required type='number' min='1' placeholder='Сумма займа' class='input loanAmount' name='loanAmount' autocomplete='on'/>
+                        <input required type='text' placeholder='Ваше имя' class='input input_user_name' name='input_user_name' autocomplete='on'/>
+                        <input required type='text' placeholder='Ваше отчество' class='input input_user_patronymic' name='input_user_patronymic' autocomplete='on'/>
+                        <input required type='text' placeholder='Ваша фамилия' class='input input_user_surname' name='input_user_surname' autocomplete='on'/>
+                        <input required type='date' class='input input_loan_date' name='input_loan_date' autocomplete='on'/>
+                        <input required type='date' class='input input_expiration_date' name='input_expiration_date' autocomplete='on'/>
+                        <input required type='number' min='1' placeholder='Сумма займа' class='input input_loan_amount' name='input_loan_amount' autocomplete='on'/>
     
-                        <button type='submit' class='input submit button'>
+                        <button type='submit' class='button input submit'>
                             подтвердить
                         </button>
     
@@ -151,12 +151,12 @@ class APIService { // TODO: нужно все строяные элементы 
 };
 
 const USER_FORM_FIELDS = {
-    USER_NAME: 'userName',
-    USER_PATRONYMIC: 'userPatronymic',
-    USER_SURNAME: 'userSurname',
-    USER_LOAN_DATE: 'loanDate',
-    USER_EXPIRATION_DATE: 'expirationDate',
-    USER_LOAN_AMOUNT: 'loanAmount',
+    USER_NAME: 'input_user_name',
+    USER_PATRONYMIC: 'input_user_patronymic',
+    USER_SURNAME: 'input_user_surname',
+    USER_LOAN_DATE: 'input_loan_date',
+    USER_EXPIRATION_DATE: 'input_expiration_date',
+    USER_LOAN_AMOUNT: 'input_loan_amount',
 };
 const formElement = document.getElementById('form');
 let formData = new FormData(formElement);
@@ -171,12 +171,12 @@ let user  = new User({
 let arrMyUsers = [];
 const apiService = new APIService();
 const usersList = document.querySelector('.users_list');
-const myUsersBtn = document.querySelector('.myUsersBtn');
-const modalAdminPanel = document.querySelector('.modalAdminPanel');
-const closeModalAdminPanel = document.querySelector('.closeModalAdminPanel');
-const addUsersBtn = document.querySelector('.addUsersBtn');
-const modalAddUsers = document.querySelector('.modalAddUsers');
-const closeModalAddUsers = document.querySelector('.closeModalAddUsers');
+const myUsersBtn = document.querySelector('.btn_show_my_users');
+const modalAdminPanel = document.querySelector('.modal_main');
+const closeModalAdminPanel = document.querySelector('.close_modal_main');
+const addUsersBtn = document.querySelector('.btn_add_new_user');
+const modalAddUsers = document.querySelector('.modal_form_add_user');
+const closeModalAddUsers = document.querySelector('.close_modal_form_add_users');
 const LOCAL_STORAGE = {
     KEY: 'myUsers',
 };
@@ -210,20 +210,20 @@ function createFormMini(arr, i) {
     myUsersBtn.insertAdjacentHTML(
         'beforebegin',
 
-        `<div class='modalEditUser hidden'>
+        `<div class='modal_edit_user hidden'>
 
-            <div class='closeModalEditUser'></div>
+            <div class='close_modal_edit_user'></div>
             
-            <form class='formMini' id='formMini'>
+            <form class='form_mini' id='form_mini'>
             
-                <input type='text' placeholder=${arr[i].userName} class='input editInput editUserName' name='editUserName' autocomplete='on'/>
-                <input type='text' placeholder=${arr[i].userPatronymic} class='input editInput editUserPatronymic' name='editUserPatronymic' autocomplete='on'/>
-                <input type='text' placeholder=${arr[i].userSurname} class='input editInput editUserSurname' name='editUserSurname' autocomplete='on'/>            
-                <input type='date' value=${arr[i].loanDate} class='input editInput editLoanDate' name='editLoanDate' autocomplete='on'/>
-                <input type='date' value=${arr[i].expirationDate} class='input editInput editExpirationDate' name='editExpirationDate' autocomplete='on'/>
-                <input type='number' min='1' placeholder=${arr[i].loanAmount} class='input editInput editLoanAmount' name='editLoanAmount' autocomplete='on'/>
+                <input type='text' placeholder=${arr[i].userName} class='input input_edit input_edit_user_name' name='input_edit_user_name' autocomplete='on'/>
+                <input type='text' placeholder=${arr[i].userPatronymic} class='input input_edit input_edit_user_patronymic' name='input_edit_user_patronymic' autocomplete='on'/>
+                <input type='text' placeholder=${arr[i].userSurname} class='input input_edit input_edit_user_surname' name='input_edit_user_surname' autocomplete='on'/>            
+                <input type='date' value=${arr[i].loanDate} class='input input_edit input_edit_loan_date' name='input_edit_loan_date' autocomplete='on'/>
+                <input type='date' value=${arr[i].expirationDate} class='input input_edit input_edit_expiration_date' name='input_edit_expiration_date' autocomplete='on'/>
+                <input type='number' min='1' placeholder=${arr[i].loanAmount} class='input input_edit input_edit_loan_amount' name='input_edit_loan_amount' autocomplete='on'/>
             
-                <button type='submit' class='input editInput editSubmit button'>
+                <button type='submit' class='input input_edit submit_edit button'>
                     изменить
                 </button>
             
@@ -235,11 +235,13 @@ function createFormMini(arr, i) {
 function createUserString(users, parent) {
     users.forEach((myUser, i) => {
         parent.innerHTML += `
-            <li class="each_user"> 
-                <span class='each_user-number'>
+            <li class="each_user">
+
+                <span class='each_user-index'>
                     ${i + 1}.
                 </span>
-                <span class='each_user-userName' data-tooltip="
+
+                <span class='each_user-user_name' data-tooltip="
                     ${myUser.userName} 
                     ${myUser.userPatronymic} 
                     ${myUser.userSurname}
@@ -248,23 +250,29 @@ function createUserString(users, parent) {
                     ${myUser.userPatronymic.substring(0, 1)}. 
                     ${myUser.userSurname}
                 </span>
-                <span class='each_user-loanDate'>
+
+                <span class='each_user-loan_date'>
                     ${myUser.loanDate}
                 </span>
-                <span class='each_user-expirationDate'>
+
+                <span class='each_user-expiration_date'>
                     ${myUser.expirationDate}
                 </span>
-                <span class='each_user-dateAdded'>
+
+                <span class='each_user-date_added'>
                     ${myUser.dateAdded}
                 </span>
-                <span class='each_user-loanAmount'>
-                    ${myUser.loanAmount}
+
+                <span class='each_user-loan_amount'>
+                    ${myUser.loanAmount} $
                 </span>
-                <span class='each_user-userId'>
+
+                <span class='each_user-user_id'>
                     #${myUser.userId}
                 </span>
-                <div class='edit'></div> 
-                <div class='remove'></div> 
+
+                <div class='icon_edit'></div> 
+                <div class='icon_remove'></div> 
             </li>
         `;
     });
@@ -277,80 +285,10 @@ function createUsersList(users, parent) {
 
     parent.innerHTML = '';
 
-    // function createUserString(users, parent) {
-    //     users.forEach((myUser, i) => {
-    //         parent.innerHTML += `
-    //             <li class="each_user"> 
-    //                 <span class='each_user-number'>
-    //                     ${i + 1}.
-    //                 </span>
-    //                 <span class='each_user-userName' data-tooltip="
-    //                     ${myUser.userName} 
-    //                     ${myUser.userPatronymic} 
-    //                     ${myUser.userSurname}
-    //                 ">
-    //                     ${myUser.userName.substring(0, 1)}. 
-    //                     ${myUser.userPatronymic.substring(0, 1)}. 
-    //                     ${myUser.userSurname}
-    //                 </span>
-    //                 <span class='each_user-loanDate'>
-    //                     ${myUser.loanDate}
-    //                 </span>
-    //                 <span class='each_user-expirationDate'>
-    //                     ${myUser.expirationDate}
-    //                 </span>
-    //                 <span class='each_user-dateAdded'>
-    //                     ${myUser.dateAdded}
-    //                 </span>
-    //                 <span class='each_user-loanAmount'>
-    //                     ${myUser.loanAmount}
-    //                 </span>
-    //                 <span class='each_user-userId'>
-    //                     #${myUser.userId}
-    //                 </span>
-    //                 <div class='edit'></div> 
-    //                 <div class='remove'></div> 
-    //             </li>
-    //         `;
-    //     });
-    // }
-
     createUserString(users, parent);
 
-    // ${myUser.USER_FORM_FIELDS.USER_NAME.substring(2, 20)}.
-
-    // users.forEach((myUser, i) => {
-    //     parent.innerHTML += `
-    //         <li class="each_user"> 
-    //             <span class='each_user-number'>
-    //                 ${i + 1}.
-    //             </span>
-    //             <span class='each_user-userName' data-tooltip="${myUser.userName} ${myUser.userPatronymic} ${myUser.userSurname}">
-    //                 ${myUser.userName.substring(0, 1)}. ${myUser.userPatronymic.substring(0, 1)}. ${myUser.userSurname}
-    //             </span>
-    //             <span class='each_user-loanDate'>
-    //                 ${myUser.loanDate}
-    //             </span>
-    //             <span class='each_user-expirationDate'>
-    //                 ${myUser.expirationDate}
-    //             </span>
-    //             <span class='each_user-dateAdded'>
-    //                 ${myUser.dateAdded}
-    //             </span>
-    //             <span class='each_user-loanAmount'>
-    //                 ${myUser.loanAmount}
-    //             </span>
-    //             <span class='each_user-userId'>
-    //                 #${myUser.userId}
-    //             </span>
-    //             <div class='edit'></div> 
-    //             <div class='remove'></div> 
-    //         </li>
-    //     `;
-    // });
-
     function deleteUser() { // удаление пользователей
-        document.querySelectorAll('.remove').forEach((btn, i) => { 
+        document.querySelectorAll('.icon_remove').forEach((btn, i) => { 
             btn.addEventListener('click', () => {
                     btn.parentElement.remove();
                     arrMyUsers.splice(i, 1);
@@ -362,48 +300,22 @@ function createUsersList(users, parent) {
 
     deleteUser();
 
-    document.querySelectorAll('.edit').forEach((btn, i) => { // изменение пользователя
+    document.querySelectorAll('.icon_edit').forEach((btn, i) => { // изменение пользователя
 
         btn.addEventListener('click', (e) => {
             e.preventDefault();
 
-            document.querySelectorAll('.edit').forEach((elem) => {
+            document.querySelectorAll('.icon_edit').forEach((elem) => {
                 elem.parentElement.style.background = '';
             });
 
-            btn.parentElement.style.background="gray";
+            btn.parentElement.style.background="rgb(128, 128, 128)";
 
             createFormMini(users, i);
 
-            // myUsersBtn.insertAdjacentHTML(
-            //     'beforebegin',
-
-            //     `<div class='modalEditUser hidden'>
-
-            //         <div class='closeModalEditUser'></div>
-                    
-            //         <form class='formMini' id='formMini'>
-                    
-            //             <input type='text' placeholder=${users[i].userName} value=${users[i].userName} class='input editInput editUserName' name='editUserName' autocomplete='on'/>
-                    
-            //             <!-- <input type='text' placeholder=${users[i].userPatronymic} class='input editInput editUserPatronymic' name='editUserPatronymic' autocomplete='on'/>
-            //             <input type='text' placeholder=${users[i].userSurname} class='input editInput editUserSurname' name='editUserSurname' autocomplete='on'/> -->
-                    
-            //             <input type='date' value=${users[i].loanDate} class='input editInput editLoanDate' name='editLoanDate' autocomplete='on'/>
-            //             <input type='date' value=${users[i].expirationDate} class='input editInput editExpirationDate' name='editExpirationDate' autocomplete='on'/>
-            //             <input type='number' min='1' value=${users[i].loanAmount} class='input editInput editLoanAmount' name='editLoanAmount' autocomplete='on'/>
-                    
-            //             <button type='submit' class='input editInput editSubmit button'>
-            //                 подтвердить
-            //             </button>
-                    
-            //         </form>
-            //     </div>
-            // `)
-
-            let modalEditUser = document.querySelector('.modalEditUser');
-            let closeModalEditUser = document.querySelector('.closeModalEditUser');
-            const formElementMini = document.getElementById('formMini');
+            let modalEditUser = document.querySelector('.modal_edit_user');
+            let closeModalEditUser = document.querySelector('.close_modal_edit_user');
+            const formElementMini = document.getElementById('form_mini');
             let formDataMini = new FormData(formElementMini);
             let userInArr = users[i];
             
@@ -431,16 +343,16 @@ function createUsersList(users, parent) {
                 formDataMini = new FormData(formElementMini);
 
                 Object.defineProperty(userInArr, 'userName', {
-                    value: formDataMini.get('editUserName') || userInArr.userName
+                    value: formDataMini.get('input_edit_user_name') || userInArr.userName
                 });
                 Object.defineProperty(userInArr, 'loanDate', {
-                    value: formDataMini.get('editLoanDate') || userInArr.loanDate
+                    value: formDataMini.get('input_edit_loan_date') || userInArr.loanDate
                 });
                 Object.defineProperty(userInArr, 'expirationDate', {
-                    value: formDataMini.get('editExpirationDate') || userInArr.expirationDate
+                    value: formDataMini.get('input_edit_expiration_date') || userInArr.expirationDate
                 });
                 Object.defineProperty(userInArr, 'loanAmount', {
-                    value: formDataMini.get('editLoanAmount') || userInArr.loanAmount
+                    value: formDataMini.get('input_edit_loan_amount') || userInArr.loanAmount
                 });
 
                 btn.parentElement.style.background='';
@@ -452,7 +364,6 @@ function createUsersList(users, parent) {
                 formElementMini.reset();
                 myUsersBtn.insertAdjacentHTML('beforebegin', ``);
             });
-            formElementMini.reset();
         });
     });
 

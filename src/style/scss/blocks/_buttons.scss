@@ -10,14 +10,14 @@
     text-transform: uppercase;
 }
 
-.myUsersBtn {
+.btn_show_my_users {
     position: absolute;
     margin-top: 75px;
     left: 50%;
     transform: translateX(-50%);
 }
 
-.myUsersBtn.hidden, .addUsersBtn.hidden {
+.btn_show_my_users.hidden, .btn_add_new_user.hidden {
     display: none;
 }
 
@@ -27,13 +27,13 @@
     height: 12%;
 }
 
-.editSubmit {
+.submit_edit {
     margin-top: 0;
     height: 30px;
     padding: 5px;
 }
 
-.addUsersBtn{
+.btn_add_new_user{
     position: absolute;
     max-height: 45px;
     margin-top: 0;
