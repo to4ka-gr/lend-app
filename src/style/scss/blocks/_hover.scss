@@ -1,4 +1,4 @@
-.close_modal_main:hover, .close_modal_form_add_users:hover {
+.close_modal_main:hover, .close_modal_form_add_users:hover, .modal_notification-close:hover {
     cursor: pointer;
     transform: scale(.9);
 }
@@ -10,7 +10,7 @@
 
 .input:hover, .button:hover {
     cursor: pointer;
-    // transform: scale(.97);
+    transform: scale(.97);
 }
 
 .btn_add_new_user:hover {
@@ -56,6 +56,11 @@
 }
 
 .icon_modal_notification:hover {
+    cursor: pointer;
+    transform: scale(.9);
+}
+
+.icon_search_users:hover {
     cursor: pointer;
     transform: scale(.9);
 }

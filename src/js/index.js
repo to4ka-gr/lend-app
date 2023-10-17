@@ -56,8 +56,10 @@ function createMainHTML() {
                         <ul class='users_list'></ul>
                     </div>
 
+                    <div class='icon_search_users'></div>
+
                     <div class='icon_modal_notification'></div>
-                    <div class='new_notification'></div>
+                    <div class='new_notification-indicator'></div>
     
                     <button class='button btn_add_new_user'>
                         Добавить
@@ -150,6 +152,8 @@ class APIService { // TODO: нужно все строяные элементы 
     }
 };
 
+const formElement = document.getElementById('form');
+let formData = new FormData(formElement);
 const USER_FORM_FIELDS = {
     USER_NAME: 'input_user_name',
     USER_PATRONYMIC: 'input_user_patronymic',
@@ -158,8 +162,11 @@ const USER_FORM_FIELDS = {
     USER_EXPIRATION_DATE: 'input_expiration_date',
     USER_LOAN_AMOUNT: 'input_loan_amount',
 };
-const formElement = document.getElementById('form');
-let formData = new FormData(formElement);
+const LOCAL_STORAGE = {
+    KEY: 'myUsers',
+};
+// const formElement = document.getElementById('form');
+// let formData = new FormData(formElement);
 let user  = new User({
     userName: formData.get(USER_FORM_FIELDS.USER_NAME),
     userPatronymic: formData.get(USER_FORM_FIELDS.USER_PATRONYMIC),
@@ -169,6 +176,13 @@ let user  = new User({
     loanAmount: formData.get(USER_FORM_FIELDS.USER_LOAN_AMOUNT),
 });
 let arrMyUsers = [];
+let warningUser = [];
+let expiredUser = [];
+const notificationIndicator = document.querySelector('.new_notification-indicator');
+const notificationBtn = document.querySelector('.icon_modal_notification');
+const showAllUsers = document.querySelector('.filter_rounds-all');
+const showWarningUsers = document.querySelector('.filter_rounds-warning');
+const showExpiredUsers = document.querySelector('.filter_rounds-expired');
 const apiService = new APIService();
 const usersList = document.querySelector('.users_list');
 const myUsersBtn = document.querySelector('.btn_show_my_users');
@@ -177,32 +191,19 @@ const closeModalAdminPanel = document.querySelector('.close_modal_main');
 const addUsersBtn = document.querySelector('.btn_add_new_user');
 const modalAddUsers = document.querySelector('.modal_form_add_user');
 const closeModalAddUsers = document.querySelector('.close_modal_form_add_users');
-const LOCAL_STORAGE = {
-    KEY: 'myUsers',
-};
+const backgroundForNotification = document.createElement('div');
+const myModalNotification = document.createElement('div');
+const myNotificationWrapper = document.createElement('div');
+const myNotificationWarning = document.createElement('div');
+const myNotificationExpired = document.createElement('div');
+const closeModalNotification = document.createElement('div');
+const notificationWarningList = document.createElement('ul'); // проверить название
+const notificationExpiredList = document.createElement('ul'); // тут тоже
 
 function parseLSInArr() {
     if (localStorage[LOCAL_STORAGE.KEY]) {
         arrMyUsers = [];
         arrMyUsers = JSON.parse(localStorage[LOCAL_STORAGE.KEY]);
-    }
-}
-
-function showWarningNotification(arr) {
-    if (!arr[0] == '') {
-        console.log('Пользоваталили у которых осталось 3 дня:');
-        arr.forEach((obj, i) => {
-            console.log(`${i + 1}. ${obj.userSurname} ${obj.userName} ${obj.userPatronymic}`);
-        });
-    }
-}
-
-function showExpiredNotification(arr) {
-    if (!arr[0] == '') {
-        console.log('Пользоваталили у которых закончился срок:');
-        arr.forEach((obj, i) => {
-            console.log(`${i + 1}. ${obj.userSurname} ${obj.userName} ${obj.userPatronymic}`);
-        });
     }
 }
 
@@ -279,9 +280,6 @@ function createUserString(users, parent) {
 }
 
 function createUsersList(users, parent) {
-
-    let warningUser = [];
-    let expiredUser = [];
 
     parent.innerHTML = '';
 
@@ -384,9 +382,110 @@ function createUsersList(users, parent) {
         }
     });
 
-    showWarningNotification(warningUser);
-    showExpiredNotification(expiredUser);
+    // showWarningNotification(warningUser);
+    // showExpiredNotification(expiredUser);
 }
+
+function createNotificationModalWindow() {
+
+    backgroundForNotification.classList.add('background_for_notification');  // задний слой поаерх индикатора
+    notificationIndicator.append(backgroundForNotification);
+
+    myModalNotification.classList.add('modal_notification'); // модалку на задний слой
+    document.querySelector('.background_for_notification').append(myModalNotification);
+
+    myNotificationWrapper.classList.add('modal_notification-wrapper'); // обертку на модалку
+    myNotificationWrapper.classList.add('modal_notification-wrapper-warning');
+    myNotificationWrapper.classList.add('modal_notification-wrapper-expired');
+    document.querySelector('.modal_notification').append(myNotificationWrapper);
+
+    myNotificationWarning.classList.add('modal_notification-warning'); // левая часть обертки
+    document.querySelector('.modal_notification-wrapper').append(myNotificationWarning);
+
+    myNotificationExpired.classList.add('modal_notification-expired'); // правя часть обертку
+    document.querySelector('.modal_notification-wrapper').append(myNotificationExpired);
+
+    closeModalNotification.classList.add('modal_notification-close'); // иконка закрытия на модалку
+    document.querySelector('.modal_notification').append(closeModalNotification);
+
+    notificationWarningList.classList.add('modal_notification-warning_list'); // лист для отображения
+    document.querySelector('.modal_notification-warning').append(notificationWarningList);
+
+    notificationExpiredList.classList.add('modal_notification-expired_list'); // лист для отображения
+    document.querySelector('.modal_notification-expired').append(notificationExpiredList);
+}
+
+const SPAN_FOR_LIST = {
+    SPAN_WARNING: '<span>Пользователи у которых заканчитвается срок:</span>',
+    SPAN_EXPIRED: '<span>Пользователи у которых закончился срок:</span>',
+}
+
+function createNotificationlist(arr, ulList, divSpan) {
+
+    if (arr === warningUser) {
+        document.querySelector('.modal_notification-wrapper-warning').insertAdjacentHTML('afterbegin', `${divSpan}`); // сделать переменные и добавить как аргументы
+    } else if (arr === expiredUser) {
+        document.querySelector('.modal_notification-wrapper-expired').insertAdjacentHTML('afterbegin', `${divSpan}`);
+    }
+
+    ulList.innerHTML = '';
+
+    arr.forEach((user, i) => {
+
+        ulList.innerHTML += `
+            <li class='attention_notification'>
+
+                <span class='attention_user-index'>
+                    ${i + 1}.
+                </span>
+
+                <span class='attention_user-full_name'>
+                    ${user.userName.substring(0, 1)}. 
+                    ${user.userPatronymic.substring(0, 1)}. 
+                    ${user.userSurname}
+                </span>
+            </li>
+        `;
+    });
+}
+
+function showNotificationList(btn, arr, ulList, divSpan) {
+    btn.addEventListener('click', (e) => {
+        e.preventDefault;
+    
+        createNotificationModalWindow();
+    
+        backgroundForNotification.classList.remove('hiden');
+        btn.classList.add('hiden');
+        notificationIndicator.classList.add('hiden');
+    
+        document.querySelector('.modal_notification-close').addEventListener('click', (e) => {
+            e.preventDefault;
+
+            divSpan = '';
+
+            backgroundForNotification.classList.add('hiden');
+            btn.classList.remove('hiden');
+            notificationIndicator.classList.remove('hiden');
+        });
+        createNotificationlist(arr, ulList, divSpan);
+    });
+}
+showNotificationList(notificationBtn, warningUser, notificationWarningList, SPAN_FOR_LIST.SPAN_WARNING);
+showNotificationList(notificationBtn, expiredUser, notificationExpiredList, SPAN_FOR_LIST.SPAN_EXPIRED);
+
+ // mutation.observer {
+ //     arr1 || arr2 в какаом из них будут изменения или в тои или в другом   
+ //     let startObserv = arr.lenght;
+ //     let endObserve = arr.lenght;
+ // startObserve !== endObserve      
+ // }
+
+
+// function checkAttentionUsers() {
+//     let startArrs = (warningUser.length && expiredUser.length);
+//     if ()
+// }
 
 myUsersBtn.addEventListener('click', (e) => {
     e.preventDefault();
@@ -394,6 +493,13 @@ myUsersBtn.addEventListener('click', (e) => {
     myUsersBtn.classList.add('hidden');
     parseLSInArr();
     createUsersList(arrMyUsers, usersList);
+
+    // console.log((warningUser && expiredUser));
+    // console.log((warningUser.length && expiredUser.length));
+    // console.log((warningUser.length + expiredUser.length));
+    // console.log((warningUser.length));
+    // console.log((expiredUser.length));
+    // console.log();
 });
 
 closeModalAdminPanel.addEventListener('click', (e) => {
@@ -439,3 +545,4 @@ formElement.addEventListener('submit', (e) => {
 // Оповещение сделать отдельную кнопку и функциями туда записывать
 // Фильтрах использовать мои массивы которые я использовал для сортировки просроченных и важных
 // переиспользовать форму для уменьшения кода
+// приятный цвет #816767
