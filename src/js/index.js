@@ -56,7 +56,7 @@ function createMainHTML() {
                         <ul class='users_list'></ul>
                     </div>
 
-                    <div class='icon_search_users'></div>
+                    <div class='icon_search_users' id='search'></div>
 
                     <div class='icon_modal_notification'></div>
                     <div class='new_notification-indicator'></div>
@@ -205,6 +205,7 @@ const closeModalNotification = document.createElement('div');
 const notificationWarningList = document.createElement('ul'); // проверить название
 const notificationExpiredList = document.createElement('ul'); // тут тоже
 
+const iconSearchUsers = document.querySelector('.icon_search_users');
 const btnFilterAll = document.querySelector('.filter_rounds-all');
 const btnFilterWarning = document.querySelector('.filter_rounds-warning');
 const btnFilterexpired = document.querySelector('.filter_rounds-expired');
@@ -306,7 +307,7 @@ function createUserString(users, parent) { // создание сторки по
                 </span>
 
                 <span class='each_user-loan_amount'>
-                    ${myUser.loanAmount} $
+                    ${myUser.loanAmount}$
                 </span>
 
                 <span class='each_user-user_id'>
@@ -585,6 +586,22 @@ function formModalSubmit() {
     });
 }
 
+function searchUser() {
+    iconSearchUsers.addEventListener('click', (e) => {
+        e.preventDefault;
+
+        search.insertAdjacentHTML(
+            'beforebegin', 
+            `<div class='search_modal'>
+                <div class='search_modal-wrapper'>
+                    <div></div>
+                </div>
+                <div class='search_modal_close'></div>
+            </div>`
+        );
+    });
+}
+
 function sortListBySurname() {
     iconSortBySurname.addEventListener('click', (e) => {
         e.preventDefault;
@@ -606,13 +623,6 @@ function sortListBySurname() {
 function sortListByDateAded() {
     iconSortByAddedDate.addEventListener('click', (e) => {
         e.preventDefault;
-  
-        // function (a, b) {
-        //     let dateA = new Date(a.dateAdded);
-        //     let dateB = new Date(b.dateAdded);
-            
-        //     return dateB - dateA;
-        // }
 
         sortArr = arrMyUsers.sort(function (a, b) {
             let dateA = new Date(a.dateAdded);
@@ -625,7 +635,6 @@ function sortListByDateAded() {
     });
 }
 
-
 function sortListByLoanAmount() {
     iconSortByLoanAmount.addEventListener('click', (e) => {
         e.preventDefault;
@@ -636,9 +645,6 @@ function sortListByLoanAmount() {
         sortArr = [];
     });
 }
-
-
-
 
 function runAll() {
 
