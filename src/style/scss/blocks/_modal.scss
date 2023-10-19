@@ -150,5 +150,61 @@
     background: url('../icons/search.png') center center/cover no-repeat; 
     top: 440px;
     left: 25px;
+    &.hiden {
+        // width: 0;
+        // height: 0;
+        display: none;
+    }
+}
+
+.search_modal {
+    position: absolute;
+    top: 440px;
+    left: 25px;
+    background: $third-color;
+    width: 450px;
+    height: 40px;
+    &-wrapper {
+        display: grid;
+        grid-template-columns: 10% 90%;
+        .icon_calendar {
+            background: url('../icons/calendar.png') center center/cover no-repeat; 
+            width: 40px;
+            height: 40px;
+            &.hiden {
+                display: none;
+            }
+            &-form {
+                display: grid;
+                width: 300px;
+                grid-template-columns: repeat(2, 115px) 70px;
+                grid-template-rows: 40px;
+                .hiden {
+                    display: none;
+                }
+                .input_date-search {
+                    height: 100%;
+                }
+                .submit_search {
+                    margin-top: 0;
+                    height: 40px;
+                    width: 70px;
+                }
+            }
+        }
+        .dynamic_search {
+            width: 50%;
+            .form_search {
+                .input_search {
+                    width: 100%;
+                }
+            }
+        }
+        .dynamic_search {
+            &.hiden {
+                display: none;
+            }
+        }
+    }
 
 }

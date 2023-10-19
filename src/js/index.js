@@ -16,7 +16,7 @@ function createMainHTML() {
                     Мои заемщики
                 </button>
     
-                <div class='modal_main'>
+                <div class='modal_main' id=''modal_main>
     
                     <div class='close_modal_main'></div>
     
@@ -586,20 +586,32 @@ function formModalSubmit() {
     });
 }
 
-function searchUser() {
-    iconSearchUsers.addEventListener('click', (e) => {
-        e.preventDefault;
+function searchUserModal() {
 
-        search.insertAdjacentHTML(
-            'beforebegin', 
-            `<div class='search_modal'>
-                <div class='search_modal-wrapper'>
-                    <div></div>
+    search.insertAdjacentHTML(
+        'beforebegin', 
+
+        `<div class='search_modal'>
+
+            <div class='search_modal-wrapper'>
+
+                <div class='icon_calendar' id='icon_calendar'></div>
+
+                <div class='dynamic_search'>
+                    <form class='form_search'>
+                        <input type='text' class='input input_search' placeholder='Что ищем?' />
+                        <ul class='toping'>
+                            <li>Имя</li>
+                        </ul>
+                    </form>
                 </div>
-                <div class='search_modal_close'></div>
-            </div>`
-        );
-    });
+
+            </div>
+
+            <div class='search_modal_close'></div>
+
+        </div>`
+    );
 }
 
 function sortListBySurname() {
@@ -646,6 +658,50 @@ function sortListByLoanAmount() {
     });
 }
 
+function searchUsers() {
+    iconSearchUsers.addEventListener('click', (e) => {
+        e.preventDefault;
+
+        // searchUserModal();
+        iconSearchUsers.classList.add('hiden');
+        searchUserModal();
+
+        const serachModal = document.querySelector('.search_modal');
+        const serachModalWrapper = document.querySelector('.search_modal-wrapper');
+        const iconCalendar = document.querySelector('.icon_calendar');
+        const dynamicSearch = document.querySelector('.dynamic_search');
+        const inputSearchForm = document.querySelector('.form_search');
+        const inputSearch = document.querySelector('.search');
+        const ulSearch = document.querySelector('.toping');
+        const closeSearchForm = document.querySelector('.search_modal_close');
+        
+        iconCalendar.addEventListener('click', (e) => {
+            e.preventDefault;
+            iconCalendar.insertAdjacentHTML(
+                'beforebegin', 
+
+                `<form class='icon_calendar-form hiden'>
+                    <input type='date' class='input input_date-search input_date-start' name='input_date-start' autocomplete='on' />
+                    <input type='date' class='input input_date-search input_date-end' name='input_date-end' autocomplete='on' />
+                    <button type='submit' class='button input submit_search'>
+                        найти
+                    </button>
+                </form>`
+            );
+            const dateSerachForm = document.querySelector('.icon_calendar-form');
+            const inputDateStart = document.querySelector('.input_date-start');
+            const inputDateEnd = document.querySelector('.input_date-end');
+            const btnSubmitSearch = document.querySelector('.submit_search');
+
+            dateSerachForm.classList.remove('hiden');
+            iconCalendar.classList.add('hiden');
+            dynamicSearch.classList.add('hiden');
+
+        });
+
+    });
+}
+
 function runAll() {
 
     showNotificationList(notificationBtn, warningUser, notificationWarningList, SPAN_FOR_LIST.SPAN_WARNING);
@@ -673,6 +729,8 @@ function runAll() {
     sortListByDateAded();
 
     sortListByLoanAmount();
+
+    searchUsers();
 }
 
 runAll(); // сделать все функции через аргументы и внести все сюда

@@ -1,19 +1,10 @@
-.close_modal_main:hover, .close_modal_form_add_users:hover, .modal_notification-close:hover {
+.close_modal_main:hover, .close_modal_form_add_users:hover, .modal_notification-close:hover, .icon_calendar:hover, .close_modal_edit_user:hover, .sort_icon:hover, .filter_rounds-item:hover, .icon_modal_notification:hover, .icon_search_users:hover {
     cursor: pointer;
     transform: scale(.9);
 }
 
-.close_modal_edit_user:hover {
+.input:hover, .button:hover, .btn_add_new_user:hover {
     cursor: pointer;
-    transform: scale(.9);
-}
-
-.input:hover, .button:hover {
-    cursor: pointer;
-    transform: scale(.97);
-}
-
-.btn_add_new_user:hover {
     transform: scale(.97);
 }
 
@@ -27,8 +18,6 @@
         display: block;
         position: absolute;
         right: 7px;
-        // top: 50%;
-        // transform: translateY(-50%);
         width: 22px;
         height: 22px;
         background: url('../icons/trash.png') center (center / cover) no-repeat;
@@ -42,27 +31,6 @@
         width: 24px;
         height: 24px;
     }
-}
-
-.sort_icon:hover {
-    cursor: pointer;
-    transform: scale(.9);
-}
-
-.filter_rounds-item:hover {
-    cursor: pointer;
-    transform: scale(.9);
-    
-}
-
-.icon_modal_notification:hover {
-    cursor: pointer;
-    transform: scale(.9);
-}
-
-.icon_search_users:hover {
-    cursor: pointer;
-    transform: scale(.9);
 }
 
 [data-tooltip]:hover:after { 
