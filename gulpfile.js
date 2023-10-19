@@ -10,7 +10,7 @@ task('server', function() {
 
     browserSync({
         server: {
-            baseDir: "my-project"
+            baseDir: "dist"
         }
     });
 
@@ -25,7 +25,7 @@ task('styles', function() {
         .pipe(rename({suffix: '.min', prefix: ''}))
         .pipe(autoprefixer())
         .pipe(cleanCSS({compatibility: 'ie8'}))
-        .pipe(dest("my-project/style"))
+        .pipe(dest("dist/style"))
         .pipe(browserSync.stream());
 });
 
@@ -40,20 +40,20 @@ task('html', function () {
 
     return src("src/*.html")
         .pipe(htmlmin({ collapseWhitespace: true }))
-        .pipe(dest("my-project"));
+        .pipe(dest("dist"));
 });
 
 task('scripts', function () {
 
     return src("src/**/*.js")
-        .pipe(dest("my-project"))
+        .pipe(dest("dist"))
         .pipe(browserSync.stream());
 });
 
 task('icons', function () {
 
     return src("src/icons/**/*.+(svg|png)")
-        .pipe(dest("my-project/icons"))
+        .pipe(dest("dist/icons"))
         .pipe(browserSync.stream());
 
 });
