@@ -80,7 +80,6 @@
 
 .new_notification-indicator.hiden {
     background-color: $third-color;
-    // display: none;
 }
 
 .background_for_notification {
@@ -126,10 +125,6 @@
     &-warning, &-expired {
         overflow: auto;
         width: 100%;
-        // span {
-        //     font-size: 20px;
-        //     line-height: 35px;
-        // }
         &_list {
             font-size: 15px;
             font-weight: 700;
@@ -166,7 +161,9 @@
     height: 40px;
     &-wrapper {
         display: grid;
-        grid-template-columns: 10% 90%;
+        grid-template-columns: 30% 70%;
+        grid-template-rows: 40px;
+
         .icon_calendar {
             background: url('../icons/calendar.png') center center/cover no-repeat; 
             width: 40px;
@@ -176,8 +173,9 @@
             }
             &-form {
                 display: grid;
-                width: 300px;
-                grid-template-columns: repeat(2, 115px) 70px;
+                width: 450px;
+                grid-template-columns: repeat(2, 33.5%) repeat(2, 15%);
+                column-gap: 1%;
                 grid-template-rows: 40px;
                 .hiden {
                     display: none;
@@ -193,10 +191,15 @@
             }
         }
         .dynamic_search {
-            width: 50%;
+            width: 70%;
             .form_search {
+                width: 100%;
                 .input_search {
                     width: 100%;
+                    height: 38px;
+                    text-align: center;
+                    outline: 0;
+                    font-size: 18px;                
                 }
             }
         }
