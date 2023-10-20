@@ -75,9 +75,9 @@ function createMainHTML() {
     
                     <form class='form' id='form'>
     
+                    <input required type='text' placeholder='Ваша фамилия' class='input input_user_surname' name='input_user_surname' autocomplete='on'/>
                         <input required type='text' placeholder='Ваше имя' class='input input_user_name' name='input_user_name' autocomplete='on'/>
                         <input required type='text' placeholder='Ваше отчество' class='input input_user_patronymic' name='input_user_patronymic' autocomplete='on'/>
-                        <input required type='text' placeholder='Ваша фамилия' class='input input_user_surname' name='input_user_surname' autocomplete='on'/>
                         <input required type='date' class='input input_loan_date' name='input_loan_date' autocomplete='on'/>
                         <input required type='date' class='input input_expiration_date' name='input_expiration_date' autocomplete='on'/>
                         <input required type='number' min='1' placeholder='Сумма займа' class='input input_loan_amount' name='input_loan_amount' autocomplete='on'/>
@@ -98,9 +98,9 @@ createMainHTML();
 
 class User {
     constructor({userName, userPatronymic, userSurname, loanDate, expirationDate, loanAmount}) {
+        this.userSurname = userSurname;
         this.userName = userName;
         this.userPatronymic = userPatronymic;
-        this.userSurname = userSurname;
         this.loanDate = loanDate;
         this.expirationDate = expirationDate;
         this.loanAmount = loanAmount;
@@ -158,9 +158,9 @@ class APIService { // TODO: нужно все строяные элементы 
 const formElement = document.getElementById('form');
 let formData = new FormData(formElement);
 const USER_FORM_FIELDS = {
+    USER_SURNAME: 'input_user_surname',
     USER_NAME: 'input_user_name',
     USER_PATRONYMIC: 'input_user_patronymic',
-    USER_SURNAME: 'input_user_surname',
     USER_LOAN_DATE: 'input_loan_date',
     USER_EXPIRATION_DATE: 'input_expiration_date',
     USER_LOAN_AMOUNT: 'input_loan_amount',
@@ -169,9 +169,9 @@ const LOCAL_STORAGE = {
     KEY: 'myUsers',
 };
 let user  = new User({
+    userSurname: formData.get(USER_FORM_FIELDS.USER_SURNAME),
     userName: formData.get(USER_FORM_FIELDS.USER_NAME),
     userPatronymic: formData.get(USER_FORM_FIELDS.USER_PATRONYMIC),
-    userSurname: formData.get(USER_FORM_FIELDS.USER_SURNAME),
     loanDate: formData.get(USER_FORM_FIELDS.USER_LOAN_DATE),
     expirationDate: formData.get(USER_FORM_FIELDS.USER_EXPIRATION_DATE),
     loanAmount: formData.get(USER_FORM_FIELDS.USER_LOAN_AMOUNT),
@@ -600,16 +600,19 @@ function formModalSubmit() {
         formData = new FormData(formElement);
 
         user = new User({
+            userSurname: formData.get(USER_FORM_FIELDS.USER_SURNAME),
             userName: formData.get(USER_FORM_FIELDS.USER_NAME),
             userPatronymic: formData.get(USER_FORM_FIELDS.USER_PATRONYMIC),
-            userSurname: formData.get(USER_FORM_FIELDS.USER_SURNAME),
             loanDate: formData.get(USER_FORM_FIELDS.USER_LOAN_DATE),
             expirationDate: formData.get(USER_FORM_FIELDS.USER_EXPIRATION_DATE),
             loanAmount: formData.get(USER_FORM_FIELDS.USER_LOAN_AMOUNT),
         }); 
         apiService.addNewUser(user);
         formElement.reset();
-        filterAll(arrMyUsers);
+        searchUsers();
+        // filterAll(arrMyUsers);
+        createUsersList(arrMyUsers, usersList);
+
     });
 }
 
@@ -700,127 +703,143 @@ function sortListByLoanAmount() {
 
 function searchUsers() { // отменить событие submit в dynamic input
 
-    iconSearchUsers.addEventListener('click', (e) => {
-        e.preventDefault();
-
+    if (!localStorage[LOCAL_STORAGE.KEY]) {
         iconSearchUsers.classList.add('hiden');
+    } else if (localStorage[LOCAL_STORAGE.KEY]) {
+        iconSearchUsers.classList.remove('hiden');
 
-        const serachModal = document.querySelector('.search_modal');
-        // const serachModalWrapper = document.querySelector('.search_modal-wrapper');
-        const iconCalendar = document.querySelector('.icon_calendar');
-        const dynamicSearch = document.querySelector('.dynamic_search'); 
-        const formDynamicSubmit = document.querySelector('.form_search');
-        const inputSearch = document.querySelector('.input_search');
-        const closeSearchForm = document.querySelector('.search_modal_close');
-
-        iconCalendar.classList.remove('hiden');
-        serachModal.classList.remove('hiden');
-        dynamicSearch.classList.remove('hiden');
-        closeSearchForm.classList.remove('hiden');
-        
-
-        // поиск по датам - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-        iconCalendar.addEventListener('click', (e) => {
+        iconSearchUsers.addEventListener('click', (e) => {
             e.preventDefault();
+    
+            iconSearchUsers.classList.add('hiden');
+    
+            const searchModal = document.querySelector('.search_modal');
+            // const serachModalWrapper = document.querySelector('.search_modal-wrapper');
+            const iconCalendar = document.querySelector('.icon_calendar');
+            const dynamicSearch = document.querySelector('.dynamic_search'); 
+            const formDynamicSubmit = document.querySelector('.form_search');
+            const inputSearch = document.querySelector('.input_search');
+            const closeSearchForm = document.querySelector('.search_modal_close');
 
-            const dateSerachForm = document.querySelector('.icon_calendar-form');
-            const inputDateStart = document.querySelector('.input_date-start');
-            const inputDateEnd = document.querySelector('.input_date-end');
-            // const btnSubmitSearch = document.querySelector('.submit_search');
-            const formDateSubmit = document.querySelector('.icon_calendar-form');
-            const closeDateSearchForm = document.querySelector('.close_calendar-form');
-
-            closeDateSearchForm.classList.remove('hiden');
-            iconCalendar.classList.add('hiden');
-            closeSearchForm.classList.add('hiden');
-            dateSerachForm.classList.remove('hiden');
-            dynamicSearch.classList.add('hiden');
-
-            closeDateSearchForm.addEventListener('click', (e) => {
-                e.preventDefault();
-
-                iconSearchUsers.classList.remove('hiden');
-                dateSerachForm.classList.add('hiden');
-                closeDateSearchForm.classList.add('hiden');
-            });
-
-            formDateSubmit.addEventListener('submit', (e) => {
-                e.preventDefault();
-
-                const resultArrForDate = [];
-                parseLSInArr();
-
-                const dateA = Date.parse(`${inputDateStart.value}`);
-                const dateC = Date.parse(`${inputDateEnd.value}`);
-
-                arrMyUsers.forEach(user => {
-
-                    const dateB = Date.parse(`${user.dateAdded}`);
-
-                    if (dateB >= dateA && dateB <= dateC) {
-
-                        resultArrForDate.push(user);
-                        createUsersList(resultArrForDate, usersList);
-                    }
-
-                    formDateSubmit.reset();
-                });
-            });
-
-        });
-
-        closeSearchForm.addEventListener('click', (e) => {
-            e.preventDefault();
+            iconCalendar.classList.remove('hiden');
+            searchModal.classList.remove('hiden');
+            dynamicSearch.classList.remove('hiden');
+            closeSearchForm.classList.remove('hiden');
             
-            iconSearchUsers.classList.remove('hiden');
-            serachModal.classList.add('hiden');
-        });
-
-        // динамический поиск - - - - - - - - - - - - - - - - - - - - - - - - - -
-        const findUsers = [];
-        let arrFromLS = [];
-        arrFromLS = JSON.parse(localStorage[LOCAL_STORAGE.KEY]);
-        
-        arrFromLS.forEach(user => {
-            findUsers.push(user);
-        });
-
-        function getThisUsersSurname(symbol, arr) {
-            return arr.filter(elem => {
-                const regex = new RegExp(symbol, 'gi');
-                return elem.userSurname.match(regex);
+            addUsersBtn.addEventListener('click', () => {
+                searchModal.classList.add('hiden');
             });
-        }
 
-        function getThisUsersLoanAmount(symbol, arr) {
-
-            return arr.filter(elem => {
-                const regex = new RegExp(symbol, 'gi');
-                return elem.loanAmount.match(regex);
+            closeModalAddUsers.addEventListener('click', () => {
+                iconSearchUsers.classList.remove('hiden');
             });
-        }
 
-        function showUsers() {
 
-            if (this.value == +(this.value)) {
+            
+            // поиск по датам - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+            iconCalendar.addEventListener('click', (e) => {
+                e.preventDefault();
+    
+                const dateSerachForm = document.querySelector('.icon_calendar-form');
+                const inputDateStart = document.querySelector('.input_date-start');
+                const inputDateEnd = document.querySelector('.input_date-end');
+                // const btnSubmitSearch = document.querySelector('.submit_search');
+                const formDateSubmit = document.querySelector('.icon_calendar-form');
+                const closeDateSearchForm = document.querySelector('.close_calendar-form');
+    
+                closeDateSearchForm.classList.remove('hiden');
+                iconCalendar.classList.add('hiden');
+                closeSearchForm.classList.add('hiden');
+                dateSerachForm.classList.remove('hiden');
+                dynamicSearch.classList.add('hiden');
+    
+                closeDateSearchForm.addEventListener('click', (e) => {
+                    e.preventDefault();
+    
+                    iconSearchUsers.classList.remove('hiden');
+                    dateSerachForm.classList.add('hiden');
+                    closeDateSearchForm.classList.add('hiden');
+                });
+    
+                formDateSubmit.addEventListener('submit', (e) => {
+                    e.preventDefault();
+    
+                    const resultArrForDate = [];
+                    parseLSInArr();
+    
+                    const dateA = Date.parse(`${inputDateStart.value}`);
+                    const dateC = Date.parse(`${inputDateEnd.value}`);
+    
+                    arrMyUsers.forEach(user => {
+    
+                        const dateB = Date.parse(`${user.dateAdded}`);
+    
+                        if (dateB >= dateA && dateB <= dateC) {
+    
+                            resultArrForDate.push(user);
+                            createUsersList(resultArrForDate, usersList);
+                        }
+    
+                        formDateSubmit.reset();
+                    });
+                });
+    
+            });
+    
+            closeSearchForm.addEventListener('click', (e) => {
+                e.preventDefault();
                 
-                const getUsersLoanAmount = getThisUsersLoanAmount(this.value, arrFromLS);
-                createUsersList(getUsersLoanAmount, usersList);
-            } else if (this.value == String(this.value)) {
-
-                const getUsersSurname = getThisUsersSurname(this.value, arrFromLS);
-                createUsersList(getUsersSurname, usersList);
+                iconSearchUsers.classList.remove('hiden');
+                searchModal.classList.add('hiden');
+            });
+    
+            // динамический поиск - - - - - - - - - - - - - - - - - - - - - - - - - -
+            const findUsers = [];
+            let arrFromLS = [];
+    
+            arrFromLS = JSON.parse(localStorage[LOCAL_STORAGE.KEY]);
+            
+            arrFromLS.forEach(user => {
+                findUsers.push(user);
+            });
+    
+            function getThisUsersSurname(symbol, arr) {
+                return arr.filter(elem => {
+                    const regex = new RegExp(symbol, 'gi');
+                    return elem.userSurname.match(regex);
+                });
             }
-
-        }
-        
-        inputSearch.addEventListener('change', showUsers);
-        inputSearch.addEventListener('keyup', showUsers);
-
-        formDynamicSubmit.addEventListener('submit', (e) => {
-            e.preventDefault();
+    
+            function getThisUsersLoanAmount(symbol, arr) {
+    
+                return arr.filter(elem => {
+                    const regex = new RegExp(symbol, 'gi');
+                    return elem.loanAmount.match(regex);
+                });
+            }
+    
+            function showUsers() {
+    
+                if (this.value == +(this.value)) {
+                    
+                    const getUsersLoanAmount = getThisUsersLoanAmount(this.value, arrFromLS);
+                    createUsersList(getUsersLoanAmount, usersList);
+                } else if (this.value == String(this.value)) {
+    
+                    const getUsersSurname = getThisUsersSurname(this.value, arrFromLS);
+                    createUsersList(getUsersSurname, usersList);
+                }
+    
+            }
+            
+            inputSearch.addEventListener('change', showUsers);
+            inputSearch.addEventListener('keyup', showUsers);
+    
+            formDynamicSubmit.addEventListener('submit', (e) => {
+                e.preventDefault();
+            });
         });
-    });
+    }
 }
 
 function runAll() {
