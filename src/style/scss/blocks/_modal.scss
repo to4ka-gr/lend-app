@@ -161,25 +161,18 @@
     height: 40px;
     &-wrapper {
         display: grid;
-        grid-template-columns: 30% 70%;
+        grid-template-columns: 10% 90%;
         grid-template-rows: 40px;
-
         .icon_calendar {
             background: url('../icons/calendar.png') center center/cover no-repeat; 
             width: 40px;
             height: 40px;
-            &.hiden {
-                display: none;
-            }
             &-form {
                 display: grid;
                 width: 450px;
                 grid-template-columns: repeat(2, 33.5%) repeat(2, 15%);
                 column-gap: 1%;
                 grid-template-rows: 40px;
-                .hiden {
-                    display: none;
-                }
                 .input_date-search {
                     height: 100%;
                 }
@@ -203,11 +196,9 @@
                 }
             }
         }
-        .dynamic_search {
-            &.hiden {
-                display: none;
-            }
-        }
     }
+}
 
+.search_modal.hiden, .icon_calendar.hiden, .dynamic_search.hiden, .icon_calendar-form.hiden {
+    display: none;
 }

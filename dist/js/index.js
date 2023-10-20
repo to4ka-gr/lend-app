@@ -216,8 +216,10 @@ const iconSortByAddedDate = document.querySelector('.sort_icon-added_date');
 const iconSortByLoanAmount = document.querySelector('.sort_icon-loan_amount');
 
 function filterAll() {
+
     btnFilterAll.addEventListener('click', (e) => {
-        e.preventDefault;
+        e.preventDefault();
+
         warningUser = [];
         expiredUser = [];
         parseLSInArr();
@@ -226,8 +228,10 @@ function filterAll() {
 }
 
 function filterWarning() {
+
     btnFilterWarning.addEventListener('click', (e) => {
-        e.preventDefault;
+        e.preventDefault();
+
         usersList.innerHTML = '';
         createUserString(warningUser, usersList);
         // usersList.style.background="rgba(255, 215, 51, 0.639)";
@@ -235,8 +239,10 @@ function filterWarning() {
 }
 
 function filterExpired() {
+
     btnFilterexpired.addEventListener('click', (e) => {
-        e.preventDefault;
+        e.preventDefault();
+
         usersList.innerHTML = '';
         createUserString(expiredUser, usersList);
         // usersList.style.background="rgba(171, 47, 13, 0.42)";
@@ -244,6 +250,7 @@ function filterExpired() {
 }
 
 function parseLSInArr() { // получение объектов из local
+
     if (localStorage[LOCAL_STORAGE.KEY]) {
         arrMyUsers = [];
         arrMyUsers = JSON.parse(localStorage[LOCAL_STORAGE.KEY]);
@@ -251,6 +258,7 @@ function parseLSInArr() { // получение объектов из local
 }
 
 function createFormMini(arr, i) { // создание формы для редактирования
+
     myUsersBtn.insertAdjacentHTML(
         'beforebegin',
 
@@ -277,7 +285,9 @@ function createFormMini(arr, i) { // создание формы для реда
 }
 
 function createUserString(users, parent) { // создание сторки пользователя
+
     users.forEach((myUser, i) => {
+
         parent.innerHTML += `
             <li class="each_user">
 
@@ -323,7 +333,9 @@ function createUserString(users, parent) { // создание сторки по
 }
 
 function deleteUser(users, remove) { // удаление пользователей
+
     remove.forEach((btn, i) => { 
+
         btn.addEventListener('click', () => {
             btn.parentElement.remove();
             users.splice(i, 1);
@@ -334,6 +346,7 @@ function deleteUser(users, remove) { // удаление пользовател�
 }
 
 function editUser(edit, users) { // изменение пользователя
+
     edit.forEach((btn, i) => { 
 
         btn.addEventListener('click', (e) => {
@@ -403,7 +416,9 @@ function editUser(edit, users) { // изменение пользователя
 }
 
 function checkDateAttention(users) { // проверка просрочки
+
     users.forEach((myUser, i) => {
+
         let dateNow = Date.now();
         let getEndDateInSec = Date.parse(myUser.expirationDate);
         let threeDaysInSec = 259200000;
@@ -511,7 +526,7 @@ function createNotificationlist(arr, ulList, divSpan) {
 
 function showNotificationList(btn, arr, ulList, divSpan) {
     btn.addEventListener('click', (e) => {
-        e.preventDefault;
+        e.preventDefault();
     
         createNotificationModalWindow();
     
@@ -520,7 +535,7 @@ function showNotificationList(btn, arr, ulList, divSpan) {
         notificationIndicator.classList.add('hiden');
     
         document.querySelector('.modal_notification-close').addEventListener('click', (e) => {
-            e.preventDefault;
+            e.preventDefault();
 
             divSpan = '';
 
@@ -534,8 +549,10 @@ function showNotificationList(btn, arr, ulList, divSpan) {
 }
 
 function showMainModal() {
+
     myUsersBtn.addEventListener('click', (e) => {
         e.preventDefault();
+
         modalAdminPanel.classList.add('active');
         myUsersBtn.classList.add('hidden');
         parseLSInArr();
@@ -544,8 +561,10 @@ function showMainModal() {
 }
 
 function closeMainModal() {
+
     closeModalAdminPanel.addEventListener('click', (e) => {
         e.preventDefault();
+
         modalAdminPanel.classList.remove('active');
         myUsersBtn.classList.remove('hidden');
         warningUser = [];
@@ -554,25 +573,32 @@ function closeMainModal() {
 }
 
 function showModalForm() {
+
     addUsersBtn.addEventListener('click', (e) => {
         e.preventDefault();
+
         modalAddUsers.classList.add('active');
         modalAdminPanel.classList.remove('active');
     });
 }
 
 function closeModalForm() {
+
     closeModalAddUsers.addEventListener('click', (e) => {
         e.preventDefault();
+
         modalAddUsers.classList.remove('active');
         modalAdminPanel.classList.add('active');
     });
 }
 
 function formModalSubmit() {
+
     formElement.addEventListener('submit', (e) => {
         e.preventDefault();
+
         formData = new FormData(formElement);
+
         user = new User({
             userName: formData.get(USER_FORM_FIELDS.USER_NAME),
             userPatronymic: formData.get(USER_FORM_FIELDS.USER_PATRONYMIC),
@@ -592,29 +618,42 @@ function searchUserModal() {
     search.insertAdjacentHTML(
         'beforebegin', 
 
-        `<div class='search_modal'>
+        `<div class='search_modal hiden'>
 
             <div class='search_modal-wrapper'>
+                <div class='icon_calendar hiden' id='icon_calendar'></div>
 
-                <div class='icon_calendar' id='icon_calendar'></div>
-
-                <div class='dynamic_search'>
-                    <form class='form_search'>
+                <div class='dynamic_search hiden'>
+                    <form class='form_search' id='form_dynamic'>
                         <input type='text' class='input input_search' placeholder='Что ищем?' />
                     </form>
                 </div>
 
-            </div>
+                <div class='search_modal_close hiden'></div>
 
-            <div class='search_modal_close'></div>
+                <form class='icon_calendar-form hiden' id='form_date'>
+
+                    <input type='date' class='input input_date-search input_date-start' name='input_date-start' autocomplete='on' />
+                    <input type='date' class='input input_date-search input_date-end' name='input_date-end' autocomplete='on' />
+                
+                    <button type='submit' class='button input submit_search'>
+                       найти
+                    </button>
+
+                </form>
+
+                <div class='close_calendar-form hiden'></div>
+
+            </div>
 
         </div>`
     );
 }
 
 function sortListBySurname() {
+
     iconSortBySurname.addEventListener('click', (e) => {
-        e.preventDefault;
+        e.preventDefault();
 
         sortArr = arrMyUsers.sort(function (a, b) {
             if (a.userSurname > b.userSurname) {
@@ -631,8 +670,9 @@ function sortListBySurname() {
 }
 
 function sortListByDateAded() {
+
     iconSortByAddedDate.addEventListener('click', (e) => {
-        e.preventDefault;
+        e.preventDefault();
 
         sortArr = arrMyUsers.sort(function (a, b) {
             let dateA = new Date(a.dateAdded);
@@ -646,8 +686,10 @@ function sortListByDateAded() {
 }
 
 function sortListByLoanAmount() {
+
     iconSortByLoanAmount.addEventListener('click', (e) => {
-        e.preventDefault;
+        e.preventDefault();
+
         sortArr = arrMyUsers.sort((a, b) => Number(a.loanAmount) - Number(b.loanAmount));
         warningUser = [];
         expiredUser = [];
@@ -656,47 +698,85 @@ function sortListByLoanAmount() {
     });
 }
 
-function searchUsers() { // отменить событие submit
+function searchUsers() { // отменить событие submit в dynamic input
+
     iconSearchUsers.addEventListener('click', (e) => {
-        e.preventDefault;
+        e.preventDefault();
 
         iconSearchUsers.classList.add('hiden');
-        searchUserModal();
 
         const serachModal = document.querySelector('.search_modal');
-        const serachModalWrapper = document.querySelector('.search_modal-wrapper');
+        // const serachModalWrapper = document.querySelector('.search_modal-wrapper');
         const iconCalendar = document.querySelector('.icon_calendar');
-        const dynamicSearch = document.querySelector('.dynamic_search');
-        const inputSearchForm = document.querySelector('.form_search');
+        const dynamicSearch = document.querySelector('.dynamic_search'); 
+        const formDynamicSubmit = document.querySelector('.form_search');
         const inputSearch = document.querySelector('.input_search');
-        // const ulSearch = document.querySelector('.toping');
         const closeSearchForm = document.querySelector('.search_modal_close');
-        
-        iconCalendar.addEventListener('click', (e) => {
-            e.preventDefault;
-            iconCalendar.insertAdjacentHTML(
-                'beforebegin', 
 
-                `<form class='icon_calendar-form hiden'>
-                    <input type='date' class='input input_date-search input_date-start' name='input_date-start' autocomplete='on' />
-                    <input type='date' class='input input_date-search input_date-end' name='input_date-end' autocomplete='on' />
-                    <button type='submit' class='button input submit_search'>
-                        найти
-                    </button>
-                    <div class='close_calendar-form'></div>
-                </form>`
-            );
+        iconCalendar.classList.remove('hiden');
+        serachModal.classList.remove('hiden');
+        dynamicSearch.classList.remove('hiden');
+        closeSearchForm.classList.remove('hiden');
+        
+
+        // поиск по датам - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+        iconCalendar.addEventListener('click', (e) => {
+            e.preventDefault();
+
             const dateSerachForm = document.querySelector('.icon_calendar-form');
             const inputDateStart = document.querySelector('.input_date-start');
             const inputDateEnd = document.querySelector('.input_date-end');
-            const btnSubmitSearch = document.querySelector('.submit_search');
+            // const btnSubmitSearch = document.querySelector('.submit_search');
+            const formDateSubmit = document.querySelector('.icon_calendar-form');
             const closeDateSearchForm = document.querySelector('.close_calendar-form');
 
-            dateSerachForm.classList.remove('hiden');
+            closeDateSearchForm.classList.remove('hiden');
             iconCalendar.classList.add('hiden');
+            closeSearchForm.classList.add('hiden');
+            dateSerachForm.classList.remove('hiden');
             dynamicSearch.classList.add('hiden');
+
+            closeDateSearchForm.addEventListener('click', (e) => {
+                e.preventDefault();
+
+                iconSearchUsers.classList.remove('hiden');
+                dateSerachForm.classList.add('hiden');
+                closeDateSearchForm.classList.add('hiden');
+            });
+
+            formDateSubmit.addEventListener('submit', (e) => {
+                e.preventDefault();
+
+                const resultArrForDate = [];
+                parseLSInArr();
+
+                const dateA = Date.parse(`${inputDateStart.value}`);
+                const dateC = Date.parse(`${inputDateEnd.value}`);
+
+                arrMyUsers.forEach(user => {
+
+                    const dateB = Date.parse(`${user.dateAdded}`);
+
+                    if (dateB >= dateA && dateB <= dateC) {
+
+                        resultArrForDate.push(user);
+                        createUsersList(resultArrForDate, usersList);
+                    }
+
+                    formDateSubmit.reset();
+                });
+            });
+
         });
 
+        closeSearchForm.addEventListener('click', (e) => {
+            e.preventDefault();
+            
+            iconSearchUsers.classList.remove('hiden');
+            serachModal.classList.add('hiden');
+        });
+
+        // динамический поиск - - - - - - - - - - - - - - - - - - - - - - - - - -
         const findUsers = [];
         let arrFromLS = [];
         arrFromLS = JSON.parse(localStorage[LOCAL_STORAGE.KEY]);
@@ -704,7 +784,6 @@ function searchUsers() { // отменить событие submit
         arrFromLS.forEach(user => {
             findUsers.push(user);
         });
-
 
         function getThisUsersSurname(symbol, arr) {
             return arr.filter(elem => {
@@ -737,6 +816,10 @@ function searchUsers() { // отменить событие submit
         
         inputSearch.addEventListener('change', showUsers);
         inputSearch.addEventListener('keyup', showUsers);
+
+        formDynamicSubmit.addEventListener('submit', (e) => {
+            e.preventDefault();
+        });
     });
 }
 
@@ -768,7 +851,11 @@ function runAll() {
 
     sortListByLoanAmount();
 
+    searchUserModal();
+
     searchUsers();
+
+    // console.log(Date.now('2023-10-11'));
 }
 
 runAll(); // сделать все функции через аргументы и внести все сюда
@@ -785,6 +872,4 @@ runAll(); // сделать все функции через аргументы 
 //     if ()
 // }
 
-
-// ajax
 // приятный цвет #816767
