@@ -215,13 +215,18 @@ const iconSortBySurname = document.querySelector('.sort_icon-surname');
 const iconSortByAddedDate = document.querySelector('.sort_icon-added_date');
 const iconSortByLoanAmount = document.querySelector('.sort_icon-loan_amount');
 
+
 function filterAll() {
 
     btnFilterAll.addEventListener('click', (e) => {
         e.preventDefault();
 
+        usersList.classList.remove('users_list-warning');
+        usersList.classList.remove('users_list-expired');
+
         warningUser = [];
         expiredUser = [];
+
         parseLSInArr();
         createUsersList(arrMyUsers, usersList);
     });
@@ -233,6 +238,10 @@ function filterWarning() {
         e.preventDefault();
 
         usersList.innerHTML = '';
+
+        usersList.classList.add('users_list-warning');
+        usersList.classList.remove('users_list-expired');
+
         createUserString(warningUser, usersList);
         // usersList.style.background="rgba(255, 215, 51, 0.639)";
     });
@@ -244,6 +253,9 @@ function filterExpired() {
         e.preventDefault();
 
         usersList.innerHTML = '';
+
+        usersList.classList.remove('users_list-warning');
+        usersList.classList.add('users_list-expired');
         createUserString(expiredUser, usersList);
         // usersList.style.background="rgba(171, 47, 13, 0.42)";
     });
@@ -415,7 +427,7 @@ function editUser(edit, users) { // изменение пользователя
     });
 }
 
-function checkDateAttention(users) { // проверка просрочки
+function checkDateAttention(users) { // проверка просрочки // добавить в другую функцию
 
     users.forEach((myUser, i) => {
 
@@ -434,6 +446,35 @@ function checkDateAttention(users) { // проверка просрочки
             stringOfUser[i].classList.add('each_warning');
         }
     });
+}
+
+function createNotificationModalWindow() { // создание окна уведомлений
+
+    backgroundForNotification.classList.add('background_for_notification');  // задний слой поаерх индикатора
+    notificationIndicator.append(backgroundForNotification);
+
+    myModalNotification.classList.add('modal_notification'); // модалку на задний слой
+    document.querySelector('.background_for_notification').append(myModalNotification);
+
+    myNotificationWrapper.classList.add('modal_notification-wrapper'); // обертку на модалку
+    myNotificationWrapper.classList.add('modal_notification-wrapper-warning');
+    myNotificationWrapper.classList.add('modal_notification-wrapper-expired');
+    document.querySelector('.modal_notification').append(myNotificationWrapper);
+
+    myNotificationWarning.classList.add('modal_notification-warning'); // левая часть обертки
+    document.querySelector('.modal_notification-wrapper').append(myNotificationWarning);
+
+    myNotificationExpired.classList.add('modal_notification-expired'); // правя часть обертку
+    document.querySelector('.modal_notification-wrapper').append(myNotificationExpired);
+
+    closeModalNotification.classList.add('modal_notification-close'); // иконка закрытия на модалку
+    document.querySelector('.modal_notification').append(closeModalNotification);
+
+    notificationWarningList.classList.add('modal_notification-warning_list'); // лист для отображения
+    document.querySelector('.modal_notification-warning').append(notificationWarningList);
+
+    notificationExpiredList.classList.add('modal_notification-expired_list'); // лист для отображения
+    document.querySelector('.modal_notification-expired').append(notificationExpiredList);
 }
 
 function createUsersList(users, parent) { // создание списка пользователей
@@ -466,35 +507,6 @@ function createUsersListAttention(users, parent) { // создание спис�
     editUser(editIcon, users);
 }
 
-function createNotificationModalWindow() { // создание окна уведомлений
-
-    backgroundForNotification.classList.add('background_for_notification');  // задний слой поаерх индикатора
-    notificationIndicator.append(backgroundForNotification);
-
-    myModalNotification.classList.add('modal_notification'); // модалку на задний слой
-    document.querySelector('.background_for_notification').append(myModalNotification);
-
-    myNotificationWrapper.classList.add('modal_notification-wrapper'); // обертку на модалку
-    myNotificationWrapper.classList.add('modal_notification-wrapper-warning');
-    myNotificationWrapper.classList.add('modal_notification-wrapper-expired');
-    document.querySelector('.modal_notification').append(myNotificationWrapper);
-
-    myNotificationWarning.classList.add('modal_notification-warning'); // левая часть обертки
-    document.querySelector('.modal_notification-wrapper').append(myNotificationWarning);
-
-    myNotificationExpired.classList.add('modal_notification-expired'); // правя часть обертку
-    document.querySelector('.modal_notification-wrapper').append(myNotificationExpired);
-
-    closeModalNotification.classList.add('modal_notification-close'); // иконка закрытия на модалку
-    document.querySelector('.modal_notification').append(closeModalNotification);
-
-    notificationWarningList.classList.add('modal_notification-warning_list'); // лист для отображения
-    document.querySelector('.modal_notification-warning').append(notificationWarningList);
-
-    notificationExpiredList.classList.add('modal_notification-expired_list'); // лист для отображения
-    document.querySelector('.modal_notification-expired').append(notificationExpiredList);
-}
-
 function createNotificationlist(arr, ulList, divSpan) {
 
     if (arr === warningUser) {
@@ -525,6 +537,7 @@ function createNotificationlist(arr, ulList, divSpan) {
 }
 
 function showNotificationList(btn, arr, ulList, divSpan) {
+    
     btn.addEventListener('click', (e) => {
         e.preventDefault();
     
@@ -544,6 +557,7 @@ function showNotificationList(btn, arr, ulList, divSpan) {
             notificationIndicator.classList.remove('hiden');
         });
 
+        // checkDateAttention(arrMyUsers);
         createNotificationlist(arr, ulList, divSpan);
     });
 }
@@ -629,6 +643,7 @@ function searchUserModal() {
                 <div class='dynamic_search hiden'>
                     <form class='form_search' id='form_dynamic'>
                         <input type='text' class='input input_search' placeholder='Что ищем?' />
+                        <div class='form_search-reset'></div>
                     </form>
                 </div>
 
@@ -652,6 +667,8 @@ function searchUserModal() {
         </div>`
     );
 }
+
+
 
 function sortListBySurname() {
 
@@ -701,7 +718,9 @@ function sortListByLoanAmount() {
     });
 }
 
-function searchUsers() { // отменить событие submit в dynamic input
+
+
+function searchUsers() { // сделать сортировку по имени и фамилии
 
     if (!localStorage[LOCAL_STORAGE.KEY]) {
         iconSearchUsers.classList.add('hiden');
@@ -739,23 +758,26 @@ function searchUsers() { // отменить событие submit в dynamic in
             // поиск по датам - - - - - - - - - - - - - - - - - - - - - - - - - - - -
             iconCalendar.addEventListener('click', (e) => {
                 e.preventDefault();
-    
+
                 const dateSerachForm = document.querySelector('.icon_calendar-form');
                 const inputDateStart = document.querySelector('.input_date-start');
                 const inputDateEnd = document.querySelector('.input_date-end');
                 // const btnSubmitSearch = document.querySelector('.submit_search');
                 const formDateSubmit = document.querySelector('.icon_calendar-form');
                 const closeDateSearchForm = document.querySelector('.close_calendar-form');
+                
     
                 closeDateSearchForm.classList.remove('hiden');
                 iconCalendar.classList.add('hiden');
                 closeSearchForm.classList.add('hiden');
                 dateSerachForm.classList.remove('hiden');
                 dynamicSearch.classList.add('hiden');
+                formDynamicSubmit.reset();
     
                 closeDateSearchForm.addEventListener('click', (e) => {
                     e.preventDefault();
     
+                    formDynamicSubmit.reset();
                     iconSearchUsers.classList.remove('hiden');
                     dateSerachForm.classList.add('hiden');
                     closeDateSearchForm.classList.add('hiden');
@@ -794,6 +816,7 @@ function searchUsers() { // отменить событие submit в dynamic in
             });
     
             // динамический поиск - - - - - - - - - - - - - - - - - - - - - - - - - -
+            const resetFormSearch = document.querySelector('.form_search-reset');
             const findUsers = [];
             let arrFromLS = [];
     
@@ -831,6 +854,15 @@ function searchUsers() { // отменить событие submit в dynamic in
                 }
     
             }
+
+            function resetFormSearchNow() {
+                resetFormSearch.addEventListener('click', (e) => {
+                    e.preventDefault();
+
+                    formDynamicSubmit.reset();
+                    createUsersList(arrMyUsers, usersList);
+                });
+            }
             
             inputSearch.addEventListener('change', showUsers);
             inputSearch.addEventListener('keyup', showUsers);
@@ -838,9 +870,13 @@ function searchUsers() { // отменить событие submit в dynamic in
             formDynamicSubmit.addEventListener('submit', (e) => {
                 e.preventDefault();
             });
+
+            resetFormSearchNow();
         });
     }
 }
+
+
 
 function runAll() {
 

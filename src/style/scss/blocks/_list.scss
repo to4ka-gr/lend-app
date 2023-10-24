@@ -35,6 +35,12 @@
         background: $list-color;
         color: $base-color;
         overflow: auto;
+        &-warning {
+            background: $warning-list;
+        }
+        &-expired {
+            background: $expired-list;
+        }
         .each_user {
             display: grid;
             grid-template-columns: 5% 20% 15% 15% 15% 10% 10% 10%;
