@@ -14,15 +14,28 @@
         padding-top: 8px;
         height: 25px;
         font-weight: 700;
-        .sort_icon, .sort_icon-reset {
+        .sort_icon {
             position: relative;
             top: -17px;
             left: -20px;
             width: 15px;
             height: 15px;
             background: url('../icons/sort.png') center center/cover no-repeat;
-            &.hiden {
-                display: none;
+            &-surname, &-added_date, &-loan_amount {
+                &.hiden {
+                    top: 10px;
+                }
+            }
+            &-reset_surname, &-reset_added_date, &-reset_amount {
+                position: relative;
+                background-color: $list-color;
+                border-radius: 100%;
+                top: -32px;
+                z-index: 1;
+                &.hiden {
+                    display: none;
+                    top: -5px;
+                }
             }
         }
     }

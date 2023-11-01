@@ -43,7 +43,7 @@ function createMainHTML() { // closeModalAddUsers
                             <div class='full_name'>
                                 ФИО
                                 <div class='sort_icon sort_icon-surname'></div>
-                                <div class='sort_icon-reset hiden'></div>
+                                <div class='sort_icon sort_icon-reset_surname hiden'></div>
                             </div>
                             <div class='loan_date'>
                                 Дата займа
@@ -54,12 +54,12 @@ function createMainHTML() { // closeModalAddUsers
                             <div class='date_added'>
                                 Дата добавления
                                 <div class='sort_icon sort_icon-added_date'></div>
-                                <div class='sort_icon-reset hiden'></div>
+                                <div class='sort_icon sort_icon-reset_added_date hiden'></div>
                             </div>
                             <div class='loan_amount'>
                                 Сумма
                                 <div class='sort_icon sort_icon-loan_amount'></div>
-                                <div class='sort_icon-reset hiden'></div>
+                                <div class='sort_icon sort_icon-reset_amount hiden'></div>
                             </div>
                             <div class='id'>
                                 ID
@@ -191,8 +191,7 @@ class APIService { // TODO: нужно все строяные элементы 
         modalAddUsers.classList.remove('active');
         modalAdminPanel.classList.add('active');
 
-        // createUsersList(arrMyUsers, usersList);
-        filterAll(arrMyUsers);
+        filterAll(arrMyUsers.reverse());
     }
 
     deleteUser() {
@@ -215,32 +214,18 @@ class MyVariables {
 
 const myVariables = new MyVariables();
 
-const formElement = myVariables.formElement();
+const formElement = myVariables.formElement(); // можно напрямую использовать без создания новыъ констант
 
-console.log(formElement);
-
-
-
-
-
-
-// work code here
-//
-// function myVariables() {
-//     const codabra = 'abra codabra';
-//     return codabra;
-// }
-
-// const abra = myVariables();
-
-// console.log(abra);
 
 
 
 
 
 // const formElement = document.getElementById('form');
+
+const formElementMini = document.getElementById('form_mini');
 let formData = new FormData(formElement);
+let formDataMini = new FormData(formElementMini);
 const USER_FORM_FIELDS = {
     USER_SURNAME: 'input_user_surname',
     USER_NAME: 'input_user_name',
@@ -299,7 +284,10 @@ const btnFilterexpired = document.querySelector('.filter_rounds-expired');
 const iconSortBySurname = document.querySelector('.sort_icon-surname'); // эта копопка
 const iconSortByAddedDate = document.querySelector('.sort_icon-added_date');
 const iconSortByLoanAmount = document.querySelector('.sort_icon-loan_amount');
-// const iconSortReset = document.querySelectorAll('.sort_icon-reset');
+
+const iconSortResetSurname = document.querySelector('.sort_icon-reset_surname');
+const iconSortResetAddedDate = document.querySelector('.sort_icon-reset_added_date');
+const iconSortResetLoanAmount = document.querySelector('.sort_icon-reset_amount');
 
 const inputEditSurname = document.querySelector('.input_edit_user_surname');
 const inputEditName = document.querySelector('.input_edit_user_name');
@@ -309,11 +297,36 @@ const inputEditExpDate = document.querySelector('.input_edit_expiration_date');
 const inputEditLoanAmount = document.querySelector('.input_edit_loan_amount');
 const modalEditUser = document.querySelector('.modal_edit_user');
 const closeModalEditUser = document.querySelector('.close_modal_edit_user');
-const formElementMini = document.getElementById('form_mini');
 const btnSubmitEdit = document.querySelector('.submit_edit');
 // const inputEditAll = document.querySelectorAll('.input_edit');
-let formDataMini = new FormData(formElementMini);
 
+
+// warningUser = [{
+//     c: 2,
+// }];
+
+// expiredUser = [{
+//     d: 3,
+// }];
+let observer = new MutationObserver(MutationRecords => {
+    console.log(MutationRecords);
+
+    // const checkWarArr = warningUser;
+    // const checkExpArr = expiredUser;
+    // 
+    // if (checkWarArr !== warningUser) {
+    //     // красить индикатор в крассный
+    // } else if (checkExpArr !== expiredUser) {
+    //     // красить индикатор в крассный
+    // } else {
+    //     // красить индикатор в черный
+    // }
+
+});
+
+observer.observe(notificationWarningList, {
+    childList: true,
+});
 
 
 function parseLSInArr() { // users = arrMyUsers
@@ -382,7 +395,7 @@ function deleteUser(remove, users) { // тут исправить
             btn.parentElement.remove();
             users.splice(i, 1);
             localStorage[LOCAL_STORAGE.KEY] = JSON.stringify(arrMyUsers); // usres
-            filterAll(arrMyUsers); // users
+            filterAll(arrMyUsers.reverse()); // users
         });
     });
 }
@@ -454,8 +467,6 @@ function editUser(edit, users, parent) {// меняет только перво�
 
         btn.addEventListener('click', (e) => {
             e.preventDefault();
-
-            // let editUserVar = users[i];
 
             edit.forEach((line) => {
                 line.parentElement.style.background = '';
@@ -609,7 +620,7 @@ function showMainModal() { // mainBtn, modal, users, parent,
         modalAdminPanel.classList.add('active');
         myUsersBtn.classList.add('hidden');
         parseLSInArr(); // users
-        createUsersList(arrMyUsers, usersList);
+        createUsersList(arrMyUsers.reverse(), usersList);
     });
 }
 
@@ -667,11 +678,30 @@ function formModalSubmit() { // form, formData, api, users, parent
         apiService.addNewUser(user);
         formElement.reset();
         searchUsers(); // проверить
-        createUsersList(arrMyUsers, usersList);
+        parseLSInArr();
+        createUsersList(arrMyUsers.reverse(), usersList);
     });
 }
 
 
+
+function hideIconForSort() {
+    iconSortBySurname.classList.remove('hiden');
+    iconSortByAddedDate.classList.remove('hiden');
+    iconSortByLoanAmount.classList.remove('hiden');
+
+    iconSortResetSurname.classList.remove('hiden');
+    iconSortResetAddedDate.classList.remove('hiden');
+    iconSortResetLoanAmount.classList.remove('hiden');
+
+    iconSortBySurname.classList.add('hiden');
+    iconSortByAddedDate.classList.add('hiden');
+    iconSortByLoanAmount.classList.add('hiden');
+
+    iconSortResetSurname.classList.add('hiden');
+    iconSortResetAddedDate.classList.add('hiden');
+    iconSortResetLoanAmount.classList.add('hiden');
+}
 
 function filterAll() { // btnFilter, parent, warArr, expArr, users
 
@@ -684,8 +714,16 @@ function filterAll() { // btnFilter, parent, warArr, expArr, users
         warningUser = [];
         expiredUser = [];
 
+        iconSortBySurname.classList.remove('hiden');
+        iconSortByAddedDate.classList.remove('hiden');
+        iconSortByLoanAmount.classList.remove('hiden');
+
+        iconSortResetSurname.classList.add('hiden');
+        iconSortResetAddedDate.classList.add('hiden');
+        iconSortResetLoanAmount.classList.add('hiden');
+
         parseLSInArr(); // проверить
-        createUsersList(arrMyUsers, usersList);
+        createUsersList(arrMyUsers.reverse(), usersList);
     });
 }
 
@@ -694,13 +732,18 @@ function filterWarning() { // btnFilter, parent, warArr
     btnFilterWarning.addEventListener('click', (e) => {
         e.preventDefault();
 
+        // sortArr = warningUser;
+
         usersList.innerHTML = '';
 
         usersList.classList.add('users_list-warning');
         usersList.classList.remove('users_list-expired');
-
+        
+        hideIconForSort();
+        
         createUserString(warningUser, usersList);
         // usersList.style.background="rgba(255, 215, 51, 0.639)";
+        // sortArr = [];
     });
 }
 
@@ -713,6 +756,9 @@ function filterExpired() { // btnFilter, parent, expArr
 
         usersList.classList.remove('users_list-warning');
         usersList.classList.add('users_list-expired');
+
+        hideIconForSort();
+
         createUserString(expiredUser, usersList);
     });
 }
@@ -842,7 +888,6 @@ function searchUsers() { // iconSearch, btnAdd, closebtnModal, users,
                         formDateSubmit.reset();
                     });
                 });
-    
             });
     
             closeSearchForm.addEventListener('click', (e) => {
@@ -852,6 +897,7 @@ function searchUsers() { // iconSearch, btnAdd, closebtnModal, users,
                 searchModal.classList.add('hiden');
             });
     
+
             // динамический поиск - - - - - - - - - - - - - - - - - - - - - - - - - -
             const resetFormSearch = document.querySelector('.form_search-reset');
             const findUsers = [];
@@ -897,7 +943,7 @@ function searchUsers() { // iconSearch, btnAdd, closebtnModal, users,
                     e.preventDefault();
 
                     formDynamicSubmit.reset();
-                    createUsersList(arrMyUsers, usersList);
+                    createUsersList(arrMyUsers.reverse(), usersList);
                 });
             }
             
@@ -920,19 +966,16 @@ function sortListBySurname() { // iconSort, users, parent, sortArr
     iconSortBySurname.addEventListener('click', (e) => {
         e.preventDefault();
 
-        // iconSortReset.forEach((btn, i) => {
-        //     btn.addEventListener('click', (e) => {
-        //         e.preventDefault();
+        warningUser = [];
+        expiredUser = [];
 
-        //         iconSortByLoanAmount.classList.add('hiden');
-        //         btn.classList.remove('hiden');
-        //     });
-        // });
+        iconSortBySurname.classList.add('hiden');
+        iconSortResetSurname.classList.remove('hiden');
 
-        // iconSortBySurname.classList.add('hiden');
-        // iconSortReset.classList.remove('hiden');
-        // iconSortByAddedDate
-        // iconSortByLoanAmount
+        iconSortByAddedDate.classList.remove('hiden');
+        iconSortByLoanAmount.classList.remove('hiden');
+        iconSortResetAddedDate.classList.add('hiden');
+        iconSortResetLoanAmount.classList.add('hiden');
 
         sortArr = arrMyUsers.sort(function (a, b) {
             if (a.userSurname > b.userSurname) {
@@ -944,7 +987,10 @@ function sortListBySurname() { // iconSort, users, parent, sortArr
             return 0;
         });
 
+        // checkDateAttention(sortArr);
         createUsersList(sortArr, usersList);
+        sortListReset(iconSortBySurname, iconSortResetSurname);
+        sortArr = [];
     });
 }
 
@@ -953,28 +999,28 @@ function sortListByDateAded() { // iconSort, users, parent, sortArr
     iconSortByAddedDate.addEventListener('click', (e) => {
         e.preventDefault();
 
-        // iconSortReset.forEach((btn, i) => {
-        //     btn.addEventListener('click', (e) => {
-        //         e.preventDefault();
+        warningUser = [];
+        expiredUser = [];
 
-        //         iconSortByLoanAmount.classList.add('hiden');
-        //         btn.classList.remove('hiden');
-        //     });
-        // });
+        iconSortByAddedDate.classList.add('hiden');
+        iconSortResetAddedDate.classList.remove('hiden');
 
-
-        // iconSortByAddedDate.classList.add('hiden');
-        // iconSortReset.classList.remove('hiden');
-        // iconSortBySurname
-        // iconSortByLoanAmount
+        iconSortBySurname.classList.remove('hiden');
+        iconSortByLoanAmount.classList.remove('hiden');
+        iconSortResetSurname.classList.add('hiden');
+        iconSortResetLoanAmount.classList.add('hiden');
 
         sortArr = arrMyUsers.sort(function (a, b) {
             let dateA = new Date(a.dateAdded);
             let dateB = new Date(b.dateAdded);
             
-            return dateB - dateA;
+            // return dateB - dateA;
+            return dateA - dateB;
         });
+
+        // checkDateAttention(sortArr);
         createUsersList(sortArr, usersList);
+        sortListReset(iconSortByAddedDate, iconSortResetAddedDate);
         sortArr = [];
     });
 }
@@ -983,41 +1029,45 @@ function sortListByLoanAmount() { // iconSort, users, parent, sortArr, warArr, e
 
     iconSortByLoanAmount.addEventListener('click', (e) => {
         e.preventDefault();
-
-        // iconSortByLoanAmount.classList.add('hiden');
-
-        // iconSortReset.forEach((btn, i) => {
-            
-        //     if (btn[i].parentElement === iconSortByLoanAmount) {
-                
-        //         btn.classList.remove('hiden');
-
-        //         btn.addEventListener('click', (e) => {
-        //             e.preventDefault();
-    
-        //             // iconSortByLoanAmount.classList.add('hiden');
-        //             btn.classList.add('hiden');
-        //             createUsersList(arrMyUsers, usersList);
-        //         });
-        //     }
-        // });
-
-        // iconSortByLoanAmount.classList.add('hiden');
-        // iconSortReset.classList.remove('hiden');
-        // iconSortByAddedDate
-        // iconSortBySurname
-
-        sortArr = arrMyUsers.sort((a, b) => Number(a.loanAmount) - Number(b.loanAmount));
+        
         warningUser = [];
         expiredUser = [];
+
+        iconSortByLoanAmount.classList.add('hiden');
+        iconSortResetLoanAmount.classList.remove('hiden');
+
+        iconSortBySurname.classList.remove('hiden');
+        iconSortByAddedDate.classList.remove('hiden');
+        iconSortResetSurname.classList.add('hiden');
+        iconSortResetAddedDate.classList.add('hiden');
+
+        sortArr = arrMyUsers.sort((a, b) => Number(a.loanAmount) - Number(b.loanAmount));
+
+        // checkDateAttention(sortArr);
         createUsersList(sortArr, usersList);
+        sortListReset(iconSortByLoanAmount, iconSortResetLoanAmount);
         sortArr = [];
     });
 }
 
-// function sortListReset() {
+function sortListReset(iconSort, iconReset) { // users, parent
+    
+    iconReset.addEventListener('click', (e) => {
+        e.preventDefault();
+        
+        warningUser = [];
+        expiredUser = [];
 
-// }
+        iconReset.classList.add('hiden');
+        iconSort.classList.remove('hiden');
+
+        parseLSInArr();
+        // checkDateAttention(arrMyUsers);
+        createUsersList(arrMyUsers.reverse(), usersList);
+
+        sortArr = [];
+    });
+}
 
 
 
@@ -1027,7 +1077,7 @@ function runAll() { // выенести все аргументы сюда
 
     showNotificationList(notificationBtn, expiredUser, notificationExpiredList); // проверить и добавить
 
-    filterAll(arrMyUsers);  // проверить и добавить
+    filterAll(arrMyUsers.reverse());  // проверить и добавить
 
     filterWarning(); // проверить и добавить
 
