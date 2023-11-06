@@ -329,13 +329,15 @@ observer.observe(notificationWarningList, {
 });
 
 
-function parseLSInArr() { // users = arrMyUsers
+function parseLSInArr() {
 
     if (localStorage[LOCAL_STORAGE.KEY]) {
-        arrMyUsers = []; // users
-        arrMyUsers = JSON.parse(localStorage[LOCAL_STORAGE.KEY]); // users
+        
+        arrMyUsers = [];
+        arrMyUsers = JSON.parse(localStorage[LOCAL_STORAGE.KEY]);
     }
 }
+
 
 
 
@@ -512,6 +514,8 @@ function editUser(edit, users, parent) {// меняет только перво�
 }
 
 function checkDateAttention(users) { // добавить в другую функцию
+
+    parseLSInArr();
 
     users.forEach((user, i) => {
 
@@ -812,7 +816,12 @@ function searchUsers() { // iconSearch, btnAdd, closebtnModal, users,
 
         iconSearchUsers.addEventListener('click', (e) => {
             e.preventDefault();
-    
+            
+
+            warningUser = [];
+            expiredUser = [];
+
+
             iconSearchUsers.classList.add('hiden');
     
             const searchModal = document.querySelector('.search_modal');
@@ -822,6 +831,7 @@ function searchUsers() { // iconSearch, btnAdd, closebtnModal, users,
             const formDynamicSubmit = document.querySelector('.form_search');
             const inputSearch = document.querySelector('.input_search');
             const closeSearchForm = document.querySelector('.search_modal_close');
+            const resetFormSearch = document.querySelector('.form_search-reset'); // переместил сюда из 
 
             iconCalendar.classList.remove('hiden');
             searchModal.classList.remove('hiden');
@@ -837,6 +847,14 @@ function searchUsers() { // iconSearch, btnAdd, closebtnModal, users,
             });
 
 
+            function resetFormSearchNow() {
+                resetFormSearch.addEventListener('click', (e) => {
+                    e.preventDefault();
+
+                    formDynamicSubmit.reset();
+                    createUsersList(arrMyUsers.reverse(), usersList);
+                });
+            }
             
             // поиск по датам - - - - - - - - - - - - - - - - - - - - - - - - - - - -
             iconCalendar.addEventListener('click', (e) => {
@@ -895,11 +913,15 @@ function searchUsers() { // iconSearch, btnAdd, closebtnModal, users,
                 
                 iconSearchUsers.classList.remove('hiden');
                 searchModal.classList.add('hiden');
+
+                formDynamicSubmit.reset();
+                parseLSInArr(); // users
+                createUsersList(arrMyUsers.reverse(), usersList);
             });
     
 
             // динамический поиск - - - - - - - - - - - - - - - - - - - - - - - - - -
-            const resetFormSearch = document.querySelector('.form_search-reset');
+            // const resetFormSearch = document.querySelector('.form_search-reset'); // от сюда переместил
             const findUsers = [];
             let arrFromLS = [];
     
@@ -936,15 +958,6 @@ function searchUsers() { // iconSearch, btnAdd, closebtnModal, users,
                     createUsersList(getUsersByFullNameVar, usersList);
                 }
     
-            }
-
-            function resetFormSearchNow() {
-                resetFormSearch.addEventListener('click', (e) => {
-                    e.preventDefault();
-
-                    formDynamicSubmit.reset();
-                    createUsersList(arrMyUsers.reverse(), usersList);
-                });
             }
             
             inputSearch.addEventListener('change', showUsers);
