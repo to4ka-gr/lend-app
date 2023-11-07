@@ -141,6 +141,7 @@ createMainHTML();
 
 
 
+
 class User {
     
     constructor({userName, userPatronymic, userSurname, loanDate, expirationDate, loanAmount}) {
@@ -191,7 +192,7 @@ class APIService { // TODO: нужно все строяные элементы 
         modalAddUsers.classList.remove('active');
         modalAdminPanel.classList.add('active');
 
-        filterAll(arrMyUsers.reverse());
+        filterAll(btnFilterAll, usersList, iconSortBySurname, iconSortByAddedDate, iconSortByLoanAmount, iconSortResetSurname, iconSortResetAddedDate, iconSortResetLoanAmount);
     }
 
     deleteUser() {
@@ -215,11 +216,6 @@ class MyVariables {
 const myVariables = new MyVariables();
 
 const formElement = myVariables.formElement(); // можно напрямую использовать без создания новыъ констант
-
-
-
-
-
 
 // const formElement = document.getElementById('form');
 
@@ -279,7 +275,7 @@ const closeModalNotification = document.querySelector('.modal_notification-close
 const iconSearchUsers = document.querySelector('.icon_search_users');
 const btnFilterAll = document.querySelector('.filter_rounds-all');
 const btnFilterWarning = document.querySelector('.filter_rounds-warning');
-const btnFilterexpired = document.querySelector('.filter_rounds-expired');
+const btnFilterExpired = document.querySelector('.filter_rounds-expired');
 
 const iconSortBySurname = document.querySelector('.sort_icon-surname'); // эта копопка
 const iconSortByAddedDate = document.querySelector('.sort_icon-added_date');
@@ -308,28 +304,30 @@ const btnSubmitEdit = document.querySelector('.submit_edit');
 // expiredUser = [{
 //     d: 3,
 // }];
-let observer = new MutationObserver(MutationRecords => {
-    console.log(MutationRecords);
+// let observer = new MutationObserver(MutationRecords => {
+//     console.log(MutationRecords);
 
-    // const checkWarArr = warningUser;
-    // const checkExpArr = expiredUser;
-    // 
-    // if (checkWarArr !== warningUser) {
-    //     // красить индикатор в крассный
-    // } else if (checkExpArr !== expiredUser) {
-    //     // красить индикатор в крассный
-    // } else {
-    //     // красить индикатор в черный
-    // }
+//     // const checkWarArr = warningUser;
+//     // const checkExpArr = expiredUser;
+//     // 
+//     // if (checkWarArr !== warningUser) {
+//     //     // красить индикатор в крассный
+//     // } else if (checkExpArr !== expiredUser) {
+//     //     // красить индикатор в крассный
+//     // } else {
+//     //     // красить индикатор в черный
+//     // }
 
-});
+// });
 
-observer.observe(notificationWarningList, {
-    childList: true,
-});
+// observer.observe(notificationWarningList, {
+//     childList: true,
+// });
 
 
-function parseLSInArr() {
+
+
+function parseLSInArr() { // users, key
 
     if (localStorage[LOCAL_STORAGE.KEY]) {
         
@@ -343,7 +341,7 @@ function parseLSInArr() {
 
 function createUserString(users, parent) {
 
-    users.forEach((myUser, i) => {
+    users.forEach((user, i) => {
 
         parent.innerHTML += `
             <li class="each_user">
@@ -353,33 +351,33 @@ function createUserString(users, parent) {
                 </span>
 
                 <span class='each_user-user_name' data-tooltip="
-                    ${myUser.userSurname}
-                    ${myUser.userName} 
-                    ${myUser.userPatronymic} 
+                    ${user.userSurname}
+                    ${user.userName} 
+                    ${user.userPatronymic} 
                 ">
-                    ${myUser.userSurname}
-                    ${myUser.userName.substring(0, 1)}. 
-                    ${myUser.userPatronymic.substring(0, 1)}. 
+                    ${user.userSurname}
+                    ${user.userName.substring(0, 1)}. 
+                    ${user.userPatronymic.substring(0, 1)}. 
                 </span>
 
                 <span class='each_user-loan_date'>
-                    ${myUser.loanDate}
+                    ${user.loanDate}
                 </span>
 
                 <span class='each_user-expiration_date'>
-                    ${myUser.expirationDate}
+                    ${user.expirationDate}
                 </span>
 
                 <span class='each_user-date_added'>
-                    ${myUser.dateAdded}
+                    ${user.dateAdded}
                 </span>
 
                 <span class='each_user-loan_amount'>
-                    ${myUser.loanAmount}$
+                    ${user.loanAmount}$
                 </span>
 
                 <span class='each_user-user_id'>
-                    #${myUser.userId}
+                    #${user.userId}
                 </span>
 
                 <div class='icon_edit'></div> 
@@ -389,20 +387,22 @@ function createUserString(users, parent) {
     });
 }
 
-function deleteUser(remove, users) { // тут исправить
+function deleteUser(remove, users) { // users, key
 
-    remove.forEach((btn, i) => { // indexBtnRemove
+    remove.forEach((indexBtnRemove, i) => {
 
-        btn.addEventListener('click', () => {
-            btn.parentElement.remove();
+        indexBtnRemove.addEventListener('click', () => {
+            indexBtnRemove.parentElement.remove();
             users.splice(i, 1);
-            localStorage[LOCAL_STORAGE.KEY] = JSON.stringify(arrMyUsers); // usres
-            filterAll(arrMyUsers.reverse()); // users
+            localStorage[LOCAL_STORAGE.KEY] = JSON.stringify(users);
+
+            parseLSInArr();
+            createUsersList(arrMyUsers.reverse(), usersList);
         });
     });
 }
 
-function editUserSubmit(form, formData, user, indexBtn, users, parent) {
+function editUserSubmit(form, formData, user, indexBtn, parent) { // key, modalEditUser, closeModalAdminPanel, addUsersBtn
 
     form.addEventListener('submit', (e) => {
         e.preventDefault();
@@ -436,12 +436,12 @@ function editUserSubmit(form, formData, user, indexBtn, users, parent) {
         closeModalAdminPanel.classList.remove('hidden');
         addUsersBtn.classList.remove('hidden');
 
-        localStorage[LOCAL_STORAGE.KEY] = JSON.stringify(users);
+        localStorage[LOCAL_STORAGE.KEY] = JSON.stringify(arrMyUsers);
 
         warningUser = [];
         expiredUser = [];
         parseLSInArr();
-        createUsersList(users, parent);
+        createUsersList(arrMyUsers, parent);
 
         console.log('click submit2 ===>', user);
 
@@ -461,7 +461,7 @@ function closeScript(form, indexBtn, closeBtn, btnAdd, modal) {
     modal.classList.add('hidden');
 }
 
-function editUser(edit, users, parent) {// меняет только первого выбранного ползователя
+function editUser(edit, users, parent) { // меняет только первого выбранного ползователя // modalEditUser, closeModalAdminPanel, addUsersBtn, inputEditSurname, inputEditName, inputEditpatroniymic, inputEditLoanDate, inputEditExpDate, inputEditLoanAmount, btnSubmitEdit, closeModalEditUser
 
     edit.forEach((btn, i) => {
 
@@ -500,7 +500,7 @@ function editUser(edit, users, parent) {// меняет только перво�
 
             
             btnSubmitEdit.addEventListener('click', () => {
-                editUserSubmit(formElementMini, formDataMini, editUserVar, btn, users, parent);
+                editUserSubmit(formElementMini, formDataMini, editUserVar, btn, parent);
             });
 
 
@@ -515,7 +515,7 @@ function editUser(edit, users, parent) {// меняет только перво�
 
 function checkDateAttention(users) { // добавить в другую функцию
 
-    parseLSInArr();
+    parseLSInArr(); // 
 
     users.forEach((user, i) => {
 
@@ -551,6 +551,7 @@ function createUsersList(users, parent) {
 
     checkDateAttention(users);
 }
+
 
 
 
@@ -591,7 +592,7 @@ function createNotificationlist(arr, ulList) {
     });
 }
 
-function showNotificationList(notifBtn, arr, ulList) {
+function showNotificationList(notifBtn, arr, ulList) { // backgroundForNotification, notificationIndicator, closeModalNotification, 
     
     notifBtn.addEventListener('click', () => {
 
@@ -601,8 +602,6 @@ function showNotificationList(notifBtn, arr, ulList) {
     
         closeModalNotification.addEventListener('click', (e) => {
             e.preventDefault();
-
-            // divSpan = '';
 
             backgroundForNotification.classList.add('hiden');
             notifBtn.classList.remove('hiden');
@@ -616,25 +615,26 @@ function showNotificationList(notifBtn, arr, ulList) {
 
 
 
-function showMainModal() { // mainBtn, modal, users, parent,
 
-    myUsersBtn.addEventListener('click', (e) => {
+function showMainModal(mainBtn, modal, parent) { // users????
+
+    mainBtn.addEventListener('click', (e) => {
         e.preventDefault();
 
-        modalAdminPanel.classList.add('active');
-        myUsersBtn.classList.add('hidden');
-        parseLSInArr(); // users
-        createUsersList(arrMyUsers.reverse(), usersList);
+        modal.classList.add('active');
+        mainBtn.classList.add('hidden');
+        parseLSInArr(); // делегирование
+        createUsersList(arrMyUsers.reverse(), parent);
     });
 }
 
-function closeMainModal() { // closeBtn, modal, mainBtn, warArr, expArr
+function closeMainModal(closeBtn, modal, mainBtn) { // warArr, expArr
 
-    closeModalAdminPanel.addEventListener('click', (e) => {
+    closeBtn.addEventListener('click', (e) => {
         e.preventDefault();
 
-        modalAdminPanel.classList.remove('active');
-        myUsersBtn.classList.remove('hidden');
+        modal.classList.remove('active');
+        mainBtn.classList.remove('hidden');
         warningUser = [];
         expiredUser = [];
     });
@@ -642,29 +642,31 @@ function closeMainModal() { // closeBtn, modal, mainBtn, warArr, expArr
 
 
 
-function showModalForm() { // btnAdd, modal, mainModal
 
-    addUsersBtn.addEventListener('click', (e) => {
+function showModalForm(btnAdd, modal, mainModal) { // одинаковые функции closeModalForm()
+
+    btnAdd.addEventListener('click', (e) => {
         e.preventDefault();
 
-        modalAddUsers.classList.add('active');
-        modalAdminPanel.classList.remove('active');
+        modal.classList.add('active');
+        mainModal.classList.remove('active');
     });
 }
 
-function closeModalForm() { // closeBtn, modal, mainModal
+function closeModalForm(closeBtn, modal, mainModal) { // одинаковые функции showModalForm()
 
-    closeModalAddUsers.addEventListener('click', (e) => {
+    closeBtn.addEventListener('click', (e) => {
         e.preventDefault();
 
-        modalAddUsers.classList.remove('active');
-        modalAdminPanel.classList.add('active');
+        mainModal.classList.add('active');
+        modal.classList.remove('active');
     });
 }
 
 
 
-function formModalSubmit() { // form, formData, api, users, parent
+
+function formModalSubmit() { // (form, formData, api, users, parent) // formElement, formData, apiService, usersList 
 
     formElement.addEventListener('submit', (e) => {
         e.preventDefault();
@@ -689,89 +691,87 @@ function formModalSubmit() { // form, formData, api, users, parent
 
 
 
-function hideIconForSort() {
-    iconSortBySurname.classList.remove('hiden');
-    iconSortByAddedDate.classList.remove('hiden');
-    iconSortByLoanAmount.classList.remove('hiden');
 
-    iconSortResetSurname.classList.remove('hiden');
-    iconSortResetAddedDate.classList.remove('hiden');
-    iconSortResetLoanAmount.classList.remove('hiden');
+function hideIconForSort(iconS, iconAD, iconLA, iconRS, iconRAD, iconRLA) {
 
-    iconSortBySurname.classList.add('hiden');
-    iconSortByAddedDate.classList.add('hiden');
-    iconSortByLoanAmount.classList.add('hiden');
+    iconS.classList.remove('hiden');
+    iconAD.classList.remove('hiden');
+    iconLA.classList.remove('hiden');
 
-    iconSortResetSurname.classList.add('hiden');
-    iconSortResetAddedDate.classList.add('hiden');
-    iconSortResetLoanAmount.classList.add('hiden');
+    iconRS.classList.remove('hiden');
+    iconRAD.classList.remove('hiden');
+    iconRLA.classList.remove('hiden');
+
+    iconS.classList.add('hiden');
+    iconAD.classList.add('hiden');
+    iconLA.classList.add('hiden');
+
+    iconRS.classList.add('hiden');
+    iconRAD.classList.add('hiden');
+    iconRLA.classList.add('hiden');
 }
 
-function filterAll() { // btnFilter, parent, warArr, expArr, users
-
-    btnFilterAll.addEventListener('click', (e) => {
+function filterAll(btnFilter, parent, iconS, iconAD, iconLA, iconRS, iconRAD, iconRLA) { // users,  warArr, expArr
+    btnFilter.addEventListener('click', (e) => {
         e.preventDefault();
 
-        usersList.classList.remove('users_list-warning');
-        usersList.classList.remove('users_list-expired');
+        parent.classList.remove('users_list-warning');
+        parent.classList.remove('users_list-expired');
 
         warningUser = [];
         expiredUser = [];
 
-        iconSortBySurname.classList.remove('hiden');
-        iconSortByAddedDate.classList.remove('hiden');
-        iconSortByLoanAmount.classList.remove('hiden');
+        iconS.classList.remove('hiden');
+        iconAD.classList.remove('hiden');
+        iconLA.classList.remove('hiden');
 
-        iconSortResetSurname.classList.add('hiden');
-        iconSortResetAddedDate.classList.add('hiden');
-        iconSortResetLoanAmount.classList.add('hiden');
+        iconRS.classList.add('hiden');
+        iconRAD.classList.add('hiden');
+        iconRLA.classList.add('hiden');
 
         parseLSInArr(); // проверить
-        createUsersList(arrMyUsers.reverse(), usersList);
+        createUsersList(arrMyUsers.reverse(), parent);
     });
 }
 
-function filterWarning() { // btnFilter, parent, warArr
+function filterWarning(btnFilter, parent, warArr, iconS, iconAD, iconLA, iconRS, iconRAD, iconRLA) { // одинкаовые функции filterExpired()
 
-    btnFilterWarning.addEventListener('click', (e) => {
+    btnFilter.addEventListener('click', (e) => {
         e.preventDefault();
 
-        // sortArr = warningUser;
+        parent.innerHTML = '';
 
-        usersList.innerHTML = '';
-
-        usersList.classList.add('users_list-warning');
-        usersList.classList.remove('users_list-expired');
+        parent.classList.add('users_list-warning');
+        parent.classList.remove('users_list-expired');
         
-        hideIconForSort();
+        hideIconForSort(iconS, iconAD, iconLA, iconRS, iconRAD, iconRLA);
         
-        createUserString(warningUser, usersList);
-        // usersList.style.background="rgba(255, 215, 51, 0.639)";
-        // sortArr = [];
+        createUserString(warArr, parent);
     });
 }
 
-function filterExpired() { // btnFilter, parent, expArr
+function filterExpired(btnFilter, parent, expArr, iconS, iconAD, iconLA, iconRS, iconRAD, iconRLA) { // одинкаовые функции filterWarning()
 
-    btnFilterexpired.addEventListener('click', (e) => {
+    btnFilter.addEventListener('click', (e) => {
         e.preventDefault();
 
-        usersList.innerHTML = '';
+        parent.innerHTML = '';
 
-        usersList.classList.remove('users_list-warning');
-        usersList.classList.add('users_list-expired');
+        parent.classList.remove('users_list-warning');
+        parent.classList.add('users_list-expired');
 
-        hideIconForSort();
+        hideIconForSort(iconS, iconAD, iconLA, iconRS, iconRAD, iconRLA);
 
-        createUserString(expiredUser, usersList);
+        createUserString(expArr, parent);
     });
 }
 
 
 
-function searchUserModal() { // idElem
 
-    search.insertAdjacentHTML(
+function searchUserModal(idElem) {
+
+    idElem.insertAdjacentHTML(
         'beforebegin', 
 
         `<div class='search_modal hiden'>
@@ -807,7 +807,7 @@ function searchUserModal() { // idElem
     );
 }
 
-function searchUsers() { // iconSearch, btnAdd, closebtnModal, users, 
+function searchUsers() { // iconSearch, btnAdd, closeBtnModal, users, parent // users, key, arrWar, arrExp // iconSearchUsers, addUsersBtn, closeModalAddUsers, arrMyUsers, usersList, 
 
     if (!localStorage[LOCAL_STORAGE.KEY]) {
         iconSearchUsers.classList.add('hiden');
@@ -847,7 +847,7 @@ function searchUsers() { // iconSearch, btnAdd, closebtnModal, users,
             });
 
 
-            function resetFormSearchNow() {
+            function resetFormSearchNow() { // parent
                 resetFormSearch.addEventListener('click', (e) => {
                     e.preventDefault();
 
@@ -974,6 +974,7 @@ function searchUsers() { // iconSearch, btnAdd, closebtnModal, users,
 
 
 
+
 function sortListBySurname() { // iconSort, users, parent, sortArr
 
     iconSortBySurname.addEventListener('click', (e) => {
@@ -1084,25 +1085,26 @@ function sortListReset(iconSort, iconReset) { // users, parent
 
 
 
-function runAll() { // выенести все аргументы сюда
 
-    showNotificationList(notificationBtn, warningUser, notificationWarningList); // проверить и добавить
+function runAll() { // notifBtn, warUs, notifWL, expUs, notifEL, btnFA, parent, iconS, iconAD, iconLA, iconRS, iconRAD, iconRLA, btnFE, btnMain, modalAP, closeBtnAP, btnAU, modalAU, closeBtnAU, idElem, 
 
-    showNotificationList(notificationBtn, expiredUser, notificationExpiredList); // проверить и добавить
+    showNotificationList(notificationBtn, warningUser, notificationWarningList); // выписал аргументы // нужно вписать параметры
 
-    filterAll(arrMyUsers.reverse());  // проверить и добавить
+    showNotificationList(notificationBtn, expiredUser, notificationExpiredList); // выписал аргументы // нужно вписать параметры
 
-    filterWarning(); // проверить и добавить
+    filterAll(btnFilterAll, usersList, iconSortBySurname, iconSortByAddedDate, iconSortByLoanAmount, iconSortResetSurname, iconSortResetAddedDate, iconSortResetLoanAmount); // выписал аргументы // нужно вписать параметры
 
-    filterExpired(); // проверить и добавить
+    filterWarning(btnFilterWarning, usersList, warningUser, iconSortBySurname, iconSortByAddedDate, iconSortByLoanAmount, iconSortResetSurname, iconSortResetAddedDate, iconSortResetLoanAmount); // выписал аргументы // нужно вписать параметры
 
-    showMainModal(); // проверить и добавить
+    filterExpired(btnFilterExpired, usersList, expiredUser, iconSortBySurname, iconSortByAddedDate, iconSortByLoanAmount, iconSortResetSurname, iconSortResetAddedDate, iconSortResetLoanAmount); // выписал аргументы // нужно вписать параметры
 
-    closeMainModal(); // проверить и добавить
+    showMainModal(myUsersBtn, modalAdminPanel, usersList); // выписал аргументы // нужно вписать параметры
 
-    showModalForm(); // проверить и добавить
+    closeMainModal(closeModalAdminPanel, modalAdminPanel, myUsersBtn); // выписал аргументы // нужно вписать параметры
 
-    closeModalForm(); // проверить и добавить
+    showModalForm(addUsersBtn, modalAddUsers, modalAdminPanel); // выписал аргументы // нужно вписать параметры
+
+    closeModalForm(closeModalAddUsers, modalAddUsers, modalAdminPanel); // выписал аргументы // нужно вписать параметры
 
     formModalSubmit(); // проверить и добавить
 
@@ -1114,24 +1116,9 @@ function runAll() { // выенести все аргументы сюда
 
     // sortListReset(); // проверить и добавить
 
-    searchUserModal(); // проверить и добавить
+    searchUserModal(search); // выписал аргументы // нужно вписать параметры
 
     searchUsers(); // проверить и добавить
 }
 
-runAll(); // заменить аргументы элементами тут
-
-
-
-
-// mutation.observer {
-//     arr1 || arr2 в какаом то из них будут изменения или в тои или в другом   
-//     let startObserv = arr.lenght;
-//     let endObserve = arr.lenght;
-// startObserve !== endObserve      
-// }
-
-// function checkAttentionUsers() {
-//     let startArrs = (warningUser.length || expiredUser.length);
-//     if ()
-// }
+runAll(); // вставить аргументы
