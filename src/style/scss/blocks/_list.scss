@@ -5,7 +5,9 @@
     height: 400px;
     left: 50%;
     transform: translateX(-50%);
-    background: $second-color;
+    border-radius: 10px;
+    color: $elem-color;
+    background: $bcg-color;
     .users_list-wrapper {
         display: grid;
         grid-template-columns: 5% 20% 15% 15% 15% 10% 10% 10%;
@@ -20,21 +22,27 @@
             left: -20px;
             width: 15px;
             height: 15px;
-            background: url('../icons/sort.png') center center/cover no-repeat;
             &-surname, &-added_date, &-loan_amount {
+                background: url('../icons/sort-up.svg') center center/cover no-repeat;
                 &.hiden {
                     top: 10px;
+                }
+                &.active {
+                    background: url('../icons/sort-up-red.svg') center center/cover no-repeat;
                 }
             }
             &-reset_surname, &-reset_added_date, &-reset_amount {
                 position: relative;
-                background-color: $list-color;
+                background: url('../icons/sort-down.svg') center center/cover no-repeat;
                 border-radius: 100%;
                 top: -32px;
                 z-index: 1;
                 &.hiden {
                     display: none;
                     top: -5px;
+                }
+                &.active {
+                    background: url('../icons/sort-down-red.svg') center center/cover no-repeat;
                 }
             }
         }
@@ -49,13 +57,17 @@
         left: 50%;
         transform: translateX(-50%);
         background: $list-color;
-        color: $base-color;
+        color: $elem-color;
         overflow: auto;
+        border-radius: 0 0 10px 10px;
+        border: 2px solid $list-color;
         &-warning {
-            background: $warning-list;
+            background: $list-color;
+            border-top: 2px solid $warning-color;
         }
         &-expired {
-            background: $expired-list;
+            background: $list-color;
+            border-top: 2px solid $main-color;
         }
         .each_user {
             display: grid;
@@ -63,15 +75,13 @@
             justify-items: center;
             text-transform: uppercase;
             font-size: 20px;
-            // font-weight: bold;
             list-style-type: none;
             position: relative;
             line-height: 25px;
-            color: $base-color;
             margin-bottom: 15px;
-        }
-        .each_user-loan_amount {
-            text-transform: lowercase;
+            &-loan_amount {
+                text-transform: lowercase;
+            }
         }
         .each_warning {
             .each_user-expiration_date {
@@ -86,7 +96,7 @@
             }
         }
         .each_edit {
-            background-color: $second-color;
+            background-color: $bcg-color;
         }
     }
     .filter_rounds {
@@ -99,7 +109,7 @@
             height: 20px;
             width: 20px;
             border-radius: 100%;
-            color: $base-color;
+            color: $elem-color;
         }
         &-all {
             background-color: $list-color;
@@ -121,15 +131,15 @@
         min-width: 150%;
         left: -25px; 
         top: 0;
-        background: $base-color;
-        color: $third-color;
+        background: $elem-color;
+        color: $modal-color;
         font-size: 10px;
         font-weight: 400;
         padding: 0 10px;
-        box-shadow: 2px 2px 5px $base-color;
+        box-shadow: 2px 2px 5px $elem-color;
         pointer-events: none;
         opacity: 0;
-        // transition: .5s;
-        transition-delay: .5s, .1s;
+        transition-delay: 0s, .5s;
+        z-index: 1000;
     }
-} 
+}

@@ -3,7 +3,7 @@
     width: 130px;
     height: 50px;
     margin-top: 20px;
-    color: $third-color;
+    color: $modal-color;
     background-color: $main-color;
     border: none;
     border-radius: 5px;
@@ -14,29 +14,42 @@
     width: auto;
     margin-top: 0px;
     height: 12%;
+    &_edit {
+        margin-top: 0;
+        height: 40px;
+        padding: 5px;
+    }
+    &_search {
+        position: relative;
+        background: url('../icons/search.png') center center/cover no-repeat;
+        top: 5px;
+        width: 30px;
+        height: 30px;
+        border: none;
+        cursor: pointer;
+    }
 }
 
-.btn_show_my_users {
-    position: absolute;
-    margin-top: 0;
-    top: 75px;
-    left: 505px;
-}
-
-.submit_edit {
-    margin-top: 0;
-    height: 40px;
-    padding: 5px;
-}
-
-.btn_add_new_user{
-    position: absolute;
-    max-height: 45px;
-    margin-top: 0;
-    bottom: 15px;
-    z-index: -1;
-}
-
-.btn_show_my_users.hidden, .btn_add_new_user.hidden {
-    display: none;
+.btn {
+    &_show_my_users {
+        position: absolute;
+        margin-top: 0;
+        top: 75px;
+        left: 505px;
+    }
+    &_add_new_user{
+        position: absolute;
+        max-height: 45px;
+        margin-top: 0;
+        bottom: 15px;
+        z-index: -1;
+    }
+    &_notification-hiden {
+        margin-top: 0;
+        max-height: 45px;
+        top: 15px;
+    }
+    &_show_my_users.hiden, &_add_new_user.hiden {
+        display: none;
+    }
 }

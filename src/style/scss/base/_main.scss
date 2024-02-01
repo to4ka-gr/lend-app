@@ -2,6 +2,10 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    &::selection {
+        background-color: $selection-color;
+        color: $elem-color;
+    }
 }
 
 html, body {
@@ -10,13 +14,14 @@ html, body {
 }
 
 #root {
-    background-color: $second-color;
+    background-color: $bcg-color;
     width: 100%;
     height: 100%;
 }
 
 .container {
     max-width: 1140px;
+    height: 100%;
     margin: 0 auto;
 }
 

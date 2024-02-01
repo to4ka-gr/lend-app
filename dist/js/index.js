@@ -1,4 +1,4 @@
-function createMainHTML() { // closeModalAddUsers
+function createMainHTML() {
     
     root.insertAdjacentHTML(
         
@@ -10,12 +10,33 @@ function createMainHTML() { // closeModalAddUsers
                 <button class='button btn_show_my_users' id='btn_show_my_users'>
                     Мои заемщики
                 </button>
+
+                <div class='modal_submit-delete hiden' id='modal_submit-delete'>
+                    <div class='modal_submit-delete-wrapper' id='modal_submit-delete-wrapper'>
+                        <div class='modal_submit-delete-wrapper-list'>
+                            <span class='modal_submit-delete-message'>
+                                вы уверены, что хотите удалить пользователя:
+                                <span class='modal_submit-delete-user' id='modal_submit-delete-user'></span>
+                            </span>
     
-                <div class='modal_main' id=''modal_main>
+                            <div class='button_wrapper'>
+                                <button type='button' class='button modal_submit-delete-button modal_submit-delete-button-no' id='modal_submit-delete-button-no'>
+                                    отмена
+                                </button>
+                    
+                                <button type='button' class='button modal_submit-delete-button modal_submit-delete-button-yes' id='modal_submit-delete-button-yes'>
+                                    удалить
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-                    <div class='modal_edit_user hidden'>
+                <div class='modal_main' id='modal_main'>
 
-                        <div class='close_modal_edit_user'></div>
+                    <div class='modal_edit_user hiden' id='modal_edit_user'>
+
+                        <div class='close_modal_edit_user' id='close_modal_edit_user'></div>
                 
                         <form class='form_mini' id='form_mini'>
                         
@@ -26,24 +47,24 @@ function createMainHTML() { // closeModalAddUsers
                             <input type='date' placeholder='' class='input input_edit input_edit_expiration_date' name='input_edit_expiration_date' autocomplete='on'/>
                             <input type='number' min='1' placeholder='Сумма займа' class='input input_edit input_edit_loan_amount' name='input_edit_loan_amount' autocomplete='on'/>
                         
-                            <button type='submit' class='input input_edit submit_edit button'>
+                            <button type='button' class='input input_edit submit_edit button' id='submit_edit'>
                                 изменить
                             </button>
                         
                         </form>
                     </div>
 
-                    <div class='close_modal_main'></div>
+                    <div class='close_modal_main' id='close_modal_main'></div>
     
-                    <div class='users_list-head'>
+                    <div class='users_list-head' id='users_list-head'>
                         <div class='users_list-wrapper'>
                             <div class='index'>
                                 №
                             </div>
                             <div class='full_name'>
                                 ФИО
-                                <div class='sort_icon sort_icon-surname'></div>
-                                <div class='sort_icon sort_icon-reset_surname hiden'></div>
+                                <div class='sort_icon sort_icon-surname' id='sort_icon-surname'></div>
+                                <div class='sort_icon sort_icon-reset_surname hiden' id='sort_icon-reset_surname'></div>
                             </div>
                             <div class='loan_date'>
                                 Дата займа
@@ -53,39 +74,75 @@ function createMainHTML() { // closeModalAddUsers
                             </div>
                             <div class='date_added'>
                                 Дата добавления
-                                <div class='sort_icon sort_icon-added_date'></div>
-                                <div class='sort_icon sort_icon-reset_added_date hiden'></div>
+                                <div class='sort_icon sort_icon-added_date' id='sort_icon-added_date'></div>
+                                <div class='sort_icon sort_icon-reset_added_date hiden' id='sort_icon-reset_added_date'></div>
                             </div>
                             <div class='loan_amount'>
                                 Сумма
-                                <div class='sort_icon sort_icon-loan_amount'></div>
-                                <div class='sort_icon sort_icon-reset_amount hiden'></div>
+                                <div class='sort_icon sort_icon-loan_amount' id='sort_icon-loan_amount'></div>
+                                <div class='sort_icon sort_icon-reset_amount hiden' id='sort_icon-reset_amount'></div>
                             </div>
                             <div class='id'>
                                 ID
                             </div>
                             <div class='filter_rounds'>
-                                <div class='filter_rounds-item filter_rounds-all'></div>
-                                <div class='filter_rounds-item filter_rounds-warning'></div>
-                                <div class='filter_rounds-item filter_rounds-expired'></div>
+                                <div class='filter_rounds-item filter_rounds-all' id='filter_rounds-all'></div>
+                                <div class='filter_rounds-item filter_rounds-warning' id='filter_rounds-warning'></div>
+                                <div class='filter_rounds-item filter_rounds-expired' id='filter_rounds-expired'></div>
                             </div>
                         </div>
     
-                        <ul class='users_list'>
+                        <ul class='users_list' id='users_list'>
                             <li></li>
                         </ul>
+
+                    </div>
+
+                    <div class='search_modal hiden'>
+                        <div class='search_modal-wrapper'>
+                            <div class='icon_calendar hiden' id='icon_calendar'></div>
+            
+                            <div class='dynamic_search hiden'>
+                                <form class='form_search' id='form_dynamic'>
+                                    <input type='text' class='input input_search' name='input_search' placeholder='Что ищем?' />
+                                    <div class='form_search-reset' id='form_search-reset'></div>
+                                </form>
+                            </div>
+            
+                            <div class='search_modal_close hiden' id='search_modal_close'></div>
+            
+                            <form class='icon_calendar-form hiden' id='icon_calendar-form'>
+                                <div class='div_for_calendar-input'>
+                                    
+                                    <label for='input_date-start' class='span_for_calendar_form span_for_calendar_form-from'>
+                                        с 
+                                    </label>
+                                    <input type='date' class='input input_date-search input_date-start' name='input_date-start' id='input_date-start' placeholder='дд/мм/год' autocomplete='on' />
+                                </div>
+
+                                <div class='div_for_calendar-input'>
+                                    <label for='input_date-end' class='span_for_calendar_form span_for_calendar_form-to'>
+                                        по 
+                                    </label>
+                                    <input type='date' class='input input_date-search input_date-end' name='input_date-end' id='input_date-end' autocomplete='on' />
+                                </div>
+                            
+                                <button type='button' class='submit_search' id='submit_search'></button>
+                            </form>
+            
+                            <div class='close_calendar-form hiden' id='close_calendar-form'></div>
+                        </div>
                     </div>
 
                     <div class='icon_search_users' id='search'></div>
 
-                    <div class='icon_modal_notification'></div>
-                    <div class='new_notification-indicator' id='indicator'>
+                    <div class='icon_modal_notification' id='icon_modal_notification'></div>
 
-                        <div class='background_for_notification hiden'>
+                    <div class='new_notification-indicator' id='indicator'>
+                        <div class='background_for_notification hiden' id='background_for_notification'>
                             <div class='modal_notification'>
         
                                 <div class='modal_notification-wrapper'>
-        
                                     <div class='modal_notification-warning'>
                                         <div class='span_for_attention-list span_for_attention-list-warning'>
                                             Пользователи у которых заканчитвается срок:
@@ -100,37 +157,45 @@ function createMainHTML() { // closeModalAddUsers
                                         <ul class='modal_notification-expired_list'></ul>
                                     </div>
                                 </div>
-        
-                                <div class='modal_notification-close'></div>
+
+                                <div class='wrapper_for_btn'>
+                                    <button class='button btn_notification-hiden' id='btn_notification-hiden'>
+                                        понятно
+                                    </button>
+                                </div>
+
+                                <div class='modal_notification-close' id='modal_notification-close'></div>
 
                             </div>
                         </div>
                     </div>
     
-                    <button class='button btn_add_new_user'>
+                    <button class='button btn_add_new_user' id='btn_add_new_user'>
                         Добавить
                     </button>
-    
+
                 </div>
-            
-                <div class='modal_form_add_user'>
+
+                <div class='modal_form_add_user-wrapper hiden' id='modal_form_add_user-wrapper'>
+                    <div class='modal_form_add_user'>
     
-                    <div class='close_modal_form_add_users'></div>
-    
-                    <form class='form' id='form'>
-    
-                    <input required type='text' placeholder='Ваша фамилия' class='input input_user_surname' name='input_user_surname' autocomplete='on'/>
-                        <input required type='text' placeholder='Ваше имя' class='input input_user_name' name='input_user_name' autocomplete='on'/>
-                        <input required type='text' placeholder='Ваше отчество' class='input input_user_patronymic' name='input_user_patronymic' autocomplete='on'/>
-                        <input required type='date' class='input input_loan_date' name='input_loan_date' autocomplete='on'/>
-                        <input required type='date' class='input input_expiration_date' name='input_expiration_date' autocomplete='on'/>
-                        <input required type='number' min='1' placeholder='Сумма займа' class='input input_loan_amount' name='input_loan_amount' autocomplete='on'/>
-    
-                        <button type='submit' class='button input submit'>
-                            подтвердить
-                        </button>
-    
-                    </form>
+                        <div class='close_modal_form_add_users' id='close_modal_form_add_users'></div>
+
+                        <form class='form' id='form'>
+
+                            <input required type='text' placeholder='Ваша фамилия' class='input input_user_surname' name='input_user_surname' autocomplete='on'/>
+                            <input required type='text' placeholder='Ваше имя' class='input input_user_name' name='input_user_name' autocomplete='on'/>
+                            <input required type='text' placeholder='Ваше отчество' class='input input_user_patronymic' name='input_user_patronymic' autocomplete='on'/>
+                            <input required type='date' class='input input_loan_date' name='input_loan_date' autocomplete='on'/>
+                            <input required type='date' class='input input_expiration_date' name='input_expiration_date' autocomplete='on'/>
+                            <input required type='number' min='1' placeholder='Сумма займа' class='input input_loan_amount' name='input_loan_amount' autocomplete='on'/>
+
+                            <button type='submit' class='button input submit' id='submit'>
+                                подтвердить
+                            </button>
+
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>`
@@ -138,7 +203,6 @@ function createMainHTML() { // closeModalAddUsers
 }
 
 createMainHTML();
-
 
 
 
@@ -179,9 +243,9 @@ class User {
         max = Math.floor(max);
         return String(Math.floor(Math.random() * (max - min + 1)) + min);
     }
-};
+}
 
-class APIService { // TODO: нужно все строяные элементы заменить на константы как сделано с формой
+class APIService {
     
     addNewUser(user) {
 
@@ -192,36 +256,26 @@ class APIService { // TODO: нужно все строяные элементы 
         modalAddUsers.classList.remove('active');
         modalAdminPanel.classList.add('active');
 
-        filterAll(btnFilterAll, usersList, iconSortBySurname, iconSortByAddedDate, iconSortByLoanAmount, iconSortResetSurname, iconSortResetAddedDate, iconSortResetLoanAmount);
+        filterAll();
     }
 
-    deleteUser() {
-        // обратиться в localStorage/ найти объекты/ вытащить div remove/ удалить родительский объект/ записать новые данные в массив из localStorage/обновить список
-    }
+    // deleteUser() {
+    //     // обратиться в localStorage/ найти объекты/ вытащить div remove/ удалить родительский объект/ записать новые данные в массив из localStorage/обновить список
+    // }
 
-    editUser() {
-        // обратиться в localStorage/ найти объекты/ вытащить div edit/ добраться к каждому ключу и изменить его значение/ записать новые данные в массив из localStorage/обновить список
-    }
-};
-
-class MyVariables {
-
-    formElement() {
-        const formElement = document.getElementById('form');
-        return formElement;
-    }
-
+    // editUser() {
+    //     // обратиться в localStorage/ найти объекты/ вытащить div edit/ добраться к каждому ключу и изменить его значение/ записать новые данные в массив из localStorage/обновить список
+    // }
 }
 
-const myVariables = new MyVariables();
 
-const formElement = myVariables.formElement(); // можно напрямую использовать без создания новыъ констант
 
-// const formElement = document.getElementById('form');
-
+const formElement = document.getElementById('form');
 const formElementMini = document.getElementById('form_mini');
+
 let formData = new FormData(formElement);
 let formDataMini = new FormData(formElementMini);
+
 const USER_FORM_FIELDS = {
     USER_SURNAME: 'input_user_surname',
     USER_NAME: 'input_user_name',
@@ -241,10 +295,19 @@ let user  = new User({
     expirationDate: formData.get(USER_FORM_FIELDS.USER_EXPIRATION_DATE),
     loanAmount: formData.get(USER_FORM_FIELDS.USER_LOAN_AMOUNT),
 });
+
 let arrMyUsers = [];
 let warningUser = [];
 let expiredUser = [];
 let sortArr = [];
+let id;
+let idEditBtn;
+let idRemoveBtn;
+let searchId;
+let indexOfUser;
+let editUserVar;
+let deleteUserVar;
+let childElem;
 
 const apiService = new APIService();
 
@@ -257,9 +320,11 @@ const myUsersBtn = document.querySelector('.btn_show_my_users');
 
 const modalAdminPanel = document.querySelector('.modal_main');
 const closeModalAdminPanel = document.querySelector('.close_modal_main');
+
 const addUsersBtn = document.querySelector('.btn_add_new_user');
 const modalAddUsers = document.querySelector('.modal_form_add_user');
 const closeModalAddUsers = document.querySelector('.close_modal_form_add_users');
+const backgroundFormAddUser = document.querySelector('.modal_form_add_user-wrapper');
 
 const notificationBtn = document.querySelector('.icon_modal_notification');
 const notificationIndicator = document.querySelector('.new_notification-indicator');
@@ -270,6 +335,7 @@ const myNotificationWarning = document.querySelector('.modal_notification-warnin
 const myNotificationExpired = document.querySelector('.modal_notification-expired');
 const notificationWarningList = document.querySelector('.modal_notification-warning_list');
 const notificationExpiredList = document.querySelector('.modal_notification-expired_list');
+const btnHidenNotification = document.querySelector('.btn_notification-hiden');
 const closeModalNotification = document.querySelector('.modal_notification-close');
 
 const iconSearchUsers = document.querySelector('.icon_search_users');
@@ -277,7 +343,7 @@ const btnFilterAll = document.querySelector('.filter_rounds-all');
 const btnFilterWarning = document.querySelector('.filter_rounds-warning');
 const btnFilterExpired = document.querySelector('.filter_rounds-expired');
 
-const iconSortBySurname = document.querySelector('.sort_icon-surname'); // эта копопка
+const iconSortBySurname = document.querySelector('.sort_icon-surname');
 const iconSortByAddedDate = document.querySelector('.sort_icon-added_date');
 const iconSortByLoanAmount = document.querySelector('.sort_icon-loan_amount');
 
@@ -294,36 +360,330 @@ const inputEditLoanAmount = document.querySelector('.input_edit_loan_amount');
 const modalEditUser = document.querySelector('.modal_edit_user');
 const closeModalEditUser = document.querySelector('.close_modal_edit_user');
 const btnSubmitEdit = document.querySelector('.submit_edit');
-// const inputEditAll = document.querySelectorAll('.input_edit');
+
+const searchModal = document.querySelector('.search_modal');
+const iconCalendar = document.querySelector('.icon_calendar');
+const dynamicSearch = document.querySelector('.dynamic_search'); 
+const formDynamicSubmit = document.querySelector('.form_search');
+const inputSearch = document.querySelector('.input_search');
+const closeSearchForm = document.querySelector('.search_modal_close');
+const resetFormSearch = document.querySelector('.form_search-reset');
+
+const dateSerachForm = document.querySelector('.icon_calendar-form');
+const inputDateStart = document.querySelector('.input_date-start');
+const inputDateEnd = document.querySelector('.input_date-end');
+const btnSubmitSearch = document.querySelector('.submit_search');
+const formDateSubmit = document.querySelector('.icon_calendar-form');
+const closeDateSearchForm = document.querySelector('.close_calendar-form');
+
+const modalSubmitDelete = document.querySelector('.modal_submit-delete');
+const spanForUserDelete = document.querySelector('.modal_submit-delete-user');
 
 
-// warningUser = [{
-//     c: 2,
-// }];
 
-// expiredUser = [{
-//     d: 3,
-// }];
-// let observer = new MutationObserver(MutationRecords => {
-//     console.log(MutationRecords);
+// function deleteUser(remove, arrUsers) { // users, key
 
-//     // const checkWarArr = warningUser;
-//     // const checkExpArr = expiredUser;
-//     // 
-//     // if (checkWarArr !== warningUser) {
-//     //     // красить индикатор в крассный
-//     // } else if (checkExpArr !== expiredUser) {
-//     //     // красить индикатор в крассный
-//     // } else {
-//     //     // красить индикатор в черный
-//     // }
+//     remove.forEach((indexBtnRemove, i) => {
 
-// });
+//         indexBtnRemove.addEventListener('click', () => {
 
-// observer.observe(notificationWarningList, {
-//     childList: true,
-// });
+//             indexBtnRemove.parentElement.remove();
+            
+//             arrUsers.splice(i, 1);
 
+//             localStorage[LOCAL_STORAGE.KEY] = JSON.stringify(arrUsers.reverse());
+
+//             parseLSInArr();
+
+//             createUsersList(arrUsers.reverse(), usersList);
+//         });
+//     });
+// }
+
+// function editUserSubmit(user, indexBtn) { // key, formData, modalEditUser, closeModalAdminPanel, addUsersBtn
+
+//     formData = new FormData(formElementMini);
+
+//     user.userSurname = formData.get('input_edit_user_surname') || user.userSurname;
+//     user.userName = formData.get('input_edit_user_name') || user.userName;
+//     user.userPatronymic = formData.get('input_edit_user_patronymic') || user.userPatronymic;
+//     user.loanDate = formData.get('input_edit_loan_date') || user.loanDate;
+//     user.expirationDate = formData.get('input_edit_expiration_date') || user.expirationDate;
+//     user.loanAmount = formData.get('input_edit_loan_amount') || user.loanAmount;
+
+//     localStorage[LOCAL_STORAGE.KEY] = JSON.stringify(arrMyUsers);
+
+//     // indexBtn.parentElement.style.background='';
+
+//     modalEditUser.classList.add('hiden');
+//     closeModalAdminPanel.classList.remove('hiden');
+//     addUsersBtn.classList.remove('hiden');
+
+//     warningUser = []; 
+//     expiredUser = [];
+//     arrMyUsers = [];
+
+//     arrMyUsers = JSON.parse(localStorage[LOCAL_STORAGE.KEY]);
+
+//     createUsersList(arrMyUsers.reverse(), usersList);
+// }
+
+// function checkDateAttention(arrUsers) { // добавить в другую функцию
+
+//     parseLSInArr();
+
+//     arrUsers.forEach((user, i) => {
+
+//         let dateNow = Date.now();
+//         let getEndDateInSec = Date.parse(user.expirationDate);
+//         let threeDaysInSec = 259200000;
+//         let stringOfUser = document.querySelectorAll('.each_user');
+
+//         if (getEndDateInSec <= dateNow) {
+//             expiredUser.push(user);
+//             stringOfUser[i].classList.remove('each_warning');
+//             stringOfUser[i].classList.add('each_expired');
+//         } else if (getEndDateInSec <= (dateNow + threeDaysInSec)) {
+//             warningUser.push(user);
+//             stringOfUser[i].classList.remove('each_expired');
+//             stringOfUser[i].classList.add('each_warning');
+//         } else if (getEndDateInSec >= dateNow) {
+//             stringOfUser[i].classList.remove('each_warning');
+//             stringOfUser[i].classList.remove('each_expired');
+//         }
+//     });
+// }
+
+// function createUsersList(arrUsers, parent) {
+
+//     parent.innerHTML = '';
+
+//     createUserString(arrUsers, parent);
+
+//     // const removeIcon = document.querySelectorAll('.icon_remove');
+//     // const editIcon = document.querySelectorAll('.icon_edit');
+
+//     // deleteUser(removeIcon, arrUsers);
+
+//     // editUser(editIcon, arrUsers);
+
+//     checkDateAttention(arrUsers);
+// }
+
+// function showNotificationList() { // notifBtn, arr, ulList
+    
+//     notificationBtn.addEventListener('click', (e) => {
+//         e.preventDefault();
+
+//         modalAdminPanel.classList.remove('active');
+//         backgroundForNotification.classList.remove('hiden');
+//         notificationBtn.classList.add('hiden');
+//         notificationIndicator.classList.add('hiden');
+
+//         function createNotificationlist(arr, ulList) {
+
+//             ulList.innerHTML = '';
+        
+//             arr.forEach((user, i) => {
+        
+//                 ulList.innerHTML += `
+//                     <li class='attention_notification'>
+        
+//                         <span class='attention_user-index'>
+//                             ${i + 1}.
+//                         </span>
+        
+//                         <span class='attention_user-full_name'>
+//                             ${user.userSurname}
+//                             ${user.userName.substring(0, 1)}.
+//                             ${user.userPatronymic.substring(0, 1)}.
+//                         </span>
+//                     </li>
+//                 `;
+//             });
+//         }
+
+//         createNotificationlist(warningUser, notificationWarningList);
+//         createNotificationlist(expiredUser, notificationExpiredList);
+
+//     });
+// }
+
+// function showNotificationList() { // notifBtn, arr, ulList
+
+//     modalAdminPanel.classList.remove('active');
+//     backgroundForNotification.classList.remove('hiden');
+//     notificationBtn.classList.add('hiden');
+//     notificationIndicator.classList.add('hiden');
+
+//     function createNotificationlist(arr, ulList) {
+
+//         ulList.innerHTML = '';
+    
+//         arr.forEach((user, i) => {
+    
+//             ulList.innerHTML += `
+//                 <li class='attention_notification'>
+    
+//                     <span class='attention_user-index'>
+//                         ${i + 1}.
+//                     </span>
+    
+//                     <span class='attention_user-full_name'>
+//                         ${user.userSurname}
+//                         ${user.userName.substring(0, 1)}.
+//                         ${user.userPatronymic.substring(0, 1)}.
+//                     </span>
+//                 </li>
+//             `;
+//         });
+//     }
+
+//     createNotificationlist(warningUser, notificationWarningList);
+//     createNotificationlist(expiredUser, notificationExpiredList);
+// }
+// function closeNotificationModal() {
+//     modalAdminPanel.classList.add('active');
+//     backgroundForNotification.classList.add('hiden');
+//     notificationBtn.classList.remove('hiden');
+//     notificationIndicator.classList.remove('hiden');
+    
+//     filterAll();
+// }
+
+// function showModalForm() { // btnAdd, modal, mainModal
+
+//     addUsersBtn.addEventListener('click', (e) => {
+//         e.preventDefault();
+
+//         backgroundFormAddUser.classList.remove('hiden');
+//         modalAddUsers.classList.add('active');
+//         modalAdminPanel.classList.remove('active');
+
+//         searchModal.classList.add('hiden');
+//         dateSerachForm.classList.add('hiden');
+//         closeDateSearchForm.classList.add('hiden');
+        
+//     });
+// }
+
+// function closeModalForm() { // одинаковые функции showModalForm() // closeBtn, modal, mainModal
+
+//     closeModalAddUsers.addEventListener('click', (e) => {
+//         e.preventDefault();
+
+//         backgroundFormAddUser.classList.add('hiden');
+//         modalAdminPanel.classList.add('active');
+//         modalAddUsers.classList.remove('active');
+
+//         iconSearchUsers.classList.remove('hiden');
+//     });
+// }
+
+// function hideIconForSort(iconS, iconAD, iconLA, iconRS, iconRAD, iconRLA) {
+
+//     iconS.classList.remove('hiden');
+//     iconAD.classList.remove('hiden');
+//     iconLA.classList.remove('hiden');
+
+//     iconRS.classList.remove('hiden');
+//     iconRAD.classList.remove('hiden');
+//     iconRLA.classList.remove('hiden');
+
+//     iconS.classList.add('hiden');
+//     iconAD.classList.add('hiden');
+//     iconLA.classList.add('hiden');
+
+//     iconRS.classList.add('hiden');
+//     iconRAD.classList.add('hiden');
+//     iconRLA.classList.add('hiden');
+// }
+
+// function filterAll() { // btnFilter, parent, iconS, iconAD, iconLA, iconRS, iconRAD, iconRLA 
+//     btnFilterAll.addEventListener('click', (e) => {
+//         e.preventDefault();
+
+//         usersList.classList.remove('users_list-warning');
+//         usersList.classList.remove('users_list-expired');
+
+//         warningUser = [];
+//         expiredUser = [];
+
+//         iconSortBySurname.classList.remove('hiden');
+//         iconSortByAddedDate.classList.remove('hiden');
+//         iconSortByLoanAmount.classList.remove('hiden');
+
+//         iconSortResetSurname.classList.add('hiden');
+//         iconSortResetAddedDate.classList.add('hiden');
+//         iconSortResetLoanAmount.classList.add('hiden');
+
+//         iconSortBySurname.classList.remove('active');
+//         iconSortByLoanAmount.classList.remove('active');
+//         iconSortByAddedDate.classList.add('active');
+
+//         parseLSInArr(); // проверить
+//         createUsersList(arrMyUsers.reverse(), usersList);
+//     });
+// }
+
+// function filterWarning() { // btnFilter, parent, warArr, iconS, iconAD, iconLA, iconRS, iconRAD, iconRLA
+
+//     btnFilterWarning.addEventListener('click', (e) => {
+//         e.preventDefault();
+
+//         usersList.innerHTML = '';
+
+//         usersList.classList.add('users_list-warning');
+//         usersList.classList.remove('users_list-expired');
+        
+//         hideIconForSort(iconSortBySurname, iconSortByAddedDate, iconSortByLoanAmount, iconSortResetSurname, iconSortResetAddedDate, iconSortResetLoanAmount);
+        
+//         createUserString(warningUser, usersList);
+//     });
+// }
+
+// function filterExpired() { // btnFilter, parent, expArr, iconS, iconAD, iconLA, iconRS, iconRAD, iconRLA
+
+//     btnFilterExpired.addEventListener('click', (e) => {
+//         e.preventDefault();
+
+//         usersList.innerHTML = '';
+
+//         usersList.classList.remove('users_list-warning');
+//         usersList.classList.add('users_list-expired');
+
+//         hideIconForSort(iconSortBySurname, iconSortByAddedDate, iconSortByLoanAmount, iconSortResetSurname, iconSortResetAddedDate, iconSortResetLoanAmount);
+
+//         createUserString(expiredUser, usersList);
+//     });
+// }
+
+
+
+
+
+// function formModalSubmit() { // (form, formData, api, users, parent) // formElement, formData, apiService, usersList 
+
+//     formData = new FormData(formElement);
+
+//     user = new User({
+//         userSurname: formData.get(USER_FORM_FIELDS.USER_SURNAME),
+//         userName: formData.get(USER_FORM_FIELDS.USER_NAME),
+//         userPatronymic: formData.get(USER_FORM_FIELDS.USER_PATRONYMIC),
+//         loanDate: formData.get(USER_FORM_FIELDS.USER_LOAN_DATE),
+//         expirationDate: formData.get(USER_FORM_FIELDS.USER_EXPIRATION_DATE),
+//         loanAmount: formData.get(USER_FORM_FIELDS.USER_LOAN_AMOUNT),
+//     }); 
+
+//     backgroundFormAddUser.classList.add('hiden');
+//     apiService.addNewUser(user);
+//     formElement.reset();
+//     searchUsers();
+//     parseLSInArr();
+//     createUsersList(arrMyUsers.reverse(), usersList);
+// }
+
+// const idUsersList = 'users_list';
 
 
 
@@ -333,15 +693,15 @@ function parseLSInArr() { // users, key
         
         arrMyUsers = [];
         arrMyUsers = JSON.parse(localStorage[LOCAL_STORAGE.KEY]);
+
+    } else {
+
+        console.log('parse fall');
     }
 }
+function createUserString(arrUsers, parent) {
 
-
-
-
-function createUserString(users, parent) {
-
-    users.forEach((user, i) => {
+    arrUsers.forEach((user, i) => {
 
         parent.innerHTML += `
             <li class="each_user">
@@ -380,151 +740,156 @@ function createUserString(users, parent) {
                     #${user.userId}
                 </span>
 
-                <div class='icon_edit'></div> 
-                <div class='icon_remove'></div> 
+                <div class='icon_edit icon_edit_${user.userId}' id='icon_edit_${user.userId}'></div> 
+                <div class='icon_remove icon_remove_${user.userId}' id='icon_remove_${user.userId}'></div> 
             </li>
         `;
     });
 }
+function cancelDeleteUser() {
 
-function deleteUser(remove, users) { // users, key
-
-    remove.forEach((indexBtnRemove, i) => {
-
-        indexBtnRemove.addEventListener('click', () => {
-            indexBtnRemove.parentElement.remove();
-            users.splice(i, 1);
-            localStorage[LOCAL_STORAGE.KEY] = JSON.stringify(users);
-
-            parseLSInArr();
-            createUsersList(arrMyUsers.reverse(), usersList);
-        });
-    });
+    childElem.parentElement.style.background="";
+    modalSubmitDelete.classList.add('hiden');
+    spanForUserDelete.innerHTML = '';
 }
+function deleteUser() { // users, key
 
-function editUserSubmit(form, formData, user, indexBtn, parent) { // key, modalEditUser, closeModalAdminPanel, addUsersBtn
+    // modalAdminPanel.classList.remove('active');
+    // myUsersBtn.classList.add('hiden');
 
-    form.addEventListener('submit', (e) => {
-        e.preventDefault();
+    childElem.parentElement.style.background="";
 
-        console.log('click submit ===>', user);
-
-        formData = new FormData(form);
-
-        Object.defineProperty(user, 'userSurname', {
-            value: formData.get('input_edit_user_surname') || user.userSurname
-        });
-        Object.defineProperty(user, 'userName', {
-            value: formData.get('input_edit_user_name') || user.userName
-        });
-        Object.defineProperty(user, 'userPatronymic', {
-            value: formData.get('input_edit_user_patronymic') || user.userPatronymic
-        });
-        Object.defineProperty(user, 'loanDate', {
-            value: formData.get('input_edit_loan_date') || user.loanDate
-        });
-        Object.defineProperty(user, 'expirationDate', {
-            value: formData.get('input_edit_expiration_date') || user.expirationDate
-        });
-        Object.defineProperty(user, 'loanAmount', {
-            value: formData.get('input_edit_loan_amount') || user.loanAmount
-        });
-
-        indexBtn.parentElement.style.background='';
-
-        modalEditUser.classList.add('hidden');
-        closeModalAdminPanel.classList.remove('hidden');
-        addUsersBtn.classList.remove('hidden');
-
-        localStorage[LOCAL_STORAGE.KEY] = JSON.stringify(arrMyUsers);
-
-        warningUser = [];
-        expiredUser = [];
-        parseLSInArr();
-        createUsersList(arrMyUsers, parent);
-
-        console.log('click submit2 ===>', user);
-
-    });
-}
-
-function closeScript(form, indexBtn, closeBtn, btnAdd, modal) {
-
-    form.addEventListener('submit', (e) => {
-        e.preventDefault();
-    });
-
-    indexBtn.parentElement.style.background='';
-
-    closeBtn.classList.remove('hidden');
-    btnAdd.classList.remove('hidden');
-    modal.classList.add('hidden');
-}
-
-function editUser(edit, users, parent) { // меняет только первого выбранного ползователя // modalEditUser, closeModalAdminPanel, addUsersBtn, inputEditSurname, inputEditName, inputEditpatroniymic, inputEditLoanDate, inputEditExpDate, inputEditLoanAmount, btnSubmitEdit, closeModalEditUser
-
-    edit.forEach((btn, i) => {
-
-        let editUserVar = users[i];
-
-        btn.addEventListener('click', (e) => {
-            e.preventDefault();
-
-            edit.forEach((line) => {
-                line.parentElement.style.background = '';
-            });
-
-            btn.parentElement.style.background="rgb(165, 165, 165)";
-
-            modalEditUser.classList.remove('hidden');
-            closeModalAdminPanel.classList.add('hidden');
-            addUsersBtn.classList.add('hidden');
-
-            inputEditSurname.value = editUserVar.userSurname;
-            inputEditSurname.setAttribute('value', inputEditSurname.value);
-
-            inputEditName.value = editUserVar.userName;
-            inputEditName.setAttribute('value', inputEditName.value);
-
-            inputEditpatroniymic.value = editUserVar.userPatronymic;
-            inputEditpatroniymic.setAttribute('value', inputEditpatroniymic.value);
-
-            inputEditLoanDate.value = editUserVar.loanDate;
-            inputEditLoanDate.setAttribute('value', inputEditLoanDate.value);
-
-            inputEditExpDate.value = editUserVar.expirationDate;
-            inputEditExpDate.setAttribute('value', inputEditExpDate.value);
-
-            inputEditLoanAmount.value = editUserVar.loanAmount;
-            inputEditLoanAmount.setAttribute('value', inputEditLoanAmount.value);
-
+    childElem.parentElement.remove();
             
-            btnSubmitEdit.addEventListener('click', () => {
-                editUserSubmit(formElementMini, formDataMini, editUserVar, btn, parent);
-            });
+    arrMyUsers.splice(indexOfUser, 1);
 
+    localStorage[LOCAL_STORAGE.KEY] = JSON.stringify(arrMyUsers); // шевченко галивец рябичев
 
-            closeModalEditUser.addEventListener('click', () => {
-                closeScript(formElementMini, btn, closeModalAdminPanel, addUsersBtn, modalEditUser);
+    parseLSInArr();
 
-                console.log('after close user[i] ===>', editUserVar);
-            });
-        });
-    });
+    createUsersList(arrMyUsers.reverse(), usersList);
+
+    cancelDeleteUser();
+
 }
+function addUserInModalSubmitForDelete(user) {
 
-function checkDateAttention(users) { // добавить в другую функцию
+    spanForUserDelete.innerHTML = `
+        ${user.userSurname} 
+        ${user.userName.substring(0, 1)}.
+        ${user.userPatronymic.substring(0, 1)}.
+        ?
+    `;
+}
+function choseUserForDelete() {
 
-    parseLSInArr(); // 
+    searchId = id.substring(12, 22);
+    indexOfUser = arrMyUsers.findIndex(user => user.userId === searchId);
+    deleteUserVar = arrMyUsers[indexOfUser];
 
-    users.forEach((user, i) => {
+    childElem = document.querySelector(`.icon_remove_${searchId}`);
+
+    childElem.parentElement.style.background="rgb(165, 165, 165)"; // доделать
+
+    modalSubmitDelete.classList.remove('hiden');
+    addUserInModalSubmitForDelete(deleteUserVar);
+}
+function editUserSubmit(user, indexBtn) { // key, formData, modalEditUser, closeModalAdminPanel, addUsersBtn
+
+    formData = new FormData(formElementMini);
+
+    user.userSurname = formData.get('input_edit_user_surname') || user.userSurname;
+    user.userName = formData.get('input_edit_user_name') || user.userName;
+    user.userPatronymic = formData.get('input_edit_user_patronymic') || user.userPatronymic;
+    user.loanDate = formData.get('input_edit_loan_date') || user.loanDate;
+    user.expirationDate = formData.get('input_edit_expiration_date') || user.expirationDate;
+    user.loanAmount = formData.get('input_edit_loan_amount') || user.loanAmount;
+
+    localStorage[LOCAL_STORAGE.KEY] = JSON.stringify(arrMyUsers);
+
+    modalEditUser.classList.add('hiden');
+    closeModalAdminPanel.classList.remove('hiden');
+    addUsersBtn.classList.remove('hiden');
+
+    warningUser = []; 
+    expiredUser = [];
+    arrMyUsers = [];
+
+    arrMyUsers = JSON.parse(localStorage[LOCAL_STORAGE.KEY]);
+
+    createUsersList(arrMyUsers.reverse(), usersList);
+
+    // btnSubmitEdit.addEventListener('submit', (e) => {
+    //     e.preventDefault();
+    // });
+}
+function editUser() {
+
+    modalAdminPanel.classList.add('edit');
+
+    parseLSInArr();
+
+    searchId = id.substring(10, 21);
+    indexOfUser = arrMyUsers.findIndex(user => user.userId === searchId);
+    editUserVar = arrMyUsers[indexOfUser];
+
+    childElem = document.querySelector(`.icon_edit_${searchId}`);
+
+    childElem.parentElement.style.background="rgb(165, 165, 165)";
+
+    modalEditUser.classList.remove('hiden');
+    closeModalAdminPanel.classList.add('hiden');
+    addUsersBtn.classList.add('hiden');
+
+    inputEditSurname.value = editUserVar.userSurname;
+    inputEditSurname.setAttribute('value', inputEditSurname.value);
+
+    inputEditName.value = editUserVar.userName;
+    inputEditName.setAttribute('value', inputEditName.value);
+
+    inputEditpatroniymic.value = editUserVar.userPatronymic;
+    inputEditpatroniymic.setAttribute('value', inputEditpatroniymic.value);
+
+    inputEditLoanDate.value = editUserVar.loanDate;
+    inputEditLoanDate.setAttribute('value', inputEditLoanDate.value);
+
+    inputEditExpDate.value = editUserVar.expirationDate;
+    inputEditExpDate.setAttribute('value', inputEditExpDate.value);
+
+    inputEditLoanAmount.value = editUserVar.loanAmount;
+    inputEditLoanAmount.setAttribute('value', inputEditLoanAmount.value);
+}
+function submitEditUser() {
+
+    editUserSubmit(editUserVar, idEditBtn);
+
+    childElem.parentElement.style.background="";
+
+    modalAdminPanel.classList.remove('edit');
+    modalEditUser.classList.add('hiden');
+
+}
+function closeEditUser() {
+
+    childElem.parentElement.style.background="";
+
+    modalEditUser.classList.add('hiden');
+    closeModalAdminPanel.classList.remove('hiden');
+    addUsersBtn.classList.remove('hiden');
+    modalAdminPanel.classList.remove('edit');
+}
+function checkDateAttention(arrUsers) { // добавить в другую функцию
+
+    parseLSInArr();
+
+    arrUsers.forEach((user, i) => {
 
         let dateNow = Date.now();
         let getEndDateInSec = Date.parse(user.expirationDate);
         let threeDaysInSec = 259200000;
         let stringOfUser = document.querySelectorAll('.each_user');
 
-        if ((getEndDateInSec) <= dateNow) {
+        if (getEndDateInSec <= dateNow) {
             expiredUser.push(user);
             stringOfUser[i].classList.remove('each_warning');
             stringOfUser[i].classList.add('each_expired');
@@ -532,43 +897,27 @@ function checkDateAttention(users) { // добавить в другую фун�
             warningUser.push(user);
             stringOfUser[i].classList.remove('each_expired');
             stringOfUser[i].classList.add('each_warning');
+        } else if (getEndDateInSec >= dateNow) {
+            stringOfUser[i].classList.remove('each_warning');
+            stringOfUser[i].classList.remove('each_expired');
         }
     });
 }
-
-function createUsersList(users, parent) {
-
-    parent.innerHTML = '';
-
-    createUserString(users, parent);
-
-    const removeIcon = document.querySelectorAll('.icon_remove');
-    const editIcon = document.querySelectorAll('.icon_edit');
-
-    deleteUser(removeIcon, users);
-
-    editUser(editIcon, users, parent);
-
-    checkDateAttention(users);
-}
-
-
-
-
-function createUsersListAttention(users, parent) {
+function createUsersList(arrUsers, parent) {
 
     parent.innerHTML = '';
 
-    createUserString(users, parent);
+    createUserString(arrUsers, parent);
 
-    const removeIcon = document.querySelectorAll('.icon_remove');
-    const editIcon = document.querySelectorAll('.icon_edit');
+    // const removeIcon = document.querySelectorAll('.icon_remove');
+    // const editIcon = document.querySelectorAll('.icon_edit');
 
-    deleteUser(users, removeIcon);
+    // deleteUser(removeIcon, arrUsers);
 
-    editUser(editIcon, users);
+    // editUser(editIcon, arrUsers);
+
+    checkDateAttention(arrUsers);
 }
-
 function createNotificationlist(arr, ulList) {
 
     ulList.innerHTML = '';
@@ -587,82 +936,78 @@ function createNotificationlist(arr, ulList) {
                     ${user.userName.substring(0, 1)}.
                     ${user.userPatronymic.substring(0, 1)}.
                 </span>
+
+                <div class='icon_search icon_search_${user.userId}' id='icon_search_${user.userId}'></div>
+
+                <div class='icon_remove icon_remove_${user.userId}' id='icon_remove_${user.userId}'></div>
             </li>
         `;
     });
 }
+function showNotificationList() { // notifBtn, arr, ulList
 
-function showNotificationList(notifBtn, arr, ulList) { // backgroundForNotification, notificationIndicator, closeModalNotification, 
+    modalAdminPanel.classList.remove('active');
+    backgroundForNotification.classList.remove('hiden');
+    notificationBtn.classList.add('hiden');
+    notificationIndicator.classList.add('hiden');
+
+    createNotificationlist(warningUser, notificationWarningList);
+    createNotificationlist(expiredUser, notificationExpiredList);
+}
+function closeNotificationModal() {
+    modalAdminPanel.classList.add('active');
+    backgroundForNotification.classList.add('hiden');
+    notificationBtn.classList.remove('hiden');
+    notificationIndicator.classList.remove('hiden');
     
-    notifBtn.addEventListener('click', () => {
-
-        backgroundForNotification.classList.remove('hiden');
-        notifBtn.classList.add('hiden');
-        notificationIndicator.classList.add('hiden');
-    
-        closeModalNotification.addEventListener('click', (e) => {
-            e.preventDefault();
-
-            backgroundForNotification.classList.add('hiden');
-            notifBtn.classList.remove('hiden');
-            notificationIndicator.classList.remove('hiden');
-        });
-
-        // checkDateAttention(arrMyUsers);
-        createNotificationlist(arr, ulList);
-    });
+    filterAll();
 }
+function openMainModal() {
 
+    modalAdminPanel.classList.add('active');
+    myUsersBtn.classList.add('hiden');
 
+    iconSortByAddedDate.classList.add('active');
+    iconSortBySurname.classList.remove('active');
+    iconSortByLoanAmount.classList.remove('active');
+    iconSortResetSurname.classList.remove('active');
+    iconSortResetAddedDate.classList.remove('active');
+    iconSortResetLoanAmount.classList.remove('active');
 
-
-function showMainModal(mainBtn, modal, parent) { // users????
-
-    mainBtn.addEventListener('click', (e) => {
-        e.preventDefault();
-
-        modal.classList.add('active');
-        mainBtn.classList.add('hidden');
-        parseLSInArr(); // делегирование
-        createUsersList(arrMyUsers.reverse(), parent);
-    });
+    parseLSInArr();
+    createUsersList(arrMyUsers.reverse(), usersList);
 }
+function closeMainModal() { // warArr, expArr // closeBtn, modal, mainBtn // ready
 
-function closeMainModal(closeBtn, modal, mainBtn) { // warArr, expArr
+    usersList.classList.remove('users_list-warning');
+    usersList.classList.remove('users_list-expired');
 
-    closeBtn.addEventListener('click', (e) => {
-        e.preventDefault();
+    modalAdminPanel.classList.remove('active');
+    myUsersBtn.classList.remove('hiden');
+    warningUser = [];
+    expiredUser = [];
 
-        modal.classList.remove('active');
-        mainBtn.classList.remove('hidden');
-        warningUser = [];
-        expiredUser = [];
-    });
+    filterAll();
 }
+function showModalForm() { // btnAdd, modal, mainModal
 
+    backgroundFormAddUser.classList.remove('hiden');
+    modalAddUsers.classList.add('active');
+    modalAdminPanel.classList.remove('active');
 
+    searchModal.classList.add('hiden');
+    dateSerachForm.classList.add('hiden');
+    closeDateSearchForm.classList.add('hiden');
 
-
-function showModalForm(btnAdd, modal, mainModal) { // одинаковые функции closeModalForm()
-
-    btnAdd.addEventListener('click', (e) => {
-        e.preventDefault();
-
-        modal.classList.add('active');
-        mainModal.classList.remove('active');
-    });
 }
+function closeModalForm() { // одинаковые функции showModalForm() // closeBtn, modal, mainModal
 
-function closeModalForm(closeBtn, modal, mainModal) { // одинаковые функции showModalForm()
+    backgroundFormAddUser.classList.add('hiden');
+    modalAdminPanel.classList.add('active');
+    modalAddUsers.classList.remove('active');
 
-    closeBtn.addEventListener('click', (e) => {
-        e.preventDefault();
-
-        mainModal.classList.add('active');
-        modal.classList.remove('active');
-    });
+    iconSearchUsers.classList.remove('hiden');
 }
-
 
 
 
@@ -681,14 +1026,39 @@ function formModalSubmit() { // (form, formData, api, users, parent) // formElem
             expirationDate: formData.get(USER_FORM_FIELDS.USER_EXPIRATION_DATE),
             loanAmount: formData.get(USER_FORM_FIELDS.USER_LOAN_AMOUNT),
         }); 
+
+        backgroundFormAddUser.classList.add('hiden');
         apiService.addNewUser(user);
         formElement.reset();
-        searchUsers(); // проверить
+
+        searchUsers();
         parseLSInArr();
         createUsersList(arrMyUsers.reverse(), usersList);
     });
 }
 
+// function formModalSubmit() { // (form, formData, api, users, parent) // formElement, formData, apiService, usersList 
+
+    
+//     formData = new FormData(idForm);
+
+//     user = new User({
+//         userSurname: formData.get(USER_FORM_FIELDS.USER_SURNAME),
+//         userName: formData.get(USER_FORM_FIELDS.USER_NAME),
+//         userPatronymic: formData.get(USER_FORM_FIELDS.USER_PATRONYMIC),
+//         loanDate: formData.get(USER_FORM_FIELDS.USER_LOAN_DATE),
+//         expirationDate: formData.get(USER_FORM_FIELDS.USER_EXPIRATION_DATE),
+//         loanAmount: formData.get(USER_FORM_FIELDS.USER_LOAN_AMOUNT),
+//     }); 
+
+//     backgroundFormAddUser.classList.add('hiden');
+//     apiService.addNewUser(user);
+//     formElement.reset();
+
+//     searchUsers();
+//     parseLSInArr();
+//     createUsersList(arrMyUsers.reverse(), usersList);
+// }
 
 
 
@@ -710,144 +1080,82 @@ function hideIconForSort(iconS, iconAD, iconLA, iconRS, iconRAD, iconRLA) {
     iconRAD.classList.add('hiden');
     iconRLA.classList.add('hiden');
 }
+function filterAll() { // btnFilter, parent, iconS, iconAD, iconLA, iconRS, iconRAD, iconRLA 
 
-function filterAll(btnFilter, parent, iconS, iconAD, iconLA, iconRS, iconRAD, iconRLA) { // users,  warArr, expArr
-    btnFilter.addEventListener('click', (e) => {
-        e.preventDefault();
+    usersList.classList.remove('users_list-warning');
+    usersList.classList.remove('users_list-expired');
 
-        parent.classList.remove('users_list-warning');
-        parent.classList.remove('users_list-expired');
+    warningUser = [];
+    expiredUser = [];
 
-        warningUser = [];
-        expiredUser = [];
+    iconSortBySurname.classList.remove('hiden');
+    iconSortByAddedDate.classList.remove('hiden');
+    iconSortByLoanAmount.classList.remove('hiden');
 
-        iconS.classList.remove('hiden');
-        iconAD.classList.remove('hiden');
-        iconLA.classList.remove('hiden');
+    iconSortResetSurname.classList.add('hiden');
+    iconSortResetAddedDate.classList.add('hiden');
+    iconSortResetLoanAmount.classList.add('hiden');
 
-        iconRS.classList.add('hiden');
-        iconRAD.classList.add('hiden');
-        iconRLA.classList.add('hiden');
+    iconSortBySurname.classList.remove('active');
+    iconSortByLoanAmount.classList.remove('active');
+    iconSortByAddedDate.classList.add('active');
 
-        parseLSInArr(); // проверить
-        createUsersList(arrMyUsers.reverse(), parent);
-    });
+    parseLSInArr();
+    createUsersList(arrMyUsers.reverse(), usersList);
 }
+function filterWarning() { // btnFilter, parent, warArr, iconS, iconAD, iconLA, iconRS, iconRAD, iconRLA
 
-function filterWarning(btnFilter, parent, warArr, iconS, iconAD, iconLA, iconRS, iconRAD, iconRLA) { // одинкаовые функции filterExpired()
+    usersList.innerHTML = '';
 
-    btnFilter.addEventListener('click', (e) => {
-        e.preventDefault();
-
-        parent.innerHTML = '';
-
-        parent.classList.add('users_list-warning');
-        parent.classList.remove('users_list-expired');
-        
-        hideIconForSort(iconS, iconAD, iconLA, iconRS, iconRAD, iconRLA);
-        
-        createUserString(warArr, parent);
-    });
+    usersList.classList.add('users_list-warning');
+    usersList.classList.remove('users_list-expired');
+    
+    hideIconForSort(iconSortBySurname, iconSortByAddedDate, iconSortByLoanAmount, iconSortResetSurname, iconSortResetAddedDate, iconSortResetLoanAmount);
+    
+    createUserString(warningUser, usersList);
 }
+function filterExpired() { // btnFilter, parent, expArr, iconS, iconAD, iconLA, iconRS, iconRAD, iconRLA
 
-function filterExpired(btnFilter, parent, expArr, iconS, iconAD, iconLA, iconRS, iconRAD, iconRLA) { // одинкаовые функции filterWarning()
+    usersList.innerHTML = '';
 
-    btnFilter.addEventListener('click', (e) => {
-        e.preventDefault();
+    usersList.classList.remove('users_list-warning');
+    usersList.classList.add('users_list-expired');
 
-        parent.innerHTML = '';
+    hideIconForSort(iconSortBySurname, iconSortByAddedDate, iconSortByLoanAmount, iconSortResetSurname, iconSortResetAddedDate, iconSortResetLoanAmount);
 
-        parent.classList.remove('users_list-warning');
-        parent.classList.add('users_list-expired');
+    createUserString(expiredUser, usersList);
 
-        hideIconForSort(iconS, iconAD, iconLA, iconRS, iconRAD, iconRLA);
-
-        createUserString(expArr, parent);
-    });
 }
 
 
-
-
-function searchUserModal(idElem) {
-
-    idElem.insertAdjacentHTML(
-        'beforebegin', 
-
-        `<div class='search_modal hiden'>
-
-            <div class='search_modal-wrapper'>
-                <div class='icon_calendar hiden' id='icon_calendar'></div>
-
-                <div class='dynamic_search hiden'>
-                    <form class='form_search' id='form_dynamic'>
-                        <input type='text' class='input input_search' placeholder='Что ищем?' />
-                        <div class='form_search-reset'></div>
-                    </form>
-                </div>
-
-                <div class='search_modal_close hiden'></div>
-
-                <form class='icon_calendar-form hiden' id='form_date'>
-
-                    <input type='date' class='input input_date-search input_date-start' name='input_date-start' autocomplete='on' />
-                    <input type='date' class='input input_date-search input_date-end' name='input_date-end' autocomplete='on' />
-                
-                    <button type='submit' class='button input submit_search'>
-                       найти
-                    </button>
-
-                </form>
-
-                <div class='close_calendar-form hiden'></div>
-
-            </div>
-
-        </div>`
-    );
-}
 
 function searchUsers() { // iconSearch, btnAdd, closeBtnModal, users, parent // users, key, arrWar, arrExp // iconSearchUsers, addUsersBtn, closeModalAddUsers, arrMyUsers, usersList, 
 
     if (!localStorage[LOCAL_STORAGE.KEY]) {
+
         iconSearchUsers.classList.add('hiden');
+
     } else if (localStorage[LOCAL_STORAGE.KEY]) {
+
         iconSearchUsers.classList.remove('hiden');
 
         iconSearchUsers.addEventListener('click', (e) => {
             e.preventDefault();
-            
 
             warningUser = [];
             expiredUser = [];
 
-
             iconSearchUsers.classList.add('hiden');
-    
-            const searchModal = document.querySelector('.search_modal');
-            // const serachModalWrapper = document.querySelector('.search_modal-wrapper');
-            const iconCalendar = document.querySelector('.icon_calendar');
-            const dynamicSearch = document.querySelector('.dynamic_search'); 
-            const formDynamicSubmit = document.querySelector('.form_search');
-            const inputSearch = document.querySelector('.input_search');
-            const closeSearchForm = document.querySelector('.search_modal_close');
-            const resetFormSearch = document.querySelector('.form_search-reset'); // переместил сюда из 
+            notificationBtn.classList.add('hiden');
+            notificationIndicator.classList.add('hiden');
 
             iconCalendar.classList.remove('hiden');
             searchModal.classList.remove('hiden');
             dynamicSearch.classList.remove('hiden');
             closeSearchForm.classList.remove('hiden');
-            
-            addUsersBtn.addEventListener('click', () => {
-                searchModal.classList.add('hiden');
-            });
-
-            closeModalAddUsers.addEventListener('click', () => {
-                iconSearchUsers.classList.remove('hiden');
-            });
-
 
             function resetFormSearchNow() { // parent
+
                 resetFormSearch.addEventListener('click', (e) => {
                     e.preventDefault();
 
@@ -859,14 +1167,6 @@ function searchUsers() { // iconSearch, btnAdd, closeBtnModal, users, parent // 
             // поиск по датам - - - - - - - - - - - - - - - - - - - - - - - - - - - -
             iconCalendar.addEventListener('click', (e) => {
                 e.preventDefault();
-
-                const dateSerachForm = document.querySelector('.icon_calendar-form');
-                const inputDateStart = document.querySelector('.input_date-start');
-                const inputDateEnd = document.querySelector('.input_date-end');
-                // const btnSubmitSearch = document.querySelector('.submit_search');
-                const formDateSubmit = document.querySelector('.icon_calendar-form');
-                const closeDateSearchForm = document.querySelector('.close_calendar-form');
-                
     
                 closeDateSearchForm.classList.remove('hiden');
                 iconCalendar.classList.add('hiden');
@@ -877,18 +1177,25 @@ function searchUsers() { // iconSearch, btnAdd, closeBtnModal, users, parent // 
     
                 closeDateSearchForm.addEventListener('click', (e) => {
                     e.preventDefault();
-    
+
                     formDynamicSubmit.reset();
                     iconSearchUsers.classList.remove('hiden');
                     dateSerachForm.classList.add('hiden');
                     closeDateSearchForm.classList.add('hiden');
+
+                    notificationBtn.classList.remove('hiden');
+                    notificationIndicator.classList.remove('hiden');
+
+                    // parseLSInArr();
+                    // createUsersList(arrMyUsers.reverse(), usersList);
+                    filterAll();
                 });
     
                 formDateSubmit.addEventListener('submit', (e) => {
                     e.preventDefault();
     
                     const resultArrForDate = [];
-                    parseLSInArr(); // проверить
+                    parseLSInArr();
     
                     const dateA = Date.parse(`${inputDateStart.value}`);
                     const dateC = Date.parse(`${inputDateEnd.value}`);
@@ -911,23 +1218,30 @@ function searchUsers() { // iconSearch, btnAdd, closeBtnModal, users, parent // 
             closeSearchForm.addEventListener('click', (e) => {
                 e.preventDefault();
                 
+                usersList.classList.remove('users_list-warning');
+                usersList.classList.remove('users_list-expired');
+
+                notificationBtn.classList.remove('hiden');
+                notificationIndicator.classList.remove('hiden');
+
                 iconSearchUsers.classList.remove('hiden');
                 searchModal.classList.add('hiden');
 
                 formDynamicSubmit.reset();
-                parseLSInArr(); // users
-                createUsersList(arrMyUsers.reverse(), usersList);
+
+                // parseLSInArr();
+                // createUsersList(arrMyUsers.reverse(), usersList);
+                filterAll();
             });
     
 
             // динамический поиск - - - - - - - - - - - - - - - - - - - - - - - - - -
-            // const resetFormSearch = document.querySelector('.form_search-reset'); // от сюда переместил
             const findUsers = [];
             let arrFromLS = [];
     
             arrFromLS = JSON.parse(localStorage[LOCAL_STORAGE.KEY]);
             
-            arrFromLS.forEach(user => {
+            arrFromLS.reverse().forEach(user => {
                 findUsers.push(user);
             });
     
@@ -957,7 +1271,6 @@ function searchUsers() { // iconSearch, btnAdd, closeBtnModal, users, parent // 
                     const getUsersByFullNameVar = getThisUsersByFullName(this.value, arrFromLS);
                     createUsersList(getUsersByFullNameVar, usersList);
                 }
-    
             }
             
             inputSearch.addEventListener('change', showUsers);
@@ -974,151 +1287,315 @@ function searchUsers() { // iconSearch, btnAdd, closeBtnModal, users, parent // 
 
 
 
-
 function sortListBySurname() { // iconSort, users, parent, sortArr
 
-    iconSortBySurname.addEventListener('click', (e) => {
-        e.preventDefault();
+    warningUser = [];
+    expiredUser = [];
 
-        warningUser = [];
-        expiredUser = [];
+    iconSortBySurname.classList.add('hiden');
+    iconSortResetSurname.classList.remove('hiden');
 
-        iconSortBySurname.classList.add('hiden');
-        iconSortResetSurname.classList.remove('hiden');
+    iconSortByAddedDate.classList.remove('hiden');
+    iconSortByLoanAmount.classList.remove('hiden');
+    iconSortResetAddedDate.classList.add('hiden');
+    iconSortResetLoanAmount.classList.add('hiden');
 
-        iconSortByAddedDate.classList.remove('hiden');
-        iconSortByLoanAmount.classList.remove('hiden');
-        iconSortResetAddedDate.classList.add('hiden');
-        iconSortResetLoanAmount.classList.add('hiden');
+    iconSortResetSurname.classList.add('active');
+    iconSortBySurname.classList.remove('active');
+    iconSortResetAddedDate.classList.remove('active');
+    iconSortByAddedDate.classList.remove('active');
+    iconSortByLoanAmount.classList.remove('active');
+    iconSortResetLoanAmount.classList.remove('active');
 
-        sortArr = arrMyUsers.sort(function (a, b) {
-            if (a.userSurname > b.userSurname) {
-              return 1;
-            }
-            if (a.userSurname < b.userSurname) {
-              return -1;
-            }
-            return 0;
-        });
-
-        // checkDateAttention(sortArr);
-        createUsersList(sortArr, usersList);
-        sortListReset(iconSortBySurname, iconSortResetSurname);
-        sortArr = [];
+    sortArr = arrMyUsers.sort(function (a, b) {
+        if (a.userSurname > b.userSurname) {
+            return 1;
+        }
+        if (a.userSurname < b.userSurname) {
+            return -1;
+        }
+        return 0;
     });
-}
 
+    createUsersList(sortArr, usersList);
+    sortArr = [];
+}
+function resetSortListBySurname() {
+
+    warningUser = [];
+    expiredUser = [];
+
+    iconSortBySurname.classList.remove('hiden');
+    iconSortResetSurname.classList.add('hiden');
+
+    iconSortByAddedDate.classList.remove('hiden');
+    iconSortByLoanAmount.classList.remove('hiden');
+    iconSortResetAddedDate.classList.add('hiden');
+    iconSortResetLoanAmount.classList.add('hiden');
+
+    iconSortBySurname.classList.add('active');
+    iconSortResetSurname.classList.remove('active');
+    iconSortResetAddedDate.classList.remove('active');
+    iconSortByAddedDate.classList.remove('active');
+    iconSortByLoanAmount.classList.remove('active');
+    iconSortResetLoanAmount.classList.remove('active');
+
+    sortArr = arrMyUsers.sort(function (a, b) {
+        if (b.userSurname > a.userSurname) {
+            return 1;
+        }
+        if (b.userSurname < a.userSurname) {
+            return -1;
+        }
+        return 0;
+    });
+
+    createUsersList(sortArr, usersList);
+    sortArr = [];
+}
 function sortListByDateAded() { // iconSort, users, parent, sortArr
 
-    iconSortByAddedDate.addEventListener('click', (e) => {
-        e.preventDefault();
+    warningUser = [];
+    expiredUser = [];
 
-        warningUser = [];
-        expiredUser = [];
+    iconSortByAddedDate.classList.add('hiden');
+    iconSortResetAddedDate.classList.remove('hiden');
 
-        iconSortByAddedDate.classList.add('hiden');
-        iconSortResetAddedDate.classList.remove('hiden');
+    iconSortBySurname.classList.remove('hiden');
+    iconSortByLoanAmount.classList.remove('hiden');
+    iconSortResetSurname.classList.add('hiden');
+    iconSortResetLoanAmount.classList.add('hiden');
 
-        iconSortBySurname.classList.remove('hiden');
-        iconSortByLoanAmount.classList.remove('hiden');
-        iconSortResetSurname.classList.add('hiden');
-        iconSortResetLoanAmount.classList.add('hiden');
+    iconSortResetAddedDate.classList.add('active');
+    iconSortByAddedDate.classList.remove('active');
+    iconSortBySurname.classList.remove('active');
+    iconSortResetSurname.classList.remove('active');
+    iconSortByLoanAmount.classList.remove('active');
+    iconSortResetLoanAmount.classList.remove('active');
 
-        sortArr = arrMyUsers.sort(function (a, b) {
-            let dateA = new Date(a.dateAdded);
-            let dateB = new Date(b.dateAdded);
-            
-            // return dateB - dateA;
-            return dateA - dateB;
-        });
-
-        // checkDateAttention(sortArr);
-        createUsersList(sortArr, usersList);
-        sortListReset(iconSortByAddedDate, iconSortResetAddedDate);
-        sortArr = [];
-    });
-}
-
-function sortListByLoanAmount() { // iconSort, users, parent, sortArr, warArr, expArr
-
-    iconSortByLoanAmount.addEventListener('click', (e) => {
-        e.preventDefault();
+    sortArr = arrMyUsers.sort(function (a, b) {
+        let dateA = new Date(a.dateAdded);
+        let dateB = new Date(b.dateAdded);
         
-        warningUser = [];
-        expiredUser = [];
-
-        iconSortByLoanAmount.classList.add('hiden');
-        iconSortResetLoanAmount.classList.remove('hiden');
-
-        iconSortBySurname.classList.remove('hiden');
-        iconSortByAddedDate.classList.remove('hiden');
-        iconSortResetSurname.classList.add('hiden');
-        iconSortResetAddedDate.classList.add('hiden');
-
-        sortArr = arrMyUsers.sort((a, b) => Number(a.loanAmount) - Number(b.loanAmount));
-
-        // checkDateAttention(sortArr);
-        createUsersList(sortArr, usersList);
-        sortListReset(iconSortByLoanAmount, iconSortResetLoanAmount);
-        sortArr = [];
+        return dateA - dateB;
     });
-}
 
-function sortListReset(iconSort, iconReset) { // users, parent
+    createUsersList(sortArr, usersList);
+    sortArr = [];
+}
+function resetSortListByDateAded() {
     
-    iconReset.addEventListener('click', (e) => {
-        e.preventDefault();
+    warningUser = [];
+    expiredUser = [];
+
+    iconSortResetAddedDate.classList.add('hiden');
+    iconSortByAddedDate.classList.remove('hiden');
+
+    iconSortByAddedDate.classList.add('active');
+    iconSortResetAddedDate.classList.remove('active');
+    iconSortBySurname.classList.remove('active');
+    iconSortResetSurname.classList.remove('active');
+    iconSortByLoanAmount.classList.remove('active');
+    iconSortResetLoanAmount.classList.remove('active');
+
+    createUsersList(arrMyUsers.reverse(), usersList);
+
+    sortArr = [];
+}
+function sortListByLoanAmount() { // iconSort, users, parent, sortArr, warArr, expArr
         
-        warningUser = [];
-        expiredUser = [];
+    warningUser = [];
+    expiredUser = [];
 
-        iconReset.classList.add('hiden');
-        iconSort.classList.remove('hiden');
+    iconSortByLoanAmount.classList.add('hiden');
+    iconSortResetLoanAmount.classList.remove('hiden');
+    iconSortBySurname.classList.remove('hiden');
+    iconSortByAddedDate.classList.remove('hiden');
+    iconSortResetSurname.classList.add('hiden');
+    iconSortResetAddedDate.classList.add('hiden');
 
-        parseLSInArr();
-        // checkDateAttention(arrMyUsers);
-        createUsersList(arrMyUsers.reverse(), usersList);
+    iconSortResetLoanAmount.classList.add('active');
+    iconSortByLoanAmount.classList.remove('active');
+    iconSortByAddedDate.classList.remove('active');
+    iconSortResetAddedDate.classList.remove('active');
+    iconSortBySurname.classList.remove('active');
+    iconSortResetSurname.classList.remove('active');
 
-        sortArr = [];
+    sortArr = arrMyUsers.sort((a, b) => Number(a.loanAmount) - Number(b.loanAmount));
+
+    createUsersList(sortArr, usersList);
+
+    sortArr = [];
+}
+function resetSortListByLoanAmount() {
+    
+    warningUser = [];
+    expiredUser = [];
+
+    iconSortResetLoanAmount.classList.add('hiden');
+    iconSortByLoanAmount.classList.remove('hiden');
+    iconSortBySurname.classList.remove('hiden');
+    iconSortByAddedDate.classList.remove('hiden');
+    iconSortResetSurname.classList.add('hiden');
+    iconSortResetAddedDate.classList.add('hiden');
+
+    iconSortByLoanAmount.classList.add('active');
+    iconSortResetLoanAmount.classList.remove('active');
+    iconSortByAddedDate.classList.remove('active');
+    iconSortResetAddedDate.classList.remove('active');
+    iconSortBySurname.classList.remove('active');
+    iconSortResetSurname.classList.remove('active');
+
+    sortArr = arrMyUsers.sort((a, b) => Number(b.loanAmount) - Number(a.loanAmount));
+
+    createUsersList(sortArr, usersList);
+
+    sortArr = [];
+}
+
+
+
+function runAll() {
+    
+    searchUsers();
+
+    const idRoot = 'root';
+    const idMyUsersBtn = 'btn_show_my_users';
+    const idModalMainClose = 'close_modal_main';
+    const idModalMain = 'modal_main';
+    const idModalEditUser = 'modal_edit_user';
+    const idCloseModalEditUser = 'close_modal_edit_user';
+    const idFormMini = 'form_mini';
+    const idSubmitEdit = 'submit_edit'; // submit
+    const idUsersListHead = 'users_list-head';
+    const idIconSortBySurname = 'sort_icon-surname';
+    const idIconSortBySurnameReset = 'sort_icon-reset_surname';
+    const idIconSortByDateAdded = 'sort_icon-added_date';
+    const idIconSortByDateAddedReset = 'sort_icon-reset_added_date';
+    const idIconSortByLoanAmount = 'sort_icon-loan_amount';
+    const idIconSortByLoanAmountReset = 'sort_icon-reset_amount';
+    const idFilterRoundsAll = 'filter_rounds-all';
+    const idFilterRoundsWarning = 'filter_rounds-warning';
+    const idFilterRoundsExpired = 'filter_rounds-expired';
+    const idIconCalendar = 'icon_calendar';
+    const idFormDynamic = 'form_dynamic';
+    const idFormSearchReset = 'form_search-reset';
+    const idSearchModalClose = 'search_modal_close';
+    const idIconCalendarForm = 'icon_calendar-form';
+    const idCloseCalendarForm = 'close_calendar-form';
+    const idSubmitSearch = 'submit_search'; // submit
+    const idSearch = 'search';
+    const idIconModalNotification = 'icon_modal_notification';
+    const idIndicator = 'indicator';
+    const idBackgroundForNotification = 'background_for_notification';
+    const idBtnNotificationHiden = 'btn_notification-hiden';
+    const idModalNotificationClose = 'modal_notification-close';
+    const idBtnAddNewUser = 'btn_add_new_user';
+    const idModalFormAddUserWrapper = 'modal_form_add_user-wrapper';
+    const idCloseModalFormAddUsers = 'close_modal_form_add_users';
+    const idForm = 'form';
+    const idSubmit = 'submit'; // submit
+    const idModalSubmitDelete = 'modal_submit-delete';
+    const idBtnDeleteNo = 'modal_submit-delete-button-no';
+    const idBtnDeleteYes = 'modal_submit-delete-button-yes';
+
+
+    
+    const eventsHandlers = {
+        [idMyUsersBtn]: openMainModal,
+        [idRoot]: closeMainModal,
+        [idModalMainClose]: closeMainModal,
+        [idSubmitEdit]: submitEditUser,
+        [idCloseModalEditUser]: closeEditUser,
+        [idIconModalNotification]: showNotificationList,
+        [idModalNotificationClose]: closeNotificationModal,
+        [idBackgroundForNotification]: closeNotificationModal,
+        [idBtnNotificationHiden]: closeNotificationModal,
+        [idBtnAddNewUser]: showModalForm,
+        [idCloseModalFormAddUsers]: closeModalForm,
+        [idModalFormAddUserWrapper]: closeModalForm,
+        [idFilterRoundsAll]: filterAll,
+        [idFilterRoundsWarning]: filterWarning,
+        [idFilterRoundsExpired]: filterExpired,
+        // [idModalMain]: ,
+        [idIconSortBySurname]: sortListBySurname,
+        [idIconSortBySurnameReset]: resetSortListBySurname,
+        [idIconSortByDateAdded]: sortListByDateAded,
+        [idIconSortByDateAddedReset]: resetSortListByDateAded,
+        [idIconSortByLoanAmount]: sortListByLoanAmount,
+        [idIconSortByLoanAmountReset]: resetSortListByLoanAmount,
+        // [idForm]: formModalSubmit,
+        [idBtnDeleteYes]: deleteUser,
+        [idBtnDeleteNo]: cancelDeleteUser,
+        [idModalSubmitDelete]: cancelDeleteUser,
+        
+    }
+
+    window.addEventListener('click', (e) => {
+        // console.log(e.target.id);
+
+        id = e.target.id;
+        
+        // if (e.target.id === idForm) { 
+        //     console.log('ok')   
+        //     e.preventDefault();
+        // } else 
+        if (id.substring(0, 10) === ('icon_edit_')) {
+            idEditBtn = id;
+            eventsHandlers[idEditBtn] = editUser;
+        } else if (id.substring(0, 12) === ('icon_remove_')) {
+            idRemoveBtn = id;
+            eventsHandlers[idRemoveBtn] = choseUserForDelete;
+        } 
+
+        if (!eventsHandlers[id]) return;
+        
+        eventsHandlers[id]();
     });
 }
 
+runAll();
+
+
+// объеденить все if else в wwindow.addeventlistener
+
+// переделать переменные в универсальные id idBtn idUser
+
+// submit сделать не работает e.preventDefault();
+
+// все events переделать и останавливать где нужнока
+
+// при попытке поиска юзера не показывает списки просроченных юзеров
+
+// сделвть индикацию уведомлений
+
+// вынести все константы в глобальную область и заменить на них константы по классам
 
 
 
-function runAll() { // notifBtn, warUs, notifWL, expUs, notifEL, btnFA, parent, iconS, iconAD, iconLA, iconRS, iconRAD, iconRLA, btnFE, btnMain, modalAP, closeBtnAP, btnAU, modalAU, closeBtnAU, idElem, 
+// arrMyUsers.forEach((user, i) => {
+//     if (e.target.id.substring(10, 21) == user.userId) {
+//         console.log(i, user.userSurname, user.userName, user.userPatronymic, user.loanDate, user.expirationDate, user.loanAmount);
+//     } else return;
+// })
 
-    showNotificationList(notificationBtn, warningUser, notificationWarningList); // выписал аргументы // нужно вписать параметры
 
-    showNotificationList(notificationBtn, expiredUser, notificationExpiredList); // выписал аргументы // нужно вписать параметры
+// let observer = new MutationObserver(MutationRecords => {
+//     console.log(MutationRecords);
 
-    filterAll(btnFilterAll, usersList, iconSortBySurname, iconSortByAddedDate, iconSortByLoanAmount, iconSortResetSurname, iconSortResetAddedDate, iconSortResetLoanAmount); // выписал аргументы // нужно вписать параметры
+//     // const checkWarArr = warningUser;
+//     // const checkExpArr = expiredUser;
+//     // 
+//     // if (checkWarArr !== warningUser) {
+//     //     // красить индикатор в крассный
+//     // } else if (checkExpArr !== expiredUser) {
+//     //     // красить индикатор в крассный
+//     // } else {
+//     //     // красить индикатор в черный
+//     // }
 
-    filterWarning(btnFilterWarning, usersList, warningUser, iconSortBySurname, iconSortByAddedDate, iconSortByLoanAmount, iconSortResetSurname, iconSortResetAddedDate, iconSortResetLoanAmount); // выписал аргументы // нужно вписать параметры
+// });
 
-    filterExpired(btnFilterExpired, usersList, expiredUser, iconSortBySurname, iconSortByAddedDate, iconSortByLoanAmount, iconSortResetSurname, iconSortResetAddedDate, iconSortResetLoanAmount); // выписал аргументы // нужно вписать параметры
-
-    showMainModal(myUsersBtn, modalAdminPanel, usersList); // выписал аргументы // нужно вписать параметры
-
-    closeMainModal(closeModalAdminPanel, modalAdminPanel, myUsersBtn); // выписал аргументы // нужно вписать параметры
-
-    showModalForm(addUsersBtn, modalAddUsers, modalAdminPanel); // выписал аргументы // нужно вписать параметры
-
-    closeModalForm(closeModalAddUsers, modalAddUsers, modalAdminPanel); // выписал аргументы // нужно вписать параметры
-
-    formModalSubmit(); // проверить и добавить
-
-    sortListBySurname(); // проверить и добавить
-
-    sortListByDateAded(); // проверить и добавить
-
-    sortListByLoanAmount(); // проверить и добавить
-
-    // sortListReset(); // проверить и добавить
-
-    searchUserModal(search); // выписал аргументы // нужно вписать параметры
-
-    searchUsers(); // проверить и добавить
-}
-
-runAll(); // вставить аргументы
+// observer.observe(notificationWarningList, {
+//     childList: true,
+// });

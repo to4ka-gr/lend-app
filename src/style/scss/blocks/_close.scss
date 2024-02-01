@@ -1,29 +1,51 @@
-.close_modal_main, .close_modal_form_add_users, .close_modal_edit_user, .modal_notification-close, .close_calendar-form, .search_modal_close {
+.close {
+    &_modal_main, &_modal_form_add_users, &_modal_edit_user, &_calendar-form {
+        display: inline-block;
+        position: absolute;
+        top: 5px;
+        right: -23px;
+        width: 18px;
+        height: 18px;
+        background: url('../icons/Close.svg') center center/cover no-repeat;
+        &.hiden  {
+            display: none;
+        }
+    }
+    &_modal_edit_user {
+        height: 30px;
+        width: 30px;
+        right: 0;
+    }
+    &_calendar-form {
+        height: 30px;
+        width: 30px;
+        right: 0;
+        top: 5px;
+        background: url('../icons/back.png') center center/cover no-repeat;
+    }
+}
+
+.search {
+    &_modal_close {
+        display: inline-block;
+        position: absolute;
+        width: 30px;
+        height: 30px;
+        top: 5px;
+        right: 5px;
+        background: url('../icons/back.png') center center/cover no-repeat;
+        &.hiden  {
+            display: none;
+        }
+    }
+}
+
+.modal_notification-close {
     display: inline-block;
     position: absolute;
     top: 4px;
-    right: 5px;
+    right: -23px;
     width: 18px;
     height: 18px;
     background: url('../icons/Close.svg') center center/cover no-repeat;
-}
-
-.close_modal_edit_user, .close_calendar-form, .search_modal_close {
-    width: 30px;
-    height: 30px;
-    right: 0;
-    top: 4px;
-}
-
-.close_calendar-form {
-    right: 35px;
-    top: 5px;
-}
-
-.search_modal_close {
-    right: 84px;
-}
-
-.close_modal_main.hidden, .search_modal_close.hiden, .close_calendar-form.hiden  {
-    display: none;
 }
