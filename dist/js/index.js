@@ -11,6 +11,8 @@ function createMainHTML() {
                     Мои заемщики
                 </button>
 
+                <div class="switch-btn switch-on" id='switch-btn'></div>
+
                 <div class='modal_submit-delete hiden' id='modal_submit-delete'>
                     <div class='modal_submit-delete-wrapper' id='modal_submit-delete-wrapper'>
                         <div class='modal_submit-delete-wrapper-list'>
@@ -47,7 +49,7 @@ function createMainHTML() {
                             <input type='date' placeholder='' class='input input_edit input_edit_expiration_date' name='input_edit_expiration_date' autocomplete='on'/>
                             <input type='number' min='1' placeholder='Сумма займа' class='input input_edit input_edit_loan_amount' name='input_edit_loan_amount' autocomplete='on'/>
                         
-                            <button type='button' class='input input_edit submit_edit button' id='submit_edit'>
+                            <button type='submit' class='input input_edit submit_edit button' id='submit_edit'>
                                 изменить
                             </button>
                         
@@ -127,18 +129,18 @@ function createMainHTML() {
                                     <input type='date' class='input input_date-search input_date-end' name='input_date-end' id='input_date-end' autocomplete='on' />
                                 </div>
                             
-                                <button type='button' class='submit_search' id='submit_search'></button>
+                                <button type='submit' class='submit_search' id='submit_search'></button>
                             </form>
             
                             <div class='close_calendar-form hiden' id='close_calendar-form'></div>
                         </div>
                     </div>
 
-                    <div class='icon_search_users' id='search'></div>
+                    <div class='icon_search_users' id='icon_search_users'></div>
 
                     <div class='icon_modal_notification' id='icon_modal_notification'></div>
 
-                    <div class='new_notification-indicator' id='indicator'>
+                    <div class='new_notification-indicator unactive' id='indicator'>
                         <div class='background_for_notification hiden' id='background_for_notification'>
                             <div class='modal_notification'>
         
@@ -190,7 +192,7 @@ function createMainHTML() {
                             <input required type='date' class='input input_expiration_date' name='input_expiration_date' autocomplete='on'/>
                             <input required type='number' min='1' placeholder='Сумма займа' class='input input_loan_amount' name='input_loan_amount' autocomplete='on'/>
 
-                            <button type='submit' class='button input submit' id='submit'>
+                            <button type='submit' class='button input submit' id='submit_add_user'>
                                 подтвердить
                             </button>
 
@@ -256,14 +258,14 @@ class APIService {
         modalAddUsers.classList.remove('active');
         modalAdminPanel.classList.add('active');
 
-        filterAll();
+        filterReset();
     }
 
     // deleteUser() {
     //     // обратиться в localStorage/ найти объекты/ вытащить div remove/ удалить родительский объект/ записать новые данные в массив из localStorage/обновить список
     // }
 
-    // editUser() {
+    // cEditUser() {
     //     // обратиться в localStorage/ найти объекты/ вытащить div edit/ добраться к каждому ключу и изменить его значение/ записать новые данные в массив из localStorage/обновить список
     // }
 }
@@ -276,6 +278,10 @@ const formElementMini = document.getElementById('form_mini');
 let formData = new FormData(formElement);
 let formDataMini = new FormData(formElementMini);
 
+let observer = new MutationObserver(MutationRecords => {
+    console.log(MutationRecords);
+});
+
 const USER_FORM_FIELDS = {
     USER_SURNAME: 'input_user_surname',
     USER_NAME: 'input_user_name',
@@ -287,6 +293,10 @@ const USER_FORM_FIELDS = {
 const LOCAL_STORAGE = {
     KEY: 'myUsers',
 };
+const COLOR_FOR_INDICATOR = {
+    ACTIVE: 'active',
+    UNACTIVE: 'unactive',
+}
 let user  = new User({
     userSurname: formData.get(USER_FORM_FIELDS.USER_SURNAME),
     userName: formData.get(USER_FORM_FIELDS.USER_NAME),
@@ -301,19 +311,21 @@ let warningUser = [];
 let expiredUser = [];
 let sortArr = [];
 let id;
-let idEditBtn;
-let idRemoveBtn;
+let idBtn;
 let searchId;
-let indexOfUser;
-let editUserVar;
-let deleteUserVar;
+let usersIndex;
+// let usersIndexAt;
+let userByIndex;
+// let userByIndexAt;
 let childElem;
+// let childElemAt;
 
 const apiService = new APIService();
 
-const showAllUsers = document.querySelector('.filter_rounds-all');
-const showWarningUsers = document.querySelector('.filter_rounds-warning');
-const showExpiredUsers = document.querySelector('.filter_rounds-expired');
+const rootDiv = document.getElementById('root');
+// const showAllUsers = document.querySelector('.filter_rounds-all'); 
+// const showWarningUsers = document.querySelector('.filter_rounds-warning');
+// const showExpiredUsers = document.querySelector('.filter_rounds-expired');
 
 const usersList = document.querySelector('.users_list');
 const myUsersBtn = document.querySelector('.btn_show_my_users');
@@ -330,13 +342,13 @@ const notificationBtn = document.querySelector('.icon_modal_notification');
 const notificationIndicator = document.querySelector('.new_notification-indicator');
 const backgroundForNotification = document.querySelector('.background_for_notification');
 const myModalNotification = document.querySelector('.modal_notification');
-const myNotificationWrapper = document.querySelector('.modal_notification-wrapper');
+// const myNotificationWrapper = document.querySelector('.modal_notification-wrapper');
 const myNotificationWarning = document.querySelector('.modal_notification-warning');
-const myNotificationExpired = document.querySelector('.modal_notification-expired');
+// const myNotificationExpired = document.querySelector('.modal_notification-expired');
 const notificationWarningList = document.querySelector('.modal_notification-warning_list');
 const notificationExpiredList = document.querySelector('.modal_notification-expired_list');
-const btnHidenNotification = document.querySelector('.btn_notification-hiden');
-const closeModalNotification = document.querySelector('.modal_notification-close');
+// const btnHidenNotification = document.querySelector('.btn_notification-hiden');
+// const closeModalNotification = document.querySelector('.modal_notification-close');
 
 const iconSearchUsers = document.querySelector('.icon_search_users');
 const btnFilterAll = document.querySelector('.filter_rounds-all');
@@ -358,8 +370,8 @@ const inputEditLoanDate = document.querySelector('.input_edit_loan_date');
 const inputEditExpDate = document.querySelector('.input_edit_expiration_date');
 const inputEditLoanAmount = document.querySelector('.input_edit_loan_amount');
 const modalEditUser = document.querySelector('.modal_edit_user');
-const closeModalEditUser = document.querySelector('.close_modal_edit_user');
-const btnSubmitEdit = document.querySelector('.submit_edit');
+// const closeModalEditUser = document.querySelector('.close_modal_edit_user');
+// const btnSubmitEdit = document.querySelector('.submit_edit');
 
 const searchModal = document.querySelector('.search_modal');
 const iconCalendar = document.querySelector('.icon_calendar');
@@ -372,320 +384,22 @@ const resetFormSearch = document.querySelector('.form_search-reset');
 const dateSerachForm = document.querySelector('.icon_calendar-form');
 const inputDateStart = document.querySelector('.input_date-start');
 const inputDateEnd = document.querySelector('.input_date-end');
-const btnSubmitSearch = document.querySelector('.submit_search');
+// const btnSubmitSearch = document.querySelector('.submit_search');
 const formDateSubmit = document.querySelector('.icon_calendar-form');
 const closeDateSearchForm = document.querySelector('.close_calendar-form');
 
 const modalSubmitDelete = document.querySelector('.modal_submit-delete');
 const spanForUserDelete = document.querySelector('.modal_submit-delete-user');
 
+const btnSwitchTheme = document.querySelector('.switch-btn');
 
 
-// function deleteUser(remove, arrUsers) { // users, key
 
-//     remove.forEach((indexBtnRemove, i) => {
-
-//         indexBtnRemove.addEventListener('click', () => {
-
-//             indexBtnRemove.parentElement.remove();
-            
-//             arrUsers.splice(i, 1);
-
-//             localStorage[LOCAL_STORAGE.KEY] = JSON.stringify(arrUsers.reverse());
-
-//             parseLSInArr();
-
-//             createUsersList(arrUsers.reverse(), usersList);
-//         });
-//     });
-// }
-
-// function editUserSubmit(user, indexBtn) { // key, formData, modalEditUser, closeModalAdminPanel, addUsersBtn
-
-//     formData = new FormData(formElementMini);
-
-//     user.userSurname = formData.get('input_edit_user_surname') || user.userSurname;
-//     user.userName = formData.get('input_edit_user_name') || user.userName;
-//     user.userPatronymic = formData.get('input_edit_user_patronymic') || user.userPatronymic;
-//     user.loanDate = formData.get('input_edit_loan_date') || user.loanDate;
-//     user.expirationDate = formData.get('input_edit_expiration_date') || user.expirationDate;
-//     user.loanAmount = formData.get('input_edit_loan_amount') || user.loanAmount;
-
-//     localStorage[LOCAL_STORAGE.KEY] = JSON.stringify(arrMyUsers);
-
-//     // indexBtn.parentElement.style.background='';
-
-//     modalEditUser.classList.add('hiden');
-//     closeModalAdminPanel.classList.remove('hiden');
-//     addUsersBtn.classList.remove('hiden');
-
-//     warningUser = []; 
-//     expiredUser = [];
-//     arrMyUsers = [];
-
-//     arrMyUsers = JSON.parse(localStorage[LOCAL_STORAGE.KEY]);
-
-//     createUsersList(arrMyUsers.reverse(), usersList);
-// }
-
-// function checkDateAttention(arrUsers) { // добавить в другую функцию
-
-//     parseLSInArr();
-
-//     arrUsers.forEach((user, i) => {
-
-//         let dateNow = Date.now();
-//         let getEndDateInSec = Date.parse(user.expirationDate);
-//         let threeDaysInSec = 259200000;
-//         let stringOfUser = document.querySelectorAll('.each_user');
-
-//         if (getEndDateInSec <= dateNow) {
-//             expiredUser.push(user);
-//             stringOfUser[i].classList.remove('each_warning');
-//             stringOfUser[i].classList.add('each_expired');
-//         } else if (getEndDateInSec <= (dateNow + threeDaysInSec)) {
-//             warningUser.push(user);
-//             stringOfUser[i].classList.remove('each_expired');
-//             stringOfUser[i].classList.add('each_warning');
-//         } else if (getEndDateInSec >= dateNow) {
-//             stringOfUser[i].classList.remove('each_warning');
-//             stringOfUser[i].classList.remove('each_expired');
-//         }
-//     });
-// }
-
-// function createUsersList(arrUsers, parent) {
-
-//     parent.innerHTML = '';
-
-//     createUserString(arrUsers, parent);
-
-//     // const removeIcon = document.querySelectorAll('.icon_remove');
-//     // const editIcon = document.querySelectorAll('.icon_edit');
-
-//     // deleteUser(removeIcon, arrUsers);
-
-//     // editUser(editIcon, arrUsers);
-
-//     checkDateAttention(arrUsers);
-// }
-
-// function showNotificationList() { // notifBtn, arr, ulList
-    
-//     notificationBtn.addEventListener('click', (e) => {
-//         e.preventDefault();
-
-//         modalAdminPanel.classList.remove('active');
-//         backgroundForNotification.classList.remove('hiden');
-//         notificationBtn.classList.add('hiden');
-//         notificationIndicator.classList.add('hiden');
-
-//         function createNotificationlist(arr, ulList) {
-
-//             ulList.innerHTML = '';
-        
-//             arr.forEach((user, i) => {
-        
-//                 ulList.innerHTML += `
-//                     <li class='attention_notification'>
-        
-//                         <span class='attention_user-index'>
-//                             ${i + 1}.
-//                         </span>
-        
-//                         <span class='attention_user-full_name'>
-//                             ${user.userSurname}
-//                             ${user.userName.substring(0, 1)}.
-//                             ${user.userPatronymic.substring(0, 1)}.
-//                         </span>
-//                     </li>
-//                 `;
-//             });
-//         }
-
-//         createNotificationlist(warningUser, notificationWarningList);
-//         createNotificationlist(expiredUser, notificationExpiredList);
-
-//     });
-// }
-
-// function showNotificationList() { // notifBtn, arr, ulList
-
-//     modalAdminPanel.classList.remove('active');
-//     backgroundForNotification.classList.remove('hiden');
-//     notificationBtn.classList.add('hiden');
-//     notificationIndicator.classList.add('hiden');
-
-//     function createNotificationlist(arr, ulList) {
-
-//         ulList.innerHTML = '';
-    
-//         arr.forEach((user, i) => {
-    
-//             ulList.innerHTML += `
-//                 <li class='attention_notification'>
-    
-//                     <span class='attention_user-index'>
-//                         ${i + 1}.
-//                     </span>
-    
-//                     <span class='attention_user-full_name'>
-//                         ${user.userSurname}
-//                         ${user.userName.substring(0, 1)}.
-//                         ${user.userPatronymic.substring(0, 1)}.
-//                     </span>
-//                 </li>
-//             `;
-//         });
-//     }
-
-//     createNotificationlist(warningUser, notificationWarningList);
-//     createNotificationlist(expiredUser, notificationExpiredList);
-// }
-// function closeNotificationModal() {
-//     modalAdminPanel.classList.add('active');
-//     backgroundForNotification.classList.add('hiden');
-//     notificationBtn.classList.remove('hiden');
-//     notificationIndicator.classList.remove('hiden');
-    
-//     filterAll();
-// }
-
-// function showModalForm() { // btnAdd, modal, mainModal
-
-//     addUsersBtn.addEventListener('click', (e) => {
-//         e.preventDefault();
-
-//         backgroundFormAddUser.classList.remove('hiden');
-//         modalAddUsers.classList.add('active');
-//         modalAdminPanel.classList.remove('active');
-
-//         searchModal.classList.add('hiden');
-//         dateSerachForm.classList.add('hiden');
-//         closeDateSearchForm.classList.add('hiden');
-        
-//     });
-// }
-
-// function closeModalForm() { // одинаковые функции showModalForm() // closeBtn, modal, mainModal
-
-//     closeModalAddUsers.addEventListener('click', (e) => {
-//         e.preventDefault();
-
-//         backgroundFormAddUser.classList.add('hiden');
-//         modalAdminPanel.classList.add('active');
-//         modalAddUsers.classList.remove('active');
-
-//         iconSearchUsers.classList.remove('hiden');
-//     });
-// }
-
-// function hideIconForSort(iconS, iconAD, iconLA, iconRS, iconRAD, iconRLA) {
-
-//     iconS.classList.remove('hiden');
-//     iconAD.classList.remove('hiden');
-//     iconLA.classList.remove('hiden');
-
-//     iconRS.classList.remove('hiden');
-//     iconRAD.classList.remove('hiden');
-//     iconRLA.classList.remove('hiden');
-
-//     iconS.classList.add('hiden');
-//     iconAD.classList.add('hiden');
-//     iconLA.classList.add('hiden');
-
-//     iconRS.classList.add('hiden');
-//     iconRAD.classList.add('hiden');
-//     iconRLA.classList.add('hiden');
-// }
-
-// function filterAll() { // btnFilter, parent, iconS, iconAD, iconLA, iconRS, iconRAD, iconRLA 
-//     btnFilterAll.addEventListener('click', (e) => {
-//         e.preventDefault();
-
-//         usersList.classList.remove('users_list-warning');
-//         usersList.classList.remove('users_list-expired');
-
-//         warningUser = [];
-//         expiredUser = [];
-
-//         iconSortBySurname.classList.remove('hiden');
-//         iconSortByAddedDate.classList.remove('hiden');
-//         iconSortByLoanAmount.classList.remove('hiden');
-
-//         iconSortResetSurname.classList.add('hiden');
-//         iconSortResetAddedDate.classList.add('hiden');
-//         iconSortResetLoanAmount.classList.add('hiden');
-
-//         iconSortBySurname.classList.remove('active');
-//         iconSortByLoanAmount.classList.remove('active');
-//         iconSortByAddedDate.classList.add('active');
-
-//         parseLSInArr(); // проверить
-//         createUsersList(arrMyUsers.reverse(), usersList);
-//     });
-// }
-
-// function filterWarning() { // btnFilter, parent, warArr, iconS, iconAD, iconLA, iconRS, iconRAD, iconRLA
-
-//     btnFilterWarning.addEventListener('click', (e) => {
-//         e.preventDefault();
-
-//         usersList.innerHTML = '';
-
-//         usersList.classList.add('users_list-warning');
-//         usersList.classList.remove('users_list-expired');
-        
-//         hideIconForSort(iconSortBySurname, iconSortByAddedDate, iconSortByLoanAmount, iconSortResetSurname, iconSortResetAddedDate, iconSortResetLoanAmount);
-        
-//         createUserString(warningUser, usersList);
-//     });
-// }
-
-// function filterExpired() { // btnFilter, parent, expArr, iconS, iconAD, iconLA, iconRS, iconRAD, iconRLA
-
-//     btnFilterExpired.addEventListener('click', (e) => {
-//         e.preventDefault();
-
-//         usersList.innerHTML = '';
-
-//         usersList.classList.remove('users_list-warning');
-//         usersList.classList.add('users_list-expired');
-
-//         hideIconForSort(iconSortBySurname, iconSortByAddedDate, iconSortByLoanAmount, iconSortResetSurname, iconSortResetAddedDate, iconSortResetLoanAmount);
-
-//         createUserString(expiredUser, usersList);
-//     });
-// }
-
-
-
-
-
-// function formModalSubmit() { // (form, formData, api, users, parent) // formElement, formData, apiService, usersList 
-
-//     formData = new FormData(formElement);
-
-//     user = new User({
-//         userSurname: formData.get(USER_FORM_FIELDS.USER_SURNAME),
-//         userName: formData.get(USER_FORM_FIELDS.USER_NAME),
-//         userPatronymic: formData.get(USER_FORM_FIELDS.USER_PATRONYMIC),
-//         loanDate: formData.get(USER_FORM_FIELDS.USER_LOAN_DATE),
-//         expirationDate: formData.get(USER_FORM_FIELDS.USER_EXPIRATION_DATE),
-//         loanAmount: formData.get(USER_FORM_FIELDS.USER_LOAN_AMOUNT),
-//     }); 
-
-//     backgroundFormAddUser.classList.add('hiden');
-//     apiService.addNewUser(user);
-//     formElement.reset();
-//     searchUsers();
-//     parseLSInArr();
-//     createUsersList(arrMyUsers.reverse(), usersList);
-// }
-
-// const idUsersList = 'users_list';
-
-
+// при добавдении user пропадает кнопка уведомлений 
+// fetch - url(localStorage)
+//      resolve - true -> localStorage (continue code)
+//      reject - false -> !localStorage (show form add user)
+// then остальной код по очереди
 
 function parseLSInArr() { // users, key
 
@@ -699,12 +413,29 @@ function parseLSInArr() { // users, key
         console.log('parse fall');
     }
 }
+function switchTheme() {
+    btnSwitchTheme.classList.toggle('switch-on');
+
+    let contains = btnSwitchTheme.classList.contains('switch-on');
+
+    if (contains) {
+        console.log('light mode');
+        root.style.backgroundColor="";
+        myUsersBtn.classList.remove('button-dark');
+       
+    } else {
+        console.log('dark mode');
+        root.style.backgroundColor="black";
+        myUsersBtn.classList.add('button-dark');
+        btnSwitchTheme.classList.add('switch-btn-dark');
+    }
+}
 function createUserString(arrUsers, parent) {
 
     arrUsers.forEach((user, i) => {
 
         parent.innerHTML += `
-            <li class="each_user">
+            <li class="each_user" id="${user.userId}">
 
                 <span class='each_user-index'>
                     ${i + 1}.
@@ -736,7 +467,7 @@ function createUserString(arrUsers, parent) {
                     ${user.loanAmount}$
                 </span>
 
-                <span class='each_user-user_id'>
+                <span class='each_user-user_id each_user-user_id-${user.userId}'>
                     #${user.userId}
                 </span>
 
@@ -752,16 +483,13 @@ function cancelDeleteUser() {
     modalSubmitDelete.classList.add('hiden');
     spanForUserDelete.innerHTML = '';
 }
-function deleteUser() { // users, key
-
-    // modalAdminPanel.classList.remove('active');
-    // myUsersBtn.classList.add('hiden');
+function confirmDeleteUser() { // users, key
 
     childElem.parentElement.style.background="";
 
     childElem.parentElement.remove();
             
-    arrMyUsers.splice(indexOfUser, 1);
+    arrMyUsers.splice(usersIndex, 1);
 
     localStorage[LOCAL_STORAGE.KEY] = JSON.stringify(arrMyUsers); // шевченко галивец рябичев
 
@@ -772,7 +500,7 @@ function deleteUser() { // users, key
     cancelDeleteUser();
 
 }
-function addUserInModalSubmitForDelete(user) {
+function addUserInModalForDelete(user) {
 
     spanForUserDelete.innerHTML = `
         ${user.userSurname} 
@@ -781,57 +509,51 @@ function addUserInModalSubmitForDelete(user) {
         ?
     `;
 }
-function choseUserForDelete() {
+function choseUserForDelete() { // не работает с expiredUser
 
     searchId = id.substring(12, 22);
-    indexOfUser = arrMyUsers.findIndex(user => user.userId === searchId);
-    deleteUserVar = arrMyUsers[indexOfUser];
 
-    childElem = document.querySelector(`.icon_remove_${searchId}`);
+    usersIndex = arrMyUsers.findIndex(user => user.userId === searchId);
+    userByIndex = arrMyUsers[usersIndex];
 
-    childElem.parentElement.style.background="rgb(165, 165, 165)"; // доделать
+    if (id === (`icon_remove_${searchId}`) && !myModalNotification.classList.contains('active')) {
+
+        childElem = document.querySelector(`.icon_remove_${searchId}`);
+
+    } else if ((id === (`icon_remove_${searchId}`)) && myModalNotification.classList.contains('active')) {
+        
+        let userForDelete = {};
+
+        function getUserForDelete(arr) {
+            arr.forEach((user, i) => {
+                if (JSON.stringify(user) === JSON.stringify(userByIndex)) {
+                    userForDelete = arr[i];
+                    console.log(userForDelete);
+                }
+            });
+        }
+
+        getUserForDelete(warningUser);
+        getUserForDelete(expiredUser);
+
+        childElem = document.querySelector(`.icon_remove-attention_${searchId}`);
+    } 
+
+    childElem.parentElement.style.background="rgb(165, 165, 165)";
 
     modalSubmitDelete.classList.remove('hiden');
-    addUserInModalSubmitForDelete(deleteUserVar);
+
+    addUserInModalForDelete(userByIndex);
 }
-function editUserSubmit(user, indexBtn) { // key, formData, modalEditUser, closeModalAdminPanel, addUsersBtn
-
-    formData = new FormData(formElementMini);
-
-    user.userSurname = formData.get('input_edit_user_surname') || user.userSurname;
-    user.userName = formData.get('input_edit_user_name') || user.userName;
-    user.userPatronymic = formData.get('input_edit_user_patronymic') || user.userPatronymic;
-    user.loanDate = formData.get('input_edit_loan_date') || user.loanDate;
-    user.expirationDate = formData.get('input_edit_expiration_date') || user.expirationDate;
-    user.loanAmount = formData.get('input_edit_loan_amount') || user.loanAmount;
-
-    localStorage[LOCAL_STORAGE.KEY] = JSON.stringify(arrMyUsers);
-
-    modalEditUser.classList.add('hiden');
-    closeModalAdminPanel.classList.remove('hiden');
-    addUsersBtn.classList.remove('hiden');
-
-    warningUser = []; 
-    expiredUser = [];
-    arrMyUsers = [];
-
-    arrMyUsers = JSON.parse(localStorage[LOCAL_STORAGE.KEY]);
-
-    createUsersList(arrMyUsers.reverse(), usersList);
-
-    // btnSubmitEdit.addEventListener('submit', (e) => {
-    //     e.preventDefault();
-    // });
-}
-function editUser() {
+function openModalFormEditUser() {
 
     modalAdminPanel.classList.add('edit');
 
     parseLSInArr();
 
     searchId = id.substring(10, 21);
-    indexOfUser = arrMyUsers.findIndex(user => user.userId === searchId);
-    editUserVar = arrMyUsers[indexOfUser];
+    usersIndex = arrMyUsers.findIndex(user => user.userId === searchId);
+    userByIndex = arrMyUsers[usersIndex];
 
     childElem = document.querySelector(`.icon_edit_${searchId}`);
 
@@ -841,27 +563,57 @@ function editUser() {
     closeModalAdminPanel.classList.add('hiden');
     addUsersBtn.classList.add('hiden');
 
-    inputEditSurname.value = editUserVar.userSurname;
+    inputEditSurname.value = userByIndex.userSurname;
     inputEditSurname.setAttribute('value', inputEditSurname.value);
 
-    inputEditName.value = editUserVar.userName;
+    inputEditName.value = userByIndex.userName;
     inputEditName.setAttribute('value', inputEditName.value);
 
-    inputEditpatroniymic.value = editUserVar.userPatronymic;
+    inputEditpatroniymic.value = userByIndex.userPatronymic;
     inputEditpatroniymic.setAttribute('value', inputEditpatroniymic.value);
 
-    inputEditLoanDate.value = editUserVar.loanDate;
+    inputEditLoanDate.value = userByIndex.loanDate;
     inputEditLoanDate.setAttribute('value', inputEditLoanDate.value);
 
-    inputEditExpDate.value = editUserVar.expirationDate;
+    inputEditExpDate.value = userByIndex.expirationDate;
     inputEditExpDate.setAttribute('value', inputEditExpDate.value);
 
-    inputEditLoanAmount.value = editUserVar.loanAmount;
+    inputEditLoanAmount.value = userByIndex.loanAmount;
     inputEditLoanAmount.setAttribute('value', inputEditLoanAmount.value);
 }
-function submitEditUser() {
+function editUser(user) { // key, formData, modalEditUser, closeModalAdminPanel, addUsersBtn
+    
+    formElementMini.addEventListener('submit', (e) => {
+        e.preventDefault();
 
-    editUserSubmit(editUserVar, idEditBtn);
+        formData = new FormData(formElementMini);
+
+        user.userSurname = formData.get('input_edit_user_surname') || user.userSurname;
+        user.userName = formData.get('input_edit_user_name') || user.userName;
+        user.userPatronymic = formData.get('input_edit_user_patronymic') || user.userPatronymic;
+        user.loanDate = formData.get('input_edit_loan_date') || user.loanDate;
+        user.expirationDate = formData.get('input_edit_expiration_date') || user.expirationDate;
+        user.loanAmount = formData.get('input_edit_loan_amount') || user.loanAmount;
+
+        localStorage[LOCAL_STORAGE.KEY] = JSON.stringify(arrMyUsers);
+
+        modalEditUser.classList.add('hiden');
+        closeModalAdminPanel.classList.remove('hiden');
+        addUsersBtn.classList.remove('hiden');
+
+        warningUser = []; 
+        expiredUser = [];
+        // arrMyUsers = [];
+
+        arrMyUsers = JSON.parse(localStorage[LOCAL_STORAGE.KEY]);
+
+        createUsersList(arrMyUsers.reverse(), usersList);
+
+    }, {once: true});
+}
+function confirmEditUser() {
+
+    editUser(userByIndex);
 
     childElem.parentElement.style.background="";
 
@@ -869,7 +621,7 @@ function submitEditUser() {
     modalEditUser.classList.add('hiden');
 
 }
-function closeEditUser() {
+function closeModalFormEditUser() {
 
     childElem.parentElement.style.background="";
 
@@ -878,7 +630,16 @@ function closeEditUser() {
     addUsersBtn.classList.remove('hiden');
     modalAdminPanel.classList.remove('edit');
 }
-function checkDateAttention(arrUsers) { // добавить в другую функцию
+// function paintNotificationIndicator(colorA, colorU) {
+
+//     if (id === `${idIconModalNotification}`) {
+//         console.log(id, 'paint');
+
+//         notificationIndicator.classList.remove(`${colorA}`);
+//         notificationIndicator.classList.add(`${colorU}`);
+//     }
+// }
+function checkingDateForWarning(arrUsers) { // добавить в другую функцию
 
     parseLSInArr();
 
@@ -889,15 +650,29 @@ function checkDateAttention(arrUsers) { // добавить в другую фу
         let threeDaysInSec = 259200000;
         let stringOfUser = document.querySelectorAll('.each_user');
 
+
         if (getEndDateInSec <= dateNow) {
+
             expiredUser.push(user);
+
             stringOfUser[i].classList.remove('each_warning');
             stringOfUser[i].classList.add('each_expired');
+
+            // notificationIndicator.classList.remove(`${COLOR_FOR_INDICATOR.UNACTIVE}`);
+            // notificationIndicator.classList.add(`${COLOR_FOR_INDICATOR.ACTIVE}`);
+
         } else if (getEndDateInSec <= (dateNow + threeDaysInSec)) {
+
             warningUser.push(user);
+
             stringOfUser[i].classList.remove('each_expired');
             stringOfUser[i].classList.add('each_warning');
+
+            // notificationIndicator.classList.remove(`${COLOR_FOR_INDICATOR.UNACTIVE}`);
+            // notificationIndicator.classList.add(`${COLOR_FOR_INDICATOR.ACTIVE}`);
+
         } else if (getEndDateInSec >= dateNow) {
+
             stringOfUser[i].classList.remove('each_warning');
             stringOfUser[i].classList.remove('each_expired');
         }
@@ -909,14 +684,7 @@ function createUsersList(arrUsers, parent) {
 
     createUserString(arrUsers, parent);
 
-    // const removeIcon = document.querySelectorAll('.icon_remove');
-    // const editIcon = document.querySelectorAll('.icon_edit');
-
-    // deleteUser(removeIcon, arrUsers);
-
-    // editUser(editIcon, arrUsers);
-
-    checkDateAttention(arrUsers);
+    checkingDateForWarning(arrUsers);
 }
 function createNotificationlist(arr, ulList) {
 
@@ -931,36 +699,77 @@ function createNotificationlist(arr, ulList) {
                     ${i + 1}.
                 </span>
 
-                <span class='attention_user-full_name'>
+                <span class='attention_user-full_name' data-tooltip="
+                    ${user.loanDate}
+                    ${user.expirationDate} 
+                    ${user.dateAdded}
+                    ${user.loanAmount}$
+                ">
                     ${user.userSurname}
                     ${user.userName.substring(0, 1)}.
                     ${user.userPatronymic.substring(0, 1)}.
                 </span>
 
-                <div class='icon_search icon_search_${user.userId}' id='icon_search_${user.userId}'></div>
+                <span class='attention_user-id'>
+                    ${user.userId}
+                </span>
 
-                <div class='icon_remove icon_remove_${user.userId}' id='icon_remove_${user.userId}'></div>
+                <div class='icon_find icon_find_${user.userId}' id='icon_find_${user.userId}'></div>
+
+                <div class='icon_remove icon_remove-attention_${user.userId} icon_remove_${user.userId}' id='icon_remove_${user.userId}'></div>
             </li>
         `;
     });
+
 }
-function showNotificationList() { // notifBtn, arr, ulList
+function openModalNotification() { // notifBtn, arr, ulList
 
     modalAdminPanel.classList.remove('active');
     backgroundForNotification.classList.remove('hiden');
     notificationBtn.classList.add('hiden');
     notificationIndicator.classList.add('hiden');
+    myModalNotification.classList.add('active');
+
 
     createNotificationlist(warningUser, notificationWarningList);
     createNotificationlist(expiredUser, notificationExpiredList);
+    // paintNotificationIndicator(COLOR_FOR_INDICATOR.ACTIVE, COLOR_FOR_INDICATOR.UNACTIVE);
+
 }
-function closeNotificationModal() {
+function closeModalNotification() {
+
     modalAdminPanel.classList.add('active');
     backgroundForNotification.classList.add('hiden');
     notificationBtn.classList.remove('hiden');
     notificationIndicator.classList.remove('hiden');
+    myModalNotification.classList.remove('active');
+
+    filterReset();
+}
+function searchUserFromNotificatin() {
     
-    filterAll();
+    closeModalNotification();
+
+    searchId = id.substring(10, 20);
+    console.log(searchId);
+    usersIndex = arrMyUsers.findIndex(user => user.userId === searchId);
+    userByIndex = arrMyUsers[usersIndex];
+
+    childElem = document.querySelector(`.each_user-user_id-${searchId}`);
+    // let timer = setTimeout(() => childElem.parentElement.style.background="rgb(165, 165, 165)", 0)
+
+    // clearTimeout(timer);
+
+    setTimeout( () => {
+        childElem.parentElement.style.background="rgb(165, 165, 165)";
+    }, 0);
+
+    setTimeout( () => {
+        childElem.parentElement.style.background="";
+    }, 2500);
+
+    // childElem.parentElement.style.background="rgb(165, 165, 165)";
+
 }
 function openMainModal() {
 
@@ -984,12 +793,13 @@ function closeMainModal() { // warArr, expArr // closeBtn, modal, mainBtn // rea
 
     modalAdminPanel.classList.remove('active');
     myUsersBtn.classList.remove('hiden');
+    
+    filterReset();
+
     warningUser = [];
     expiredUser = [];
-
-    filterAll();
 }
-function showModalForm() { // btnAdd, modal, mainModal
+function openModalFormAddUser() { // btnAdd, modal, mainModal
 
     backgroundFormAddUser.classList.remove('hiden');
     modalAddUsers.classList.add('active');
@@ -1000,7 +810,7 @@ function showModalForm() { // btnAdd, modal, mainModal
     closeDateSearchForm.classList.add('hiden');
 
 }
-function closeModalForm() { // одинаковые функции showModalForm() // closeBtn, modal, mainModal
+function closeModalFormAddUser() { // одинаковые функции showModalForm() // closeBtn, modal, mainModal
 
     backgroundFormAddUser.classList.add('hiden');
     modalAdminPanel.classList.add('active');
@@ -1008,10 +818,7 @@ function closeModalForm() { // одинаковые функции showModalForm
 
     iconSearchUsers.classList.remove('hiden');
 }
-
-
-
-function formModalSubmit() { // (form, formData, api, users, parent) // formElement, formData, apiService, usersList 
+function confirmAddUser() { // (form, formData, api, users, parent) // formElement, formData, apiService, usersList 
 
     formElement.addEventListener('submit', (e) => {
         e.preventDefault();
@@ -1031,38 +838,13 @@ function formModalSubmit() { // (form, formData, api, users, parent) // formElem
         apiService.addNewUser(user);
         formElement.reset();
 
-        searchUsers();
+        // searchUsers();
+        scriptForSearchUsers();
         parseLSInArr();
         createUsersList(arrMyUsers.reverse(), usersList);
-    });
+    }, {once: true});
 }
-
-// function formModalSubmit() { // (form, formData, api, users, parent) // formElement, formData, apiService, usersList 
-
-    
-//     formData = new FormData(idForm);
-
-//     user = new User({
-//         userSurname: formData.get(USER_FORM_FIELDS.USER_SURNAME),
-//         userName: formData.get(USER_FORM_FIELDS.USER_NAME),
-//         userPatronymic: formData.get(USER_FORM_FIELDS.USER_PATRONYMIC),
-//         loanDate: formData.get(USER_FORM_FIELDS.USER_LOAN_DATE),
-//         expirationDate: formData.get(USER_FORM_FIELDS.USER_EXPIRATION_DATE),
-//         loanAmount: formData.get(USER_FORM_FIELDS.USER_LOAN_AMOUNT),
-//     }); 
-
-//     backgroundFormAddUser.classList.add('hiden');
-//     apiService.addNewUser(user);
-//     formElement.reset();
-
-//     searchUsers();
-//     parseLSInArr();
-//     createUsersList(arrMyUsers.reverse(), usersList);
-// }
-
-
-
-function hideIconForSort(iconS, iconAD, iconLA, iconRS, iconRAD, iconRLA) {
+function hideIconsForSort(iconS, iconAD, iconLA, iconRS, iconRAD, iconRLA) {
 
     iconS.classList.remove('hiden');
     iconAD.classList.remove('hiden');
@@ -1080,7 +862,7 @@ function hideIconForSort(iconS, iconAD, iconLA, iconRS, iconRAD, iconRLA) {
     iconRAD.classList.add('hiden');
     iconRLA.classList.add('hiden');
 }
-function filterAll() { // btnFilter, parent, iconS, iconAD, iconLA, iconRS, iconRAD, iconRLA 
+function filterReset() { // btnFilter, parent, iconS, iconAD, iconLA, iconRS, iconRAD, iconRLA 
 
     usersList.classList.remove('users_list-warning');
     usersList.classList.remove('users_list-expired');
@@ -1110,7 +892,7 @@ function filterWarning() { // btnFilter, parent, warArr, iconS, iconAD, iconLA, 
     usersList.classList.add('users_list-warning');
     usersList.classList.remove('users_list-expired');
     
-    hideIconForSort(iconSortBySurname, iconSortByAddedDate, iconSortByLoanAmount, iconSortResetSurname, iconSortResetAddedDate, iconSortResetLoanAmount);
+    hideIconsForSort(iconSortBySurname, iconSortByAddedDate, iconSortByLoanAmount, iconSortResetSurname, iconSortResetAddedDate, iconSortResetLoanAmount);
     
     createUserString(warningUser, usersList);
 }
@@ -1121,7 +903,7 @@ function filterExpired() { // btnFilter, parent, expArr, iconS, iconAD, iconLA, 
     usersList.classList.remove('users_list-warning');
     usersList.classList.add('users_list-expired');
 
-    hideIconForSort(iconSortBySurname, iconSortByAddedDate, iconSortByLoanAmount, iconSortResetSurname, iconSortResetAddedDate, iconSortResetLoanAmount);
+    hideIconsForSort(iconSortBySurname, iconSortByAddedDate, iconSortByLoanAmount, iconSortResetSurname, iconSortResetAddedDate, iconSortResetLoanAmount);
 
     createUserString(expiredUser, usersList);
 
@@ -1129,164 +911,167 @@ function filterExpired() { // btnFilter, parent, expArr, iconS, iconAD, iconLA, 
 
 
 
-function searchUsers() { // iconSearch, btnAdd, closeBtnModal, users, parent // users, key, arrWar, arrExp // iconSearchUsers, addUsersBtn, closeModalAddUsers, arrMyUsers, usersList, 
+// function searchUsers() {
+
+//     if (!localStorage[LOCAL_STORAGE.KEY]) {
+
+//         iconSearchUsers.classList.add('hiden');
+
+//     } else if (localStorage[LOCAL_STORAGE.KEY]) {
+
+//         iconSearchUsers.classList.remove('hiden');
+
+//         // modalSearchUser();
+//     }
+// }
+
+
+
+function scriptForSearchUsers() {
 
     if (!localStorage[LOCAL_STORAGE.KEY]) {
 
-        iconSearchUsers.classList.add('hiden');
+        // iconSearchUsers.classList.add('hiden'); // 
+        
+        console.log('empty')
+        // показать модальное окно о том что пользователей еще нет и показывать кнопку добавления пользователя addNewUSer или отмена 
 
     } else if (localStorage[LOCAL_STORAGE.KEY]) {
 
-        iconSearchUsers.classList.remove('hiden');
+        // iconSearchUsers.classList.remove('hiden'); //
 
-        iconSearchUsers.addEventListener('click', (e) => {
-            e.preventDefault();
+        iconSearchUsers.classList.remove('hiden');//
 
-            warningUser = [];
-            expiredUser = [];
-
-            iconSearchUsers.classList.add('hiden');
-            notificationBtn.classList.add('hiden');
-            notificationIndicator.classList.add('hiden');
-
-            iconCalendar.classList.remove('hiden');
-            searchModal.classList.remove('hiden');
-            dynamicSearch.classList.remove('hiden');
-            closeSearchForm.classList.remove('hiden');
-
-            function resetFormSearchNow() { // parent
-
-                resetFormSearch.addEventListener('click', (e) => {
-                    e.preventDefault();
-
-                    formDynamicSubmit.reset();
-                    createUsersList(arrMyUsers.reverse(), usersList);
-                });
-            }
-            
-            // поиск по датам - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-            iconCalendar.addEventListener('click', (e) => {
-                e.preventDefault();
+        warningUser = [];
+        expiredUser = [];
     
-                closeDateSearchForm.classList.remove('hiden');
-                iconCalendar.classList.add('hiden');
-                closeSearchForm.classList.add('hiden');
-                dateSerachForm.classList.remove('hiden');
-                dynamicSearch.classList.add('hiden');
-                formDynamicSubmit.reset();
+        iconSearchUsers.classList.add('hiden');
+        notificationBtn.classList.add('hiden');
+        notificationIndicator.classList.add('hiden');
     
-                closeDateSearchForm.addEventListener('click', (e) => {
-                    e.preventDefault();
-
-                    formDynamicSubmit.reset();
-                    iconSearchUsers.classList.remove('hiden');
-                    dateSerachForm.classList.add('hiden');
-                    closeDateSearchForm.classList.add('hiden');
-
-                    notificationBtn.classList.remove('hiden');
-                    notificationIndicator.classList.remove('hiden');
-
-                    // parseLSInArr();
-                    // createUsersList(arrMyUsers.reverse(), usersList);
-                    filterAll();
-                });
+        iconCalendar.classList.remove('hiden');
+        searchModal.classList.remove('hiden');
+        dynamicSearch.classList.remove('hiden');
+        closeSearchForm.classList.remove('hiden');
     
-                formDateSubmit.addEventListener('submit', (e) => {
-                    e.preventDefault();
-    
-                    const resultArrForDate = [];
-                    parseLSInArr();
-    
-                    const dateA = Date.parse(`${inputDateStart.value}`);
-                    const dateC = Date.parse(`${inputDateEnd.value}`);
-    
-                    arrMyUsers.forEach(user => {
-    
-                        const dateB = Date.parse(`${user.dateAdded}`);
-    
-                        if (dateB >= dateA && dateB <= dateC) {
-    
-                            resultArrForDate.push(user);
-                            createUsersList(resultArrForDate, usersList);
-                        }
-    
-                        formDateSubmit.reset();
-                    });
-                });
-            });
-    
-            closeSearchForm.addEventListener('click', (e) => {
-                e.preventDefault();
-                
-                usersList.classList.remove('users_list-warning');
-                usersList.classList.remove('users_list-expired');
-
-                notificationBtn.classList.remove('hiden');
-                notificationIndicator.classList.remove('hiden');
-
-                iconSearchUsers.classList.remove('hiden');
-                searchModal.classList.add('hiden');
-
-                formDynamicSubmit.reset();
-
-                // parseLSInArr();
-                // createUsersList(arrMyUsers.reverse(), usersList);
-                filterAll();
-            });
-    
-
-            // динамический поиск - - - - - - - - - - - - - - - - - - - - - - - - - -
-            const findUsers = [];
-            let arrFromLS = [];
-    
-            arrFromLS = JSON.parse(localStorage[LOCAL_STORAGE.KEY]);
-            
-            arrFromLS.reverse().forEach(user => {
-                findUsers.push(user);
-            });
-    
-            function getThisUsersByFullName(symbol, arr) {
-                return arr.filter(elem => {
-                    const regex = new RegExp(symbol, 'gi');
-                    return elem.userSurname.match(regex) || elem.userName.match(regex) || elem.userPatronymic.match(regex);
-                });
-            }
-    
-            function getThisUsersLoanAmount(symbol, arr) {
-    
-                return arr.filter(elem => {
-                    const regex = new RegExp(symbol, 'gi');
-                    return elem.loanAmount.match(regex);
-                });
-            }
-    
-            function showUsers() {
-    
-                if (this.value == +(this.value)) {
-                    
-                    const getUsersLoanAmount = getThisUsersLoanAmount(this.value, arrFromLS);
-                    createUsersList(getUsersLoanAmount, usersList);
-                } else if (this.value == String(this.value)) {
-    
-                    const getUsersByFullNameVar = getThisUsersByFullName(this.value, arrFromLS);
-                    createUsersList(getUsersByFullNameVar, usersList);
-                }
-            }
-            
-            inputSearch.addEventListener('change', showUsers);
-            inputSearch.addEventListener('keyup', showUsers);
-    
-            formDynamicSubmit.addEventListener('submit', (e) => {
-                e.preventDefault();
-            });
-
-            resetFormSearchNow();
-        });
+        dynamicSearchScript();
     }
 }
+function resetFormSearchNow() {
+
+    formDynamicSubmit.reset();
+    createUsersList(arrMyUsers.reverse(), usersList);
+}
+function searchByDateScript() {
+            
+    closeDateSearchForm.classList.remove('hiden');
+    iconCalendar.classList.add('hiden');
+    closeSearchForm.classList.add('hiden');
+    dateSerachForm.classList.remove('hiden');
+    dynamicSearch.classList.add('hiden');
+    formDynamicSubmit.reset();
 
 
+    formDateSubmitScript();
+}
+function closeSearchFormScript() {
 
+    usersList.classList.remove('users_list-warning');
+    usersList.classList.remove('users_list-expired');
+
+    notificationBtn.classList.remove('hiden');
+    notificationIndicator.classList.remove('hiden');
+
+    iconSearchUsers.classList.remove('hiden');
+    searchModal.classList.add('hiden');
+
+    formDynamicSubmit.reset();
+
+    filterReset();
+}
+function closeDateSearchFormScript() {
+
+    formDynamicSubmit.reset();
+    iconSearchUsers.classList.remove('hiden');
+    dateSerachForm.classList.add('hiden');
+    closeDateSearchForm.classList.add('hiden');
+
+    notificationBtn.classList.remove('hiden');
+    notificationIndicator.classList.remove('hiden');
+
+    filterReset();
+}
+function formDateSubmitScript() {
+
+    formDateSubmit.addEventListener('submit', (e) => {
+        e.preventDefault();
+
+        const resultArrForDate = [];
+        parseLSInArr();
+
+        const dateA = Date.parse(`${inputDateStart.value}`);
+        const dateC = Date.parse(`${inputDateEnd.value}`);
+
+        arrMyUsers.forEach(user => {
+
+            const dateB = Date.parse(`${user.dateAdded}`);
+
+            if (dateB >= dateA && dateB <= dateC) {
+
+                resultArrForDate.push(user);
+                createUsersList(resultArrForDate, usersList);
+            }
+
+            formDateSubmit.reset();
+        });
+    }); // {once: true}
+}
+function dynamicSearchScript() {
+
+    const findUsers = [];
+    let arrFromLS = [];
+
+    arrFromLS = JSON.parse(localStorage[LOCAL_STORAGE.KEY]);
+    
+    arrFromLS.reverse().forEach(user => {
+        findUsers.push(user);
+    });
+
+    function getThisUsersByFullName(symbol, arr) {
+        return arr.filter(elem => {
+            const regex = new RegExp(symbol, 'gi');
+            return elem.userSurname.match(regex) || elem.userName.match(regex) || elem.userPatronymic.match(regex);
+        });
+    }
+
+    function getThisUsersLoanAmount(symbol, arr) {
+
+        return arr.filter(elem => {
+            const regex = new RegExp(symbol, 'gi');
+            return elem.loanAmount.match(regex);
+        });
+    }
+
+    function showUsers() {
+
+        if (this.value == +(this.value)) {
+            
+            const getUsersLoanAmount = getThisUsersLoanAmount(this.value, arrFromLS);
+            createUsersList(getUsersLoanAmount, usersList);
+        } else if (this.value == String(this.value)) {
+
+            const getUsersByFullNameVar = getThisUsersByFullName(this.value, arrFromLS);
+            createUsersList(getUsersByFullNameVar, usersList);
+        }
+    }
+    
+    inputSearch.addEventListener('change', showUsers);
+    inputSearch.addEventListener('keyup', showUsers);
+
+    formDynamicSubmit.addEventListener('submit', (e) => {
+        e.preventDefault();
+    });
+}
 function sortListBySurname() { // iconSort, users, parent, sortArr
 
     warningUser = [];
@@ -1455,19 +1240,24 @@ function resetSortListByLoanAmount() {
 
 
 
+observer.observe(myNotificationWarning, {
+    childList: true,
+    subtree: true,
+});
+
+ 
+
 function runAll() {
-    
-    searchUsers();
 
     const idRoot = 'root';
     const idMyUsersBtn = 'btn_show_my_users';
     const idModalMainClose = 'close_modal_main';
     const idModalMain = 'modal_main';
-    const idModalEditUser = 'modal_edit_user';
+    // const idModalEditUser = 'modal_edit_user';
     const idCloseModalEditUser = 'close_modal_edit_user';
-    const idFormMini = 'form_mini';
-    const idSubmitEdit = 'submit_edit'; // submit
-    const idUsersListHead = 'users_list-head';
+    // const idFormMini = 'form_mini';
+    const idSubmitEdit = 'submit_edit';
+    // const idUsersListHead = 'users_list-head';
     const idIconSortBySurname = 'sort_icon-surname';
     const idIconSortBySurnameReset = 'sort_icon-reset_surname';
     const idIconSortByDateAdded = 'sort_icon-added_date';
@@ -1483,8 +1273,8 @@ function runAll() {
     const idSearchModalClose = 'search_modal_close';
     const idIconCalendarForm = 'icon_calendar-form';
     const idCloseCalendarForm = 'close_calendar-form';
-    const idSubmitSearch = 'submit_search'; // submit
-    const idSearch = 'search';
+    const idSubmitSearch = 'submit_search'; 
+    const idIconSearch = 'icon_search_users';
     const idIconModalNotification = 'icon_modal_notification';
     const idIndicator = 'indicator';
     const idBackgroundForNotification = 'background_for_notification';
@@ -1493,62 +1283,70 @@ function runAll() {
     const idBtnAddNewUser = 'btn_add_new_user';
     const idModalFormAddUserWrapper = 'modal_form_add_user-wrapper';
     const idCloseModalFormAddUsers = 'close_modal_form_add_users';
-    const idForm = 'form';
-    const idSubmit = 'submit'; // submit
+    // const idForm = 'form';
+    const idSubmit = 'submit_add_user';
     const idModalSubmitDelete = 'modal_submit-delete';
     const idBtnDeleteNo = 'modal_submit-delete-button-no';
     const idBtnDeleteYes = 'modal_submit-delete-button-yes';
+    const idSwitchTheme = 'switch-btn';
 
 
     
     const eventsHandlers = {
-        [idMyUsersBtn]: openMainModal,
+
         [idRoot]: closeMainModal,
+        [idMyUsersBtn]: openMainModal,
         [idModalMainClose]: closeMainModal,
-        [idSubmitEdit]: submitEditUser,
-        [idCloseModalEditUser]: closeEditUser,
-        [idIconModalNotification]: showNotificationList,
-        [idModalNotificationClose]: closeNotificationModal,
-        [idBackgroundForNotification]: closeNotificationModal,
-        [idBtnNotificationHiden]: closeNotificationModal,
-        [idBtnAddNewUser]: showModalForm,
-        [idCloseModalFormAddUsers]: closeModalForm,
-        [idModalFormAddUserWrapper]: closeModalForm,
-        [idFilterRoundsAll]: filterAll,
-        [idFilterRoundsWarning]: filterWarning,
-        [idFilterRoundsExpired]: filterExpired,
-        // [idModalMain]: ,
+        // [idModalMain]: hideSerachUser,
+        [idCloseModalEditUser]: closeModalFormEditUser,
+        [idSubmitEdit]: confirmEditUser,
         [idIconSortBySurname]: sortListBySurname,
         [idIconSortBySurnameReset]: resetSortListBySurname,
         [idIconSortByDateAdded]: sortListByDateAded,
         [idIconSortByDateAddedReset]: resetSortListByDateAded,
         [idIconSortByLoanAmount]: sortListByLoanAmount,
         [idIconSortByLoanAmountReset]: resetSortListByLoanAmount,
-        // [idForm]: formModalSubmit,
-        [idBtnDeleteYes]: deleteUser,
-        [idBtnDeleteNo]: cancelDeleteUser,
+        [idFilterRoundsAll]: filterReset,
+        [idFilterRoundsWarning]: filterWarning,
+        [idFilterRoundsExpired]: filterExpired,
+        [idIconCalendar]: searchByDateScript,
+        // [idFormDynamic]: ,
+        [idFormSearchReset]: resetFormSearchNow,
+        [idSearchModalClose]: closeSearchFormScript,
+        // [idIconCalendarForm]: ,
+        [idCloseCalendarForm]: closeDateSearchFormScript,
+        // [idSubmitSearch]: ,
+        [idIconSearch]: scriptForSearchUsers,
+        [idIconModalNotification]: openModalNotification,
+        // [idIndicator]: ,
+        [idBackgroundForNotification]: closeModalNotification,
+        [idBtnNotificationHiden]: closeModalNotification,
+        [idModalNotificationClose]: closeModalNotification,
+        [idBtnAddNewUser]: openModalFormAddUser,
+        [idModalFormAddUserWrapper]: closeModalFormAddUser,
+        [idCloseModalFormAddUsers]: closeModalFormAddUser,
+        [idSubmit]: confirmAddUser,
         [idModalSubmitDelete]: cancelDeleteUser,
-        
+        [idBtnDeleteNo]: cancelDeleteUser,
+        [idBtnDeleteYes]: confirmDeleteUser,
+        [idSwitchTheme]: switchTheme,
     }
 
     window.addEventListener('click', (e) => {
-        // console.log(e.target.id);
-
+    
         id = e.target.id;
-        
-        // if (e.target.id === idForm) { 
-        //     console.log('ok')   
-        //     e.preventDefault();
-        // } else 
-        if (id.substring(0, 10) === ('icon_edit_')) {
-            idEditBtn = id;
-            eventsHandlers[idEditBtn] = editUser;
-        } else if (id.substring(0, 12) === ('icon_remove_')) {
-            idRemoveBtn = id;
-            eventsHandlers[idRemoveBtn] = choseUserForDelete;
-        } 
+        console.log(id);
 
-        if (!eventsHandlers[id]) return;
+        if (id.substring(0, 10) === ('icon_edit_')) {
+            idBtn = id;
+            eventsHandlers[idBtn] = openModalFormEditUser;
+        } else if (id.substring(0, 12) === ('icon_remove_')) {
+            idBtn = id;
+            eventsHandlers[idBtn] = choseUserForDelete;
+        } else if (id.substring(0, 10) === ('icon_find_')) {
+            idBtn = id;
+            eventsHandlers[idBtn] = searchUserFromNotificatin;
+        } else if (!eventsHandlers[id]) return;
         
         eventsHandlers[id]();
     });
@@ -1556,14 +1354,15 @@ function runAll() {
 
 runAll();
 
+// если нажать на изменение и потом нажать на уведомления то все ломается
 
-// объеденить все if else в wwindow.addeventlistener
+// при выборе изменения пользователей подряд все подкрашиваются, а должны отменяться и оставаться только у того которого выбрали
 
-// переделать переменные в универсальные id idBtn idUser
+// нужно показывать пользователя из списка увеломлений в списке если его координаты ниже нижней границе (указать нижнюю границу списка и еслм пользователь ниже это границе то поднимать список на разницу между нижней границей и пользователем)
 
-// submit сделать не работает e.preventDefault();
+// сделать проверку на пустой мвссиы для icon_search
 
-// все events переделать и останавливать где нужнока
+// сделать дегирование во внутренних функциях
 
 // при попытке поиска юзера не показывает списки просроченных юзеров
 
@@ -1599,3 +1398,12 @@ runAll();
 // observer.observe(notificationWarningList, {
 //     childList: true,
 // });
+
+// const url = 'http://localhost/2a01:4f8:211:27c6::2';
+// let response = fetch(url);
+
+// if (response == 'ok') {
+//     console.log('ok');
+// } else if (!response == 'ok') {
+//     console.log(response);
+// }

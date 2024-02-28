@@ -99,6 +99,7 @@
     left: -1390px;
     background-color: $bcg-color;
     .modal_notification {
+        display: none;
         position: absolute;
         height: 500px;
         width: 980px;
@@ -134,8 +135,11 @@
                 list-style-type: none;
                 .attention_notification {
                     display: grid;
-                    grid-template-columns: 10% 60% 15% 15%;
+                    grid-template-columns: 11% 45% 22% 22%;
                     grid-template-rows: auto;
+                    .attention_user-id {
+                        display: none;
+                    }
                     .attention_user-index, .attention_user-full_name {
                         padding-left: 20px;
                     }
@@ -170,6 +174,10 @@
             justify-content: space-around;
         }
     }
+}
+
+.modal_notification.active {
+    display: block;
 }
 
 .icon_search_users {

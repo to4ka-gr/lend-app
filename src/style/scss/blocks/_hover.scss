@@ -12,7 +12,7 @@
     border-top: 0.1px solid;
     border-bottom: 0.1px solid;
     height: 25px;
-    .icon_remove, .icon_edit, .icon_search {
+    .icon_remove, .icon_edit, .icon_search, .icon_find {
         cursor: pointer;
         content: '';
         display: block;
@@ -34,14 +34,14 @@
 }
 
 .attention_notification:hover {
-    height: 35px;
-    .icon_remove, .icon_search {
+    height: 32px;
+    .icon_remove, .icon_find {
         position: relative;
-        right: -25px;
+        right: -50px;
         top: 5px;
     }
-    .icon_search {
-        right: -45px;
+    .icon_find {
+        right: -100px;
         background: url('../icons/search.png') center (center / cover) no-repeat;
     }
 }

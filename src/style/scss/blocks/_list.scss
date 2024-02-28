@@ -128,12 +128,13 @@
     &:after {
         content: attr(data-tooltip);
         position: absolute;
-        min-width: 150%;
+        min-width: 170%;
+        max-height: 25px;
         left: -25px; 
         top: 0;
         background: $elem-color;
         color: $modal-color;
-        font-size: 10px;
+        font-size: 12px;
         font-weight: 400;
         padding: 0 10px;
         box-shadow: 2px 2px 5px $elem-color;
@@ -143,3 +144,24 @@
         z-index: 1000;
     }
 }
+
+// [dat-tooltip] {
+//     position: relative;
+//     &:after {
+//         content: attr(dat-tooltip);
+//         position: absolute;
+//         min-width: 150%;
+//         left: -25px; 
+//         top: 0;
+//         background: $elem-color;
+//         color: $modal-color;
+//         font-size: 10px;
+//         font-weight: 400;
+//         padding: 0 10px;
+//         box-shadow: 2px 2px 5px $elem-color;
+//         pointer-events: none;
+//         opacity: 0;
+//         transition-delay: 0s, .5s;
+//         z-index: 1000;
+//     }
+// }

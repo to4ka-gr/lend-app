@@ -8,6 +8,10 @@
     border: none;
     border-radius: 5px;
     text-transform: uppercase;
+    &-dark {
+        color: $list-color;
+        background-color: $main-color-bt;
+    }
 }
 
 .submit {
@@ -53,3 +57,49 @@
         display: none;
     }
 }
+
+.switch-btn {
+    position: relative;
+    display: inline-block;
+    width: 62px; /* ширина переключателя */
+    height: 24px; /* высота переключателя */
+    border-radius: 12px; /* радиус скругления */
+    background: $modal-color; /* цвет фона */
+    z-index: 0;
+    margin: 0;
+    padding: 0;
+    border: none;
+    cursor: pointer;
+    position: relative;
+    transition-duration: 300ms; /* анимация */
+    top: 30%;
+    right: -50%;
+    transform: translateX(-50%);
+    &-dark {
+        background: $bcg-color;
+    }
+  }
+  .switch-btn::after {
+    content: "";
+    height: 36px; /* высота кнопки */
+    width: 36px; /* ширина кнопки */
+    border-radius: 18px; /* радиус кнопки */
+    background: $elem-color; /* цвет кнопки */
+    top: -6px; /* положение кнопки по вертикали относительно основы */
+    left: -6px; /* положение кнопки по горизонтали относительно основы */
+    transition-duration: 300ms; /* анимация */
+    box-shadow: 0 0 10px 0 $bcg-color; /* тень */
+    position: absolute;
+    z-index: 1;
+    :hover {
+        transform: scale(0.9);
+    }
+  }
+  .switch-on {
+    background: $modal-color;
+    box-shadow: inset 0 0 10px 0 $list-color; /* тень */
+  }
+  .switch-on::after {
+    left: 30px;
+    background: $main-color;
+  }
